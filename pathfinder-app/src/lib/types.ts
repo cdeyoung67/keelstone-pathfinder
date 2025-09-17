@@ -14,6 +14,8 @@ export interface Struggle {
 
 export interface Assessment {
   id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   struggles: string[]; // Array of struggle IDs
   door: Door;
@@ -31,6 +33,7 @@ export interface DailyPractice {
   steps: string[];
   reflection: string;
   quote: Quote;
+  commentary: string; // 3-paragraph commentary connecting quote to practice via Fruit of the Spirit
   estimatedTime: number; // in minutes
 }
 
@@ -44,6 +47,7 @@ export interface Quote {
 export interface PersonalizedPlan {
   id: string;
   userId: string;
+  assessment?: Assessment; // Include assessment data for personalization
   anchor: string; // Daily anchor statement
   virtue: CardinalVirtue;
   door: Door;
@@ -78,32 +82,77 @@ export interface MockModelConfig {
   errorRate: number; // 0-1, for testing error states
 }
 
-// Common struggles mapped to cardinal virtues
-export const COMMON_STRUGGLES: Struggle[] = [
-  // Temperance (Self-control, moderation)
-  { id: 'social-media-overwhelm', label: 'Social media overwhelm', virtue: 'temperance' },
-  { id: 'news-anxiety', label: 'News and current events anxiety', virtue: 'temperance' },
-  { id: 'digital-distraction', label: 'Constant digital distractions', virtue: 'temperance' },
-  { id: 'emotional-reactivity', label: 'Emotional reactivity to others', virtue: 'temperance' },
-  
-  // Wisdom (Sound judgment, discernment)
-  { id: 'decision-paralysis', label: 'Difficulty making decisions', virtue: 'wisdom' },
-  { id: 'information-overload', label: 'Too much information, can\'t focus', virtue: 'wisdom' },
-  { id: 'lack-direction', label: 'Feeling lost or without direction', virtue: 'wisdom' },
-  { id: 'analysis-paralysis', label: 'Overthinking everything', virtue: 'wisdom' },
-  
-  // Courage (Bravery, perseverance)
-  { id: 'fear-failure', label: 'Fear of failure or rejection', virtue: 'courage' },
-  { id: 'avoiding-conflict', label: 'Avoiding difficult conversations', virtue: 'courage' },
-  { id: 'perfectionism', label: 'Perfectionism holding me back', virtue: 'courage' },
-  { id: 'burnout-exhaustion', label: 'Burnout and exhaustion', virtue: 'courage' },
-  
-  // Justice (Fairness, compassion, service)
-  { id: 'relationship-conflicts', label: 'Relationship conflicts', virtue: 'justice' },
-  { id: 'work-life-balance', label: 'Work-life balance struggles', virtue: 'justice' },
-  { id: 'helping-others', label: 'Difficulty saying no to others', virtue: 'justice' },
-  { id: 'feeling-isolated', label: 'Feeling disconnected from community', virtue: 'justice' }
+// Struggle categories for better organization
+export interface StruggleCategory {
+  id: string;
+  title: string;
+  description: string;
+  virtue: CardinalVirtue;
+  struggles: Struggle[];
+}
+
+// Organized struggle categories
+export const STRUGGLE_CATEGORIES: StruggleCategory[] = [
+  {
+    id: 'digital-overwhelm',
+    title: 'Digital & Information Overwhelm',
+    description: 'Managing technology and information intake',
+    virtue: 'temperance',
+    struggles: [
+      { id: 'social-media-overwhelm', label: 'Social media overwhelm', virtue: 'temperance' },
+      { id: 'news-anxiety', label: 'News and current events anxiety', virtue: 'temperance' },
+      { id: 'digital-distraction', label: 'Constant digital distractions', virtue: 'temperance' },
+      { id: 'information-overload', label: 'Too much information, can\'t focus', virtue: 'wisdom' }
+    ]
+  },
+  {
+    id: 'emotional-balance',
+    title: 'Emotional Balance & Reactions',
+    description: 'Managing emotions and stress responses',
+    virtue: 'temperance',
+    struggles: [
+      { id: 'emotional-reactivity', label: 'Emotional reactivity to others', virtue: 'temperance' },
+      { id: 'burnout-exhaustion', label: 'Burnout and exhaustion', virtue: 'courage' }
+    ]
+  },
+  {
+    id: 'decision-clarity',
+    title: 'Decision Making & Direction',
+    description: 'Finding clarity and making good choices',
+    virtue: 'wisdom',
+    struggles: [
+      { id: 'decision-paralysis', label: 'Difficulty making decisions', virtue: 'wisdom' },
+      { id: 'analysis-paralysis', label: 'Overthinking everything', virtue: 'wisdom' },
+      { id: 'lack-direction', label: 'Feeling lost or without direction', virtue: 'wisdom' }
+    ]
+  },
+  {
+    id: 'confidence-action',
+    title: 'Confidence & Taking Action',
+    description: 'Overcoming fear and self-doubt',
+    virtue: 'courage',
+    struggles: [
+      { id: 'fear-failure', label: 'Fear of failure or rejection', virtue: 'courage' },
+      { id: 'perfectionism', label: 'Perfectionism holding me back', virtue: 'courage' },
+      { id: 'avoiding-conflict', label: 'Avoiding difficult conversations', virtue: 'courage' }
+    ]
+  },
+  {
+    id: 'relationships-boundaries',
+    title: 'Relationships & Boundaries',
+    description: 'Connecting with others and setting healthy limits',
+    virtue: 'justice',
+    struggles: [
+      { id: 'relationship-conflicts', label: 'Relationship conflicts', virtue: 'justice' },
+      { id: 'helping-others', label: 'Difficulty saying no to others', virtue: 'justice' },
+      { id: 'work-life-balance', label: 'Work-life balance struggles', virtue: 'justice' },
+      { id: 'feeling-isolated', label: 'Feeling disconnected from community', virtue: 'justice' }
+    ]
+  }
 ];
+
+// Flattened list for backward compatibility
+export const COMMON_STRUGGLES: Struggle[] = STRUGGLE_CATEGORIES.flatMap(category => category.struggles);
 
 // Bible version options for Christian door
 export const BIBLE_VERSIONS: { value: BibleVersion; label: string; description: string }[] = [
