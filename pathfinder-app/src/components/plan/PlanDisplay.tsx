@@ -62,7 +62,7 @@ export default function PlanDisplay({
         </div>
         
         <h1 className="text-hero mb-2">
-          Your 14-Day {virtue.title} Practice
+          {plan.assessment?.firstName}'s 14-Day {virtue.title} Practice
         </h1>
         <p className="text-subtitle mb-4">{virtue.subtitle}</p>
         

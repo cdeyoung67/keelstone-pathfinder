@@ -42,6 +42,20 @@ export default function Home() {
     setError(null);
 
     try {
+      // TODO: In production, integrate with Kit.com API here
+      // Example Kit.com integration:
+      // await kitApi.subscribers.create({
+      //   email: assessment.email,
+      //   first_name: assessment.firstName,
+      //   last_name: assessment.lastName,
+      //   tags: [assessment.door, assessment.primaryVirtue],
+      //   custom_fields: {
+      //     struggles: assessment.struggles.join(','),
+      //     time_budget: assessment.timeBudget,
+      //     daypart: assessment.daypart
+      //   }
+      // });
+      
       // Mock delay and plan generation
       const plan = await generateMockPlan(assessment);
       setCurrentPlan(plan);

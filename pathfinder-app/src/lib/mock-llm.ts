@@ -186,6 +186,7 @@ export async function generateMockPlan(
   const plan: PersonalizedPlan = {
     id: `plan_${Date.now()}`,
     userId: assessment.id,
+    assessment: assessment, // Include the full assessment for personalization
     anchor,
     virtue: primaryVirtue,
     door: assessment.door,

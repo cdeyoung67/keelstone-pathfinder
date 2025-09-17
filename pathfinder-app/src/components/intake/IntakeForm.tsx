@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue } from '@/lib/types';
-import { COMMON_STRUGGLES, BIBLE_VERSIONS } from '@/lib/types';
+import { STRUGGLE_CATEGORIES, BIBLE_VERSIONS, StruggleCategory } from '@/lib/types';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface IntakeFormProps {
   onSubmit: (assessment: Assessment) => void;
@@ -14,6 +14,8 @@ interface IntakeFormProps {
 export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
     struggles: [] as string[],
     door: 'secular' as Door,
@@ -22,6 +24,9 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
     daypart: 'morning' as Daypart,
     context: ''
   });
+  
+  // State for popup modal in struggles step
+  const [selectedCategoryPopup, setSelectedCategoryPopup] = useState<string | null>(null);
 
   const totalSteps = 5;
 
@@ -45,6 +50,8 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
   const handleSubmit = () => {
     const assessment: Assessment = {
       id: `assessment_${Date.now()}`,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       email: formData.email,
       struggles: formData.struggles,
       door: formData.door,
@@ -68,9 +75,21 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
     }));
   };
 
+  const openCategoryPopup = (categoryId: string) => {
+    setSelectedCategoryPopup(categoryId);
+  };
+
+  const closeCategoryPopup = () => {
+    setSelectedCategoryPopup(null);
+  };
+
+  const getCategorySelectedCount = (category: StruggleCategory): number => {
+    return category.struggles.filter(struggle => formData.struggles.includes(struggle.id)).length;
+  };
+
   const canProceed = () => {
     switch (currentStep) {
-      case 1: return formData.email.length > 0 && formData.email.includes('@');
+      case 1: return formData.firstName.length > 0 && formData.lastName.length > 0 && formData.email.length > 0 && formData.email.includes('@');
       case 2: return formData.struggles.length > 0;
       case 3: return true; // Door selection always valid
       case 4: return true; // Time/daypart always valid
@@ -93,7 +112,7 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
 
   return (
     <div className="fixed inset-0 bg-navy-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-thin">
+      <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="p-6 border-b border-sand-300">
           <div className="flex justify-between items-center">
@@ -112,7 +131,14 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
           {/* Progress bar */}
           <div className="mt-4">
             <div className="flex justify-between text-caption mb-2">
-              <span>Step {currentStep} of {totalSteps}</span>
+              <span>
+                Step {currentStep} of {totalSteps}
+                {currentStep === 2 && formData.struggles.length > 0 && (
+                  <span className="ml-2 text-warm-gold font-medium">
+                    • {formData.struggles.length} selected
+                  </span>
+                )}
+              </span>
               <span>{Math.round((currentStep / totalSteps) * 100)}%</span>
             </div>
             <div className="w-full bg-sand-300 rounded-full h-2">
@@ -126,19 +152,49 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
 
         {/* Form Content */}
         <div className="p-6">
-          {/* Step 1: Email */}
+          {/* Step 1: Your Information */}
           {currentStep === 1 && (
             <div className="space-contemplative">
-              <h3 className="text-title">What's your email?</h3>
-              <p className="text-body">We'll send your personalized 14-day plan here.</p>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="your@email.com"
-                className="input-field focus-ring"
-                autoFocus
-              />
+              <h3 className="text-title">Tell us about yourself</h3>
+              <p className="text-body">We'll use this to personalize your experience and send your 14-day plan.</p>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">First Name</label>
+                  <input
+                    type="text"
+                    placeholder="First name"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                    className="input-field focus-ring"
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    placeholder="Last name"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                    className="input-field focus-ring"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  className="input-field focus-ring"
+                />
+                <p className="text-xs text-slate-500 mt-1">
+                  We'll send your personalized plan here and add you to our community updates.
+                </p>
+              </div>
             </div>
           )}
 
@@ -146,25 +202,49 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
           {currentStep === 2 && (
             <div className="space-contemplative">
               <h3 className="text-title">What are you struggling with most?</h3>
-              <p className="text-body">Select all that apply. This helps us personalize your plan.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {COMMON_STRUGGLES.map((struggle) => (
-                  <button
-                    key={struggle.id}
-                    onClick={() => toggleStruggle(struggle.id)}
-                    className={`p-3 text-left border rounded-lg transition-all focus-ring ${
-                      formData.struggles.includes(struggle.id)
-                        ? 'border-gold-500 bg-gold-50 text-navy-900'
-                        : 'border-sand-400 hover:border-sand-500 bg-sand-50'
-                    }`}
-                  >
-                    <div className="font-medium text-navy-900">{struggle.label}</div>
-                    <div className="text-caption text-slate-500 mt-1">
-                      Focus: {VIRTUE_DESCRIPTIONS[struggle.virtue].title}
-                    </div>
-                  </button>
-                ))}
+              <p className="text-body">Click on any category that resonates with you.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {STRUGGLE_CATEGORIES.map((category) => {
+                  const selectedCount = getCategorySelectedCount(category);
+                  
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => openCategoryPopup(category.id)}
+                      className={`p-6 text-left rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${
+                        selectedCount > 0
+                          ? 'border-warm-gold bg-warm-gold/10 shadow-md'
+                          : 'border-slate-200 hover:border-warm-gold/50 hover:bg-warm-gold/5'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-deep-navy text-lg mb-2">{category.title}</h4>
+                          <p className="text-sm text-slate-600 mb-3">{category.description}</p>
+                          {selectedCount > 0 && (
+                            <div className="inline-flex items-center px-3 py-1 bg-warm-gold text-white text-sm rounded-full font-medium">
+                              ✓ {selectedCount} selected
+                            </div>
+                          )}
+                        </div>
+                        <div className="ml-4 text-slate-400">
+                          <ChevronDownIcon className="w-5 h-5" />
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
+              
+              {formData.struggles.length > 0 && (
+                <div className="mt-6 p-4 bg-accent rounded-lg text-center">
+                  <p className="text-sand-100 font-medium">
+                    ✓ {formData.struggles.length} area{formData.struggles.length === 1 ? '' : 's'} selected
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
@@ -329,6 +409,79 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
           )}
         </div>
       </div>
+
+      {/* Category Popup Modal */}
+      {selectedCategoryPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden">
+            {(() => {
+              const category = STRUGGLE_CATEGORIES.find(cat => cat.id === selectedCategoryPopup);
+              if (!category) return null;
+              
+              return (
+                <>
+                  {/* Popup Header */}
+                  <div className="p-6 border-b border-slate-200">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-semibold text-deep-navy">{category.title}</h3>
+                        <p className="text-slate-600 mt-1">{category.description}</p>
+                      </div>
+                      <button
+                        onClick={closeCategoryPopup}
+                        className="text-slate-400 hover:text-slate-600 transition-colors ml-4"
+                      >
+                        <XMarkIcon className="w-6 h-6" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Popup Content */}
+                  <div className="p-6 max-h-96 overflow-y-auto">
+                    <p className="text-sm text-slate-600 mb-4">Select all that apply to you:</p>
+                    <div className="space-y-3">
+                      {category.struggles.map((struggle) => (
+                        <button
+                          key={struggle.id}
+                          type="button"
+                          onClick={() => toggleStruggle(struggle.id)}
+                          className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
+                            formData.struggles.includes(struggle.id)
+                              ? 'border-warm-gold bg-warm-gold/10 text-deep-navy'
+                              : 'border-slate-200 hover:border-warm-gold/50 hover:bg-warm-gold/5'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">{struggle.label}</span>
+                            {formData.struggles.includes(struggle.id) && (
+                              <div className="w-5 h-5 rounded-full bg-warm-gold flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white rounded-full" />
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Popup Footer */}
+                  <div className="p-6 border-t border-slate-200 flex justify-between items-center">
+                    <span className="text-sm text-slate-600">
+                      {getCategorySelectedCount(category)} of {category.struggles.length} selected
+                    </span>
+                    <button
+                      onClick={closeCategoryPopup}
+                      className="btn-primary"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
