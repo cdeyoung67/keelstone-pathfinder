@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue } from '@/lib/types';
 import { STRUGGLE_CATEGORIES, BIBLE_VERSIONS, StruggleCategory } from '@/lib/types';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
@@ -17,24 +17,51 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 interface IntakeFormProps {
   onSubmit: (assessment: Assessment) => void;
   onClose: () => void;
+  initialData?: Partial<Assessment>;
+  startStep?: number;
 }
 
-export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
-  const [currentStep, setCurrentStep] = useState(1);
+export default function IntakeForm({ onSubmit, onClose, initialData, startStep = 1 }: IntakeFormProps) {
+  // Debug logging
+  console.log('IntakeForm initialData:', initialData);
+  console.log('IntakeForm startStep:', startStep);
+  
+  const [currentStep, setCurrentStep] = useState(startStep);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    struggles: [] as string[],
-    door: 'secular' as Door,
-    bibleVersion: 'niv' as BibleVersion,
-    timeBudget: '10-15' as TimeBudget,
-    daypart: 'morning' as Daypart,
-    context: ''
+    firstName: initialData?.firstName || '',
+    lastName: initialData?.lastName || '',
+    email: initialData?.email || '',
+    struggles: initialData?.struggles || [] as string[],
+    door: initialData?.door || 'secular' as Door,
+    bibleVersion: initialData?.bibleVersion || 'niv' as BibleVersion,
+    timeBudget: initialData?.timeBudget || '10-15' as TimeBudget,
+    daypart: initialData?.daypart || 'morning' as Daypart,
+    context: initialData?.context || ''
   });
   
   // State for popup modal in struggles step
   const [selectedCategoryPopup, setSelectedCategoryPopup] = useState<string | null>(null);
+  
+  // Debug logging for popup state
+  console.log('selectedCategoryPopup:', selectedCategoryPopup);
+
+  // Update form data when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      console.log('useEffect updating formData with initialData:', initialData);
+      setFormData(prev => ({
+        firstName: initialData.firstName || prev.firstName,
+        lastName: initialData.lastName || prev.lastName,
+        email: initialData.email || prev.email,
+        struggles: initialData.struggles || prev.struggles,
+        door: initialData.door || prev.door,
+        bibleVersion: initialData.bibleVersion || prev.bibleVersion,
+        timeBudget: initialData.timeBudget || prev.timeBudget,
+        daypart: initialData.daypart || prev.daypart,
+        context: initialData.context || prev.context
+      }));
+    }
+  }, [initialData]);
 
   const totalSteps = 5;
 
@@ -87,7 +114,9 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
   };
 
   const openCategoryPopup = (categoryId: string) => {
+    console.log('openCategoryPopup called with categoryId:', categoryId);
     setSelectedCategoryPopup(categoryId);
+    console.log('selectedCategoryPopup set to:', categoryId);
   };
 
   const closeCategoryPopup = () => {
@@ -122,7 +151,7 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-navy-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-navy-900 bg-opacity-50 flex items-center justify-center p-4 z-[100]">
       <div className="card max-w-2xl w-full max-h-[85vh] overflow-y-auto">
         {/* Header */}
         <div className="p-4 border-b border-sand-300">
@@ -232,7 +261,12 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
                           ? 'border-gold-500 bg-gold-50 shadow-sm'
                           : 'hover:border-gold-400 hover:bg-gold-50/50'
                       }`}
-                      onClick={() => openCategoryPopup(category.id)}
+                      onClick={(e) => {
+                        console.log('Card clicked for category:', category.id);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openCategoryPopup(category.id);
+                      }}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">
@@ -492,7 +526,7 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
 
       {/* ShadCN Dialog for Category Selection */}
       <Dialog open={!!selectedCategoryPopup} onOpenChange={(open) => !open && closeCategoryPopup()}>
-        <DialogContent className="max-w-md max-h-[80vh] overflow-hidden">
+        <DialogContent className="max-w-md max-h-[80vh] overflow-hidden z-[200]">
           {(() => {
             const category = STRUGGLE_CATEGORIES.find(cat => cat.id === selectedCategoryPopup);
             if (!category) return null;

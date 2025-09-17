@@ -33,6 +33,7 @@ export interface DailyPractice {
   steps: string[];
   reflection: string;
   quote: Quote;
+  commentary: string; // 3-paragraph commentary connecting quote to practice via Fruit of the Spirit
   estimatedTime: number; // in minutes
 }
 
