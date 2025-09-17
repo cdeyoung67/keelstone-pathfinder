@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue } from '@/lib/types';
 import { COMMON_STRUGGLES, BIBLE_VERSIONS } from '@/lib/types';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface IntakeFormProps {
   onSubmit: (assessment: Assessment) => void;
@@ -104,7 +105,7 @@ export default function IntakeForm({ onSubmit, onClose }: IntakeFormProps) {
               onClick={onClose}
               className="text-slate-400 hover:text-slate-600 text-xl focus-ring p-1 rounded"
             >
-              ×
+              <XMarkIcon className="w-5 h-5" />
             </button>
           </div>
           

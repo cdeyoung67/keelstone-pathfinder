@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { LightBulbIcon } from '@heroicons/react/24/outline';
 
 interface LoadingStateProps {
   message?: string;
@@ -90,7 +91,8 @@ export default function LoadingState({
         {/* Encouraging Note */}
         <div className="mt-6 p-4 bg-gold-50 rounded-lg border border-gold-200">
           <p className="text-sm text-gold-800">
-            💡 <strong>Did you know?</strong> Personalized practices are 3x more likely to become lasting habits than generic ones.
+            <LightBulbIcon className="w-4 h-4 inline mr-1 text-gold-600" />
+            <strong>Did you know?</strong> Personalized practices are 3x more likely to become lasting habits than generic ones.
           </p>
         </div>
       </div>

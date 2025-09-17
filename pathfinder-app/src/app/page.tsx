@@ -5,6 +5,22 @@ import IntakeForm from '@/components/intake/IntakeForm';
 import PlanDisplay from '@/components/plan/PlanDisplay';
 import LoadingState from '@/components/ui/LoadingState';
 import KeelStoneLogo from '@/components/ui/KeelStoneLogo';
+import {
+  UserIcon,
+  ClockIcon,
+  ArrowPathRoundedSquareIcon,
+  ChartBarIcon,
+  StarIcon,
+  ShieldCheckIcon,
+  DocumentTextIcon,
+  CpuChipIcon,
+  BookOpenIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  MapIcon,
+  ArrowRightIcon,
+  ArrowLeftIcon
+} from '@heroicons/react/24/outline';
 import { Assessment, PersonalizedPlan, UserProgress } from '@/lib/types';
 import { generateMockPlan } from '@/lib/mock-llm';
 
@@ -92,7 +108,9 @@ export default function Home() {
   return (
       <div className="min-h-screen bg-hero flex items-center justify-center p-4">
         <div className="max-w-md w-full card p-6 text-center">
-          <div className="text-gold-500 text-4xl mb-4">⚠️</div>
+          <div className="text-gold-500 mb-4">
+            <ExclamationTriangleIcon className="w-10 h-10 mx-auto" />
+          </div>
           <h2 className="text-title mb-2">Oops! Something went wrong</h2>
           <p className="text-body mb-4">{error}</p>
           <button
@@ -109,23 +127,24 @@ export default function Home() {
   if (currentPlan) {
     return (
       <div className="min-h-screen flex">
-        {/* Vertical Sidebar - Hidden on mobile */}
-        <div className="hidden md:flex w-64 bg-navy-900 flex-col">
-          {/* Logo at top */}
-          <div className="p-6 border-b border-navy-700">
-            <KeelStoneLogo size="md" />
-          </div>
-          
-          {/* Navigation */}
-          <div className="flex-1 p-6">
-            <button
-              onClick={handleStartOver}
-              className="text-caption text-sand-200 hover:text-sand-100 underline focus-ring"
-            >
-              ← Start Over
-            </button>
-          </div>
+      {/* Vertical Sidebar - Hidden on mobile */}
+      <div className="hidden md:flex w-32 bg-navy-900 flex-col">
+        {/* Logo at top */}
+        <div className="px-3 py-6 border-b border-navy-700 flex justify-center">
+          <KeelStoneLogo size="md" />
         </div>
+        
+        {/* Navigation */}
+        <div className="flex-1 px-3 py-6 flex justify-center">
+          <button
+            onClick={handleStartOver}
+            className="text-caption text-sand-200 hover:text-sand-100 underline focus-ring text-center"
+          >
+            <ArrowLeftIcon className="w-4 h-4 inline mr-1" />
+            Start Over
+          </button>
+        </div>
+      </div>
 
         {/* Mobile Header - Visible only on mobile */}
         <div className="md:hidden fixed top-0 left-0 right-0 bg-navy-900 py-3 px-4 z-10 flex justify-between items-center">
@@ -134,7 +153,8 @@ export default function Home() {
             onClick={handleStartOver}
             className="text-caption text-sand-200 hover:text-sand-100 underline focus-ring"
           >
-            ← Start Over
+            <ArrowLeftIcon className="w-4 h-4 inline mr-1" />
+            Start Over
           </button>
         </div>
 
@@ -155,14 +175,14 @@ export default function Home() {
   return (
     <div className="min-h-screen flex">
       {/* Vertical Sidebar - Hidden on mobile */}
-      <div className="hidden md:flex w-64 bg-navy-900 flex-col">
+      <div className="hidden md:flex w-32 bg-navy-900 flex-col">
         {/* Logo at top */}
-        <div className="p-6 border-b border-navy-700">
+        <div className="px-3 py-6 border-b border-navy-700 flex justify-center">
           <KeelStoneLogo size="md" />
         </div>
         
         {/* Navigation space for future use */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 px-3 py-6">
           {/* Future navigation items can go here */}
         </div>
       </div>
@@ -196,8 +216,9 @@ export default function Home() {
               onClick={handleStartPathfinder}
               className="btn-primary text-lg px-8 py-4 rounded-xl inline-flex items-center transform hover:scale-105 transition-all duration-200"
             >
-              ⚓ Start Your Pathfinder
-              <span className="ml-2">→</span>
+              <MapIcon className="w-5 h-5 mr-2" />
+              Start Your Pathfinder
+              <ArrowRightIcon className="w-5 h-5 ml-2" />
             </button>
             
             <p className="text-caption mt-2">
@@ -208,7 +229,9 @@ export default function Home() {
           {/* Features */}
           <div className="grid md:grid-cols-3 gap-6 mb-12 animate-slide-up">
             <div className="card-elevated text-center p-6">
-              <div className="text-4xl mb-4 text-gold-500">🎯</div>
+              <div className="flex justify-center mb-4">
+                <UserIcon className="w-8 h-8 text-gold-500" />
+              </div>
               <h3 className="text-title mb-2">Personalized</h3>
               <p className="text-body text-sm">
                 Your plan adapts to your struggles, schedule, and spiritual preferences
@@ -216,7 +239,9 @@ export default function Home() {
             </div>
             
             <div className="card-elevated text-center p-6">
-              <div className="text-4xl mb-4 text-olive-500">⏱️</div>
+              <div className="flex justify-center mb-4">
+                <ClockIcon className="w-8 h-8 text-olive-500" />
+              </div>
               <h3 className="text-title mb-2">Bite-Sized</h3>
               <p className="text-body text-sm">
                 5-20 minute daily practices that fit into your real life
@@ -224,7 +249,9 @@ export default function Home() {
             </div>
             
             <div className="card-elevated text-center p-6">
-              <div className="text-4xl mb-4 text-navy-600">🚪</div>
+              <div className="flex justify-center mb-4">
+                <ArrowPathRoundedSquareIcon className="w-8 h-8 text-navy-600" />
+              </div>
               <h3 className="text-title mb-2">Two Paths</h3>
               <p className="text-body text-sm">
                 Christian (with Scripture) or Secular (with philosophy)—your choice
@@ -237,15 +264,15 @@ export default function Home() {
             <p className="text-subtitle text-slate-500 mb-6">Join others finding peace in a chaotic world</p>
             <div className="flex justify-center space-x-8 text-caption">
               <div className="flex items-center space-x-2">
-                <span className="text-olive-500">📊</span>
+                <ChartBarIcon className="w-4 h-4 text-olive-500" />
                 <span>94% report reduced anxiety</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-gold-500">⭐</span>
+                <StarIcon className="w-4 h-4 text-gold-500" />
                 <span>4.8/5 average rating</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-navy-600">🔒</span>
+                <ShieldCheckIcon className="w-4 h-4 text-navy-600" />
                 <span>Private & secure</span>
               </div>
             </div>
@@ -259,8 +286,8 @@ export default function Home() {
             
             <div className="grid md:grid-cols-4 gap-6">
               <div className="text-center space-contemplative">
-                <div className="w-12 h-12 bg-gold-100 text-gold-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 border border-gold-200">
-                  1
+                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-gold-200">
+                  <DocumentTextIcon className="w-6 h-6 text-gold-700" />
                 </div>
                 <h3 className="font-serif font-semibold text-navy-900 mb-2">Quick Assessment</h3>
                 <p className="text-body text-sm">
@@ -269,8 +296,8 @@ export default function Home() {
               </div>
               
               <div className="text-center space-contemplative">
-                <div className="w-12 h-12 bg-olive-100 text-olive-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 border border-olive-200">
-                  2
+                <div className="w-12 h-12 bg-olive-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-olive-200">
+                  <CpuChipIcon className="w-6 h-6 text-olive-700" />
                 </div>
                 <h3 className="font-serif font-semibold text-navy-900 mb-2">AI Personalization</h3>
                 <p className="text-body text-sm">
@@ -279,8 +306,8 @@ export default function Home() {
               </div>
               
               <div className="text-center space-contemplative">
-                <div className="w-12 h-12 bg-navy-100 text-navy-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 border border-navy-200">
-                  3
+                <div className="w-12 h-12 bg-navy-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-navy-200">
+                  <BookOpenIcon className="w-6 h-6 text-navy-700" />
                 </div>
                 <h3 className="font-serif font-semibold text-navy-900 mb-2">Daily Practice</h3>
                 <p className="text-body text-sm">
@@ -289,8 +316,8 @@ export default function Home() {
               </div>
               
               <div className="text-center space-contemplative">
-                <div className="w-12 h-12 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 border border-slate-200">
-                  4
+                <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
+                  <CheckCircleIcon className="w-6 h-6 text-slate-700" />
                 </div>
                 <h3 className="font-serif font-semibold text-navy-900 mb-2">Track Progress</h3>
                 <p className="text-body text-sm">

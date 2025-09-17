@@ -2,6 +2,15 @@
 
 import { useState } from 'react';
 import { PersonalizedPlan, UserProgress } from '@/lib/types';
+import { 
+  CalendarDaysIcon,
+  StarIcon,
+  LockClosedIcon,
+  DocumentArrowDownIcon,
+  PhotoIcon,
+  BuildingLibraryIcon,
+  HeartIcon
+} from '@heroicons/react/24/outline';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
 
 interface PlanDisplayProps {
@@ -43,7 +52,12 @@ export default function PlanDisplay({
       {/* Header */}
       <div className="text-center mb-8 animate-gentle-fade">
         <div className="inline-flex items-center px-3 py-1 bg-gold-100 text-gold-800 rounded-full text-sm font-medium mb-4 border border-gold-200">
-          {plan.door === 'christian' ? '✝️' : '🏛️'} {plan.door === 'christian' ? 'Christian Path' : 'Secular Path'}
+          {plan.door === 'christian' ? (
+            <HeartIcon className="w-5 h-5 inline mr-2" />
+          ) : (
+            <BuildingLibraryIcon className="w-5 h-5 inline mr-2" />
+          )} 
+          {plan.door === 'christian' ? 'Christian Path' : 'Secular Path'}
           {plan.door === 'christian' && <span className="ml-2 text-xs opacity-75">({plan.daily[0]?.quote.bibleVersion?.toUpperCase()})</span>}
         </div>
         
@@ -91,7 +105,8 @@ export default function PlanDisplay({
               onClick={() => setShowExportOptions(!showExportOptions)}
               className="btn-outline focus-ring"
             >
-              📄 Export Plan
+              <DocumentArrowDownIcon className="w-4 h-4 inline mr-1" />
+              Export Plan
             </button>
             
             {showExportOptions && (
@@ -100,13 +115,15 @@ export default function PlanDisplay({
                   onClick={() => mockExport('pdf')}
                   className="block w-full px-4 py-2 text-left text-body hover:bg-sand-200 rounded-t-lg focus-ring"
                 >
-                  📄 Download PDF
+                  <DocumentArrowDownIcon className="w-4 h-4 inline mr-2" />
+                  Download PDF
                 </button>
                 <button
                   onClick={() => mockExport('png')}
                   className="block w-full px-4 py-2 text-left text-body hover:bg-sand-200 rounded-b-lg focus-ring"
                 >
-                  🖼️ Save as Image
+                  <PhotoIcon className="w-4 h-4 inline mr-2" />
+                  Save as Image
                 </button>
               </div>
             )}
@@ -228,14 +245,20 @@ export default function PlanDisplay({
 
       {/* Weekly Check-in */}
       <div className="mt-8 bg-gold-50 border border-gold-200 rounded-lg p-6">
-        <h3 className="font-serif font-semibold text-gold-900 mb-2">📅 Week 1 & 2 Check-in</h3>
+        <h3 className="font-serif font-semibold text-gold-900 mb-2 flex items-center">
+          <CalendarDaysIcon className="w-5 h-5 mr-2" />
+          Week 1 & 2 Check-in
+        </h3>
         <p className="text-body text-gold-800">{plan.weeklyCheckin}</p>
       </div>
 
       {/* Stretch Practice */}
       {plan.stretchPractice && (
         <div className="mt-6 bg-olive-50 border border-olive-200 rounded-lg p-6">
-          <h3 className="font-serif font-semibold text-olive-900 mb-2">🌟 Stretch Practice</h3>
+          <h3 className="font-serif font-semibold text-olive-900 mb-2 flex items-center">
+            <StarIcon className="w-5 h-5 mr-2" />
+            Stretch Practice
+          </h3>
           <p className="text-body text-olive-800">{plan.stretchPractice}</p>
         </div>
       )}
@@ -246,7 +269,8 @@ export default function PlanDisplay({
           Generated with {plan.version} • Created {plan.createdAt.toLocaleDateString()}
         </p>
         <p className="mt-2 text-slate-500">
-          🔒 Your data is private and secure. You can delete it anytime.
+          <LockClosedIcon className="w-4 h-4 inline mr-1" />
+          Your data is private and secure. You can delete it anytime.
         </p>
       </div>
     </div>
