@@ -12,6 +12,13 @@ import {
   HeartIcon
 } from '@heroicons/react/24/outline';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { Separator } from '@/components/ui/separator';
 
 interface PlanDisplayProps {
   plan: PersonalizedPlan;
@@ -67,36 +74,52 @@ export default function PlanDisplay({
         <p className="text-subtitle mb-4">{virtue.subtitle}</p>
         
         {/* Anchor Statement */}
-        <div className="bg-accent rounded-lg p-6 mb-6 text-sand-100">
-          <h2 className="text-lg font-semibold mb-2">Your Daily Anchor</h2>
-          <p className="text-quote text-sand-100">&ldquo;{plan.anchor}&rdquo;</p>
-        </div>
+        <Card className="bg-accent border-olive-500 mb-6">
+          <CardContent className="p-6 text-sand-100">
+            <h2 className="text-lg font-semibold mb-2">Your Daily Anchor</h2>
+            <p className="text-quote text-sand-100">&ldquo;{plan.anchor}&rdquo;</p>
+          </CardContent>
+        </Card>
 
         {/* Progress Overview */}
-        <div className="flex justify-center flex-wrap gap-2 mb-6">
-          {Array.from({ length: 14 }, (_, i) => i + 1).map((day) => {
-            const isCompleted = completedDays.includes(day);
-            const isCurrent = day === currentDay && !isCompleted;
-            
-            return (
-              <button
-                key={day}
-                onClick={() => handleDayClick(day)}
-                className={`progress-dot focus-ring ${
-                  isCompleted
-                    ? 'progress-dot-completed'
-                    : isCurrent
-                    ? 'progress-dot-current'
-                    : selectedDay === day
-                    ? 'bg-gold-100 text-gold-800 ring-2 ring-gold-300'
-                    : 'progress-dot-pending'
-                }`}
-              >
-                {isCompleted ? '✓' : day}
-              </button>
-            );
-          })}
-        </div>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-center text-lg">Progress Overview</CardTitle>
+            <CardDescription className="text-center">
+              {completedDays.length} of 14 days completed • Day {currentDay} is next
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center flex-wrap gap-2 mb-4">
+              {Array.from({ length: 14 }, (_, i) => i + 1).map((day) => {
+                const isCompleted = completedDays.includes(day);
+                const isCurrent = day === currentDay && !isCompleted;
+                
+                return (
+                  <button
+                    key={day}
+                    onClick={() => handleDayClick(day)}
+                    className={`progress-dot focus-ring ${
+                      isCompleted
+                        ? 'progress-dot-completed'
+                        : isCurrent
+                        ? 'progress-dot-current'
+                        : selectedDay === day
+                        ? 'bg-gold-100 text-gold-800 ring-2 ring-gold-300'
+                        : 'progress-dot-pending'
+                    }`}
+                  >
+                    {isCompleted ? '✓' : day}
+                  </button>
+                );
+              })}
+            </div>
+            <Progress 
+              value={(completedDays.length / 14) * 100} 
+              className="w-full h-2 bg-sand-300"
+            />
+          </CardContent>
+        </Card>
 
         {/* Export Options */}
         <div className="flex justify-center space-x-3 mb-8">
@@ -141,72 +164,78 @@ export default function PlanDisplay({
       </div>
 
       {/* Daily Practices */}
-      <div className="space-y-4">
-        {plan.daily.map((practice) => {
-          const isCompleted = completedDays.includes(practice.day);
-          const isCurrent = practice.day === currentDay && !isCompleted;
-          const isExpanded = selectedDay === practice.day;
+      <Tabs defaultValue="practices" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 bg-sand-200">
+          <TabsTrigger value="practices" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
+            Daily Practices
+          </TabsTrigger>
+          <TabsTrigger value="insights" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
+            Weekly Insights
+          </TabsTrigger>
+          <TabsTrigger value="resources" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
+            Resources
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="practices" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CalendarDaysIcon className="w-5 h-5" />
+                Your 14-Day Journey
+              </CardTitle>
+              <CardDescription>
+                Click on any day to expand and see the practice details
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                {plan.daily.map((practice) => {
+                  const isCompleted = completedDays.includes(practice.day);
+                  const isCurrent = practice.day === currentDay && !isCompleted;
 
-          return (
-            <div
-              key={practice.day}
-              className={`border rounded-lg transition-all ${
-                isCompleted
-                  ? 'border-olive-200 bg-olive-50'
-                  : isCurrent
-                  ? 'border-gold-300 bg-gold-50'
-                  : 'border-sand-300 bg-sand-100 hover:border-sand-400'
-              }`}
-            >
-              <div className="p-4 flex items-center justify-between">
-                <button
-                  onClick={() => handleDayClick(practice.day)}
-                  className="flex items-center space-x-3 flex-grow text-left focus-ring rounded"
-                >
-                  <div className={`progress-dot ${
-                    isCompleted
-                      ? 'progress-dot-completed'
-                      : isCurrent
-                      ? 'progress-dot-current'
-                      : 'progress-dot-pending'
-                  }`}>
-                    {isCompleted ? '✓' : practice.day}
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium text-navy-900">{practice.title}</h3>
-                    <p className="text-caption">{practice.estimatedTime} minutes</p>
-                  </div>
-                </button>
-                
-                <div className="flex items-center space-x-2 ml-4">
-                  {onProgressUpdate && (
-                    <button
-                      onClick={() => handleToggleComplete(practice.day)}
-                      className={`px-3 py-1 text-xs rounded-full transition-colors focus-ring ${
-                        isCompleted
-                          ? 'bg-olive-100 text-olive-800 hover:bg-olive-200'
-                          : 'bg-sand-200 text-slate-600 hover:bg-sand-300'
-                      }`}
-                    >
-                      {isCompleted ? 'Completed' : 'Mark Done'}
-                    </button>
-                  )}
-                  
-                  <button
-                    onClick={() => handleDayClick(practice.day)}
-                    className={`p-1 rounded focus-ring transform transition-transform ${
-                      isExpanded ? 'rotate-180' : ''
-                    }`}
-                  >
-                    <span className="text-slate-500">▼</span>
-                  </button>
-                </div>
-              </div>
+                  return (
+                    <AccordionItem key={practice.day} value={`day-${practice.day}`}>
+                      <div className="flex items-center w-full py-4">
+                        <div className={`progress-dot mr-4 ${
+                          isCompleted
+                            ? 'progress-dot-completed'
+                            : isCurrent
+                            ? 'progress-dot-current'
+                            : 'progress-dot-pending'
+                        }`}>
+                          {isCompleted ? '✓' : practice.day}
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <AccordionTrigger className="hover:no-underline py-0 border-0 w-full justify-between pr-4">
+                            <div className="flex-1 text-left">
+                              <h3 className="font-medium text-navy-900">{practice.title}</h3>
+                              <div className="flex items-center gap-4 text-sm text-slate-600 mt-1">
+                                <span>{practice.estimatedTime} minutes</span>
+                                {isCompleted && <Badge variant="secondary" className="bg-olive-100 text-olive-800">Completed</Badge>}
+                                {isCurrent && <Badge className="bg-gold-500">Current</Badge>}
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+                        </div>
+                        
+                        {onProgressUpdate && !isCompleted && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleComplete(practice.day);
+                            }}
+                            className="ml-6 flex-shrink-0"
+                          >
+                            Mark Done
+                          </Button>
+                        )}
+                      </div>
 
-              {isExpanded && (
-                <div className="px-4 pb-4 border-t border-sand-300">
-                  <div className="pt-4 space-contemplative">
+                      <AccordionContent className="pt-4 space-contemplative">
                     {/* Steps */}
                     <div>
                       <h4 className="font-serif font-medium text-navy-900 mb-2">Practice Steps</h4>
@@ -230,49 +259,102 @@ export default function PlanDisplay({
                       </cite>
                     </div>
 
-                    {/* Reflection */}
-                    <div>
-                      <h4 className="font-serif font-medium text-navy-900 mb-2">Reflection</h4>
-                      <p className="text-body">{practice.reflection}</p>
-                    </div>
-                  </div>
+                        {/* Reflection */}
+                        <div>
+                          <h4 className="font-serif font-medium text-navy-900 mb-2">Reflection</h4>
+                          <p className="text-body">{practice.reflection}</p>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="insights" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <StarIcon className="w-5 h-5" />
+                Weekly Insights & Check-ins
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-gold-50 border border-gold-200 rounded-lg p-6">
+                <h3 className="font-serif font-semibold text-gold-900 mb-2 flex items-center">
+                  <CalendarDaysIcon className="w-5 h-5 mr-2" />
+                  Week 1 & 2 Check-in
+                </h3>
+                <p className="text-body text-gold-800">{plan.weeklyCheckin}</p>
+              </div>
+
+              {plan.stretchPractice && (
+                <div className="bg-olive-50 border border-olive-200 rounded-lg p-6">
+                  <h3 className="font-serif font-semibold text-olive-900 mb-2 flex items-center">
+                    <StarIcon className="w-5 h-5 mr-2" />
+                    Stretch Practice
+                  </h3>
+                  <p className="text-body text-olive-800">{plan.stretchPractice}</p>
                 </div>
               )}
-            </div>
-          );
-        })}
-      </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="resources" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                {plan.door === 'christian' ? <HeartIcon className="w-5 h-5" /> : <BuildingLibraryIcon className="w-5 h-5" />}
+                Additional Resources
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium text-navy-900">Export Options</h4>
+                  <div className="space-y-2">
+                    <Button variant="outline" size="sm" onClick={() => mockExport('pdf')} className="w-full justify-start">
+                      <DocumentArrowDownIcon className="w-4 h-4 mr-2" />
+                      Download PDF
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => mockExport('png')} className="w-full justify-start">
+                      <PhotoIcon className="w-4 h-4 mr-2" />
+                      Save as Image
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h4 className="font-medium text-navy-900">Your Path</h4>
+                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                    {plan.door === 'christian' ? <HeartIcon className="w-4 h-4" /> : <BuildingLibraryIcon className="w-4 h-4" />}
+                    <span>{plan.door === 'christian' ? 'Christian Path' : 'Secular Path'}</span>
+                    {plan.door === 'christian' && plan.daily[0]?.quote.bibleVersion && (
+                      <Badge variant="secondary" className="text-xs">
+                        {plan.daily[0].quote.bibleVersion.toUpperCase()}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="text-center text-caption space-y-2">
+                <p>Generated with {plan.version} • Created {plan.createdAt.toLocaleDateString()}</p>
+                <p className="text-slate-500 flex items-center justify-center">
+                  <LockClosedIcon className="w-4 h-4 mr-1" />
+                  Your data is private and secure. You can delete it anytime.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
-      {/* Weekly Check-in */}
-      <div className="mt-8 bg-gold-50 border border-gold-200 rounded-lg p-6">
-        <h3 className="font-serif font-semibold text-gold-900 mb-2 flex items-center">
-          <CalendarDaysIcon className="w-5 h-5 mr-2" />
-          Week 1 & 2 Check-in
-        </h3>
-        <p className="text-body text-gold-800">{plan.weeklyCheckin}</p>
-      </div>
-
-      {/* Stretch Practice */}
-      {plan.stretchPractice && (
-        <div className="mt-6 bg-olive-50 border border-olive-200 rounded-lg p-6">
-          <h3 className="font-serif font-semibold text-olive-900 mb-2 flex items-center">
-            <StarIcon className="w-5 h-5 mr-2" />
-            Stretch Practice
-          </h3>
-          <p className="text-body text-olive-800">{plan.stretchPractice}</p>
-        </div>
-      )}
-
-      {/* Footer Info */}
-      <div className="mt-8 pt-6 border-t border-sand-300 text-center text-caption">
-        <p>
-          Generated with {plan.version} • Created {plan.createdAt.toLocaleDateString()}
-        </p>
-        <p className="mt-2 text-slate-500">
-          <LockClosedIcon className="w-4 h-4 inline mr-1" />
-          Your data is private and secure. You can delete it anytime.
-        </p>
-      </div>
     </div>
   );
 }
