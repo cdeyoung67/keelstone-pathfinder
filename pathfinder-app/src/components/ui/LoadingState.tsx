@@ -14,7 +14,7 @@ const LOADING_MESSAGES = [
   "Selecting practices that resonate with your journey...",
   "Crafting your personalized daily anchors...",
   "Choosing quotes that speak to your heart...",
-  "Finalizing your 14-day transformation path..."
+  "Finalizing your 21-day transformation path..."
 ];
 
 export default function LoadingState({ 

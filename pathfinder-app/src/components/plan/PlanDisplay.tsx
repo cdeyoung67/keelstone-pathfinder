@@ -9,7 +9,10 @@ import {
   DocumentArrowDownIcon,
   PhotoIcon,
   BuildingLibraryIcon,
-  HeartIcon
+  HeartIcon,
+  BookOpenIcon,
+  AcademicCapIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,25 +23,56 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
 
+// Phase 2: Interactive components
+import ReflectionPrompt from '@/components/interactive/ReflectionPrompt';
+import PracticalChallenge from '@/components/interactive/PracticalChallenge';
+import FruitCheckIn from '@/components/interactive/FruitCheckIn';
+import CommunityShare from '@/components/interactive/CommunityShare';
+
+// Phase 3: Gamification components
+import FruitDashboard from '@/components/gamification/FruitDashboard';
+import AchievementSystem from '@/components/gamification/AchievementSystem';
+import ProgressMarkers from '@/components/gamification/ProgressMarkers';
+import AlwaysOnDashboard from '@/components/gamification/AlwaysOnDashboard';
+
 interface PlanDisplayProps {
   plan: PersonalizedPlan;
   progress?: UserProgress;
   onProgressUpdate?: (day: number, completed: boolean) => void;
   onClose?: () => void;
+  
+  // Phase 2: Interactive callbacks
+  onReflectionSave?: (day: number, reflection: { type: 'text' | 'audio'; content: string; timestamp: Date }) => void;
+  onChallengeComplete?: (day: number, completed: boolean, timestamp: Date) => void;
+  onFruitUpdate?: (day: number, selectedFruits: string[], timestamp: Date) => void;
+  onCommunityShare?: (day: number, share: { content: string; privacy: 'public' | 'community' | 'prayer'; timestamp: Date }) => void;
 }
 
 export default function PlanDisplay({ 
   plan, 
   progress, 
   onProgressUpdate,
-  onClose 
+  onClose,
+  onReflectionSave,
+  onChallengeComplete,
+  onFruitUpdate,
+  onCommunityShare
 }: PlanDisplayProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [showExportOptions, setShowExportOptions] = useState(false);
 
   const virtue = VIRTUE_DESCRIPTIONS[plan.virtue];
   const completedDays = progress?.completedDays || [];
-  const currentDay = Math.min(completedDays.length + 1, 14);
+  const currentDay = Math.min(completedDays.length + 1, 21);
+  
+  // Ensure progress has Phase 2 fields with defaults
+  const safeProgress = progress ? {
+    ...progress,
+    dailyProgress: progress.dailyProgress || {},
+    fruitGrowth: progress.fruitGrowth || {},
+    totalChallengesCompleted: progress.totalChallengesCompleted || 0,
+    badges: progress.badges || []
+  } : undefined;
 
   const handleDayClick = (day: number) => {
     setSelectedDay(selectedDay === day ? null : day);
@@ -69,7 +103,7 @@ export default function PlanDisplay({
         </div>
         
         <h1 className="text-hero mb-2">
-          {plan.assessment?.firstName}'s 14-Day {virtue.title} Practice
+          {plan.assessment?.firstName}'s 21-Day {virtue.title} Practice
         </h1>
         <p className="text-subtitle mb-4">{virtue.subtitle}</p>
         
@@ -86,12 +120,12 @@ export default function PlanDisplay({
           <CardHeader>
             <CardTitle className="text-center text-lg">Progress Overview</CardTitle>
             <CardDescription className="text-center">
-              {completedDays.length} of 14 days completed • Day {currentDay} is next
+              {completedDays.length} of 21 days completed • Day {currentDay} is next
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-center flex-wrap gap-2 mb-4">
-              {Array.from({ length: 14 }, (_, i) => i + 1).map((day) => {
+              {Array.from({ length: 21 }, (_, i) => i + 1).map((day) => {
                 const isCompleted = completedDays.includes(day);
                 const isCurrent = day === currentDay && !isCompleted;
                 
@@ -115,7 +149,7 @@ export default function PlanDisplay({
               })}
             </div>
             <Progress 
-              value={(completedDays.length / 14) * 100} 
+              value={(completedDays.length / 21) * 100} 
               className="w-full h-2 bg-sand-300"
             />
           </CardContent>
@@ -165,9 +199,12 @@ export default function PlanDisplay({
 
       {/* Daily Practices */}
       <Tabs defaultValue="practices" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-sand-200">
+        <TabsList className="grid w-full grid-cols-4 bg-sand-200">
           <TabsTrigger value="practices" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
             Daily Practices
+          </TabsTrigger>
+          <TabsTrigger value="progress" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
+            Progress & Growth
           </TabsTrigger>
           <TabsTrigger value="insights" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
             Weekly Insights
@@ -182,7 +219,7 @@ export default function PlanDisplay({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CalendarDaysIcon className="w-5 h-5" />
-                Your 14-Day Journey
+                Your 21-Day Journey
               </CardTitle>
               <CardDescription>
                 Click on any day to expand and see the practice details
@@ -235,35 +272,137 @@ export default function PlanDisplay({
                         )}
                       </div>
 
-                      <AccordionContent className="pt-4 space-contemplative">
-                    {/* Steps */}
-                    <div>
-                      <h4 className="font-serif font-medium text-navy-900 mb-2">Practice Steps</h4>
-                      <ol className="list-decimal list-inside space-y-1 text-body">
-                        {practice.steps.map((step, index) => (
-                          <li key={index} className="text-sm">{step}</li>
-                        ))}
-                      </ol>
-                    </div>
-
-                    {/* Quote */}
-                    <div className="bg-sand-200 rounded-lg p-4 border border-sand-300">
-                      <blockquote className="text-quote text-navy-800 mb-2">
-                        &ldquo;{practice.quote.text}&rdquo;
-                      </blockquote>
-                      <cite className="text-caption text-slate-600">
-                        — {practice.quote.source}
-                        {practice.quote.bibleVersion && (
-                          <span className="ml-1">({practice.quote.bibleVersion.toUpperCase()})</span>
+                      <AccordionContent className="pt-4 space-y-6">
+                        {/* Following the exact christianUX.md framework order */}
+                        
+                        {/* 1. Opening Prayer - Christian Door Only */}
+                        {plan.door === 'christian' && practice.openingPrayer && (
+                          <div className="bg-navy-50 rounded-lg p-4 border-l-4 border-gold-500">
+                            <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center">
+                              <HeartIcon className="w-4 h-4 mr-2" />
+                              Opening Prayer
+                            </h4>
+                            <p className="text-sm text-navy-800 italic leading-relaxed">{practice.openingPrayer}</p>
+                            <p className="text-xs text-slate-500 mt-2 italic">Short prayer asking for guidance, focus, and openness to God's wisdom.</p>
+                          </div>
                         )}
-                      </cite>
-                    </div>
 
-                        {/* Reflection */}
-                        <div>
-                          <h4 className="font-serif font-medium text-navy-900 mb-2">Reflection</h4>
-                          <p className="text-body">{practice.reflection}</p>
+                        {/* 2. Scripture & Anchor - Daily Bible passage (KJV) + One clear thought framing Courage */}
+                        <div className="bg-sand-200 rounded-lg p-4 border border-sand-300">
+                          <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center">
+                            <BookOpenIcon className="w-4 h-4 mr-2" />
+                            Scripture & Anchor
+                          </h4>
+                          
+                          <blockquote className="text-quote text-navy-800 mb-2">
+                            &ldquo;{practice.quote.text}&rdquo;
+                          </blockquote>
+                          <cite className="text-caption text-slate-600 mb-4">
+                            — {practice.quote.source}
+                            {practice.quote.bibleVersion && (
+                              <span className="ml-1">({practice.quote.bibleVersion.toUpperCase()})</span>
+                            )}
+                          </cite>
+                          
+                          {/* Scripture Anchor */}
+                          {plan.door === 'christian' && practice.scriptureAnchor && (
+                            <div className="mt-4 p-3 bg-gold-50 rounded border border-gold-200">
+                              <p className="text-sm font-medium text-navy-900 italic">"{practice.scriptureAnchor}"</p>
+                              <p className="text-xs text-gold-700 mt-1">One clear thought framing the theme of Courage</p>
+                            </div>
+                          )}
                         </div>
+
+                        {/* 3. Wisdom Bridge - Secular/historical support reinforcing faith and reason */}
+                        {plan.door === 'christian' && practice.wisdomBridge && (
+                          <div className="bg-olive-50 rounded-lg p-4 border border-olive-200">
+                            <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center">
+                              <AcademicCapIcon className="w-4 h-4 mr-2" />
+                              Wisdom Bridge
+                            </h4>
+                            <p className="text-sm text-olive-800 leading-relaxed">{practice.wisdomBridge}</p>
+                            <p className="text-xs text-olive-600 mt-2 italic">Reinforces that faith and reason both affirm Courage.</p>
+                          </div>
+                        )}
+
+                        {/* Practice Steps (integrated into the flow) */}
+                        <div>
+                          <h4 className="font-serif font-medium text-navy-900 mb-3">Practice Steps</h4>
+                          <ol className="list-decimal list-inside space-y-2 text-body">
+                            {practice.steps.map((step, index) => (
+                              <li key={index} className="text-sm leading-relaxed">{step}</li>
+                            ))}
+                          </ol>
+                        </div>
+
+                        {/* 4. Reflection Prompt - Interactive component */}
+                        {plan.door === 'christian' && practice.reflectionPrompt && (
+                          <ReflectionPrompt
+                            prompt={practice.reflectionPrompt}
+                            day={practice.day}
+                            onSave={(reflection) => onReflectionSave?.(practice.day, reflection)}
+                            existingReflection={safeProgress?.dailyProgress[practice.day]?.reflection}
+                          />
+                        )}
+
+                        {/* 5. Practical Challenge (Gamified) - Interactive component */}
+                        {plan.door === 'christian' && practice.practicalChallenge && (
+                          <PracticalChallenge
+                            challenge={practice.practicalChallenge}
+                            day={practice.day}
+                            onComplete={(completed, timestamp) => onChallengeComplete?.(practice.day, completed, timestamp)}
+                            isCompleted={safeProgress?.dailyProgress[practice.day]?.challengeCompletion?.completed}
+                            completedAt={safeProgress?.dailyProgress[practice.day]?.challengeCompletion?.completedAt}
+                            currentStreak={safeProgress?.currentStreak || 0}
+                            totalCompleted={safeProgress?.totalChallengesCompleted || 0}
+                          />
+                        )}
+
+                        {/* 6. Fruit of the Spirit Check-In - Interactive component */}
+                        {plan.door === 'christian' && practice.fruitCheckIn && practice.fruitCheckIn.length > 0 && (
+                          <FruitCheckIn
+                            fruits={practice.fruitCheckIn}
+                            day={practice.day}
+                            onUpdate={(selectedFruits, timestamp) => onFruitUpdate?.(practice.day, selectedFruits, timestamp)}
+                            existingSelection={safeProgress?.dailyProgress[practice.day]?.fruitSelection?.fruits}
+                            fruitGrowth={safeProgress?.fruitGrowth}
+                          />
+                        )}
+
+                        {/* 7. Community Touchpoint - Interactive component */}
+                        {plan.door === 'christian' && practice.communityPrompt && (
+                          <CommunityShare
+                            prompt={practice.communityPrompt}
+                            day={practice.day}
+                            onShare={(share) => onCommunityShare?.(practice.day, share)}
+                            existingShare={safeProgress?.dailyProgress[practice.day]?.communityShare}
+                            userReflection={safeProgress?.dailyProgress[practice.day]?.reflection?.content}
+                          />
+                        )}
+
+                        {/* Commentary */}
+                        {practice.commentary && (
+                          <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                            <h4 className="font-serif font-medium text-navy-900 mb-3">Daily Commentary</h4>
+                            <div className="text-sm text-slate-700 leading-relaxed space-y-3">
+                              {practice.commentary.split('\n\n').map((paragraph, index) => (
+                                <p key={index}>{paragraph}</p>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 8. Closing Prayer */}
+                        {plan.door === 'christian' && practice.closingPrayer && (
+                          <div className="bg-navy-50 rounded-lg p-4 border-l-4 border-gold-500">
+                            <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center">
+                              <HeartIcon className="w-4 h-4 mr-2" />
+                              Closing Prayer
+                            </h4>
+                            <p className="text-sm text-navy-800 italic leading-relaxed">{practice.closingPrayer}</p>
+                            <p className="text-xs text-slate-500 mt-2 italic">Short prayer asking God to guide the user to improve and to grow in courage tomorrow.</p>
+                          </div>
+                        )}
                       </AccordionContent>
                     </AccordionItem>
                   );
@@ -271,6 +410,45 @@ export default function PlanDisplay({
               </Accordion>
             </CardContent>
           </Card>
+        </TabsContent>
+        
+        <TabsContent value="progress" className="mt-6">
+          <div className="space-y-6">
+            {/* Always-On Dashboard */}
+            <AlwaysOnDashboard
+              stats={{
+                currentStreak: safeProgress?.currentStreak || 0,
+                longestStreak: Math.max(safeProgress?.currentStreak || 0, completedDays.length),
+                totalDays: 21,
+                completedDays: completedDays.length,
+                currentDay: currentDay,
+                totalFruitGrowth: Object.values(safeProgress?.fruitGrowth || {}).reduce((sum, level) => sum + level, 0),
+                unlockedAchievements: safeProgress?.badges?.length || 0,
+                totalAchievements: 7, // Total possible achievements
+                todayCompleted: completedDays.includes(currentDay)
+              }}
+            />
+            
+            {/* Progress Markers */}
+            <ProgressMarkers
+              currentDay={currentDay}
+              completedDays={completedDays}
+              totalDays={21}
+            />
+            
+            {/* Fruit Dashboard */}
+            {plan.door === 'christian' && (
+              <FruitDashboard
+                fruitGrowth={safeProgress?.fruitGrowth || {}}
+                currentStreak={safeProgress?.currentStreak || 0}
+                totalDays={21}
+                completedDays={completedDays.length}
+              />
+            )}
+            
+            {/* Achievement System */}
+            <AchievementSystem />
+          </div>
         </TabsContent>
         
         <TabsContent value="insights" className="mt-6">

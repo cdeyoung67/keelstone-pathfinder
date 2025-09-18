@@ -4,6 +4,7 @@ import { useState } from 'react';
 import IntakeForm from '@/components/intake/IntakeForm';
 import PlanDisplay from '@/components/plan/PlanDisplay';
 import PlanPreview from '@/components/plan/PlanPreview';
+import JourneyGateway from '@/components/journey/JourneyGateway';
 import LoadingState from '@/components/ui/LoadingState';
 import KeelStoneLogo from '@/components/ui/KeelStoneLogo';
 import {
@@ -32,6 +33,8 @@ export default function Home() {
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hasCommittedToJourney, setHasCommittedToJourney] = useState(false);
+  const [showGateway, setShowGateway] = useState(false);
+  const [hasAccount, setHasAccount] = useState(false);
 
   const handleStartPathfinder = () => {
     setShowIntake(true);
@@ -41,51 +44,64 @@ export default function Home() {
   const handleStartJourney = async () => {
     if (!currentPlan) return;
     
+    // Go to gateway page instead of directly starting the full journey
+    setShowGateway(true);
+  };
+
+  const handleCreateAccount = async () => {
     setIsLoading(true);
     try {
       // TODO: In production, this would:
-      // 1. Save assessment and plan to database
-      // 2. Create personalized LLM prompts for each day
-      // 3. Set up cron job/email automation
-      // 4. Subscribe user to Kit.com drip campaign
+      // 1. Show account creation modal/form
+      // 2. Create user account
+      // 3. Save assessment and plan to database
+      // 4. Create personalized LLM prompts for each day
+      // 5. Set up cron job/email automation
+      // 6. Subscribe user to Kit.com drip campaign
       
-      // Mock the commitment process
+      // Mock the account creation process
       await new Promise(resolve => setTimeout(resolve, 1500));
       
+      setHasAccount(true);
       setHasCommittedToJourney(true);
       
       // Initialize progress tracking for the committed journey
-      setUserProgress({
-        planId: currentPlan.id,
-        completedDays: [],
-        skippedDays: [],
-        currentStreak: 0,
-        lastActivity: new Date(),
-        feedback: []
-      });
+      if (currentPlan) {
+        setUserProgress({
+          planId: currentPlan.id,
+          completedDays: [],
+          skippedDays: [],
+          currentStreak: 0,
+          lastActivity: new Date(),
+          feedback: [],
+          // Phase 2: Interactive tracking
+          dailyProgress: {},
+          totalChallengesCompleted: 0,
+          fruitGrowth: {},
+          badges: []
+        });
+      }
       
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start journey');
+      setError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleBackToPlan = () => {
+    setShowGateway(false);
+  };
+
   const handleReconfigure = () => {
-    // Debug logging
-    console.log('handleReconfigure called!');
-    console.log('handleReconfigure currentPlan:', currentPlan);
-    console.log('handleReconfigure assessment:', currentPlan?.assessment);
-    console.log('Setting showIntake to true');
-    
     // Reset to intake form starting at step 2 (keeping name/email)
     // Don't clear currentPlan yet - we need it for initialData
     setHasCommittedToJourney(false);
+    setShowGateway(false);
+    setHasAccount(false);
     setUserProgress(null);
     setShowIntake(true);
     setError(null);
-    
-    console.log('handleReconfigure completed');
   };
 
   const handleIntakeSubmit = async (assessment: Assessment) => {
@@ -122,7 +138,12 @@ export default function Home() {
         skippedDays: [],
         currentStreak: 0,
         lastActivity: new Date(),
-        feedback: []
+        feedback: [],
+        // Phase 2: Interactive tracking
+        dailyProgress: {},
+        totalChallengesCompleted: 0,
+        fruitGrowth: {},
+        badges: []
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate plan');
@@ -171,6 +192,8 @@ export default function Home() {
     setCurrentPlan(null);
     setUserProgress(null);
     setHasCommittedToJourney(false);
+    setShowGateway(false);
+    setHasAccount(false);
     setError(null);
   };
 
@@ -231,11 +254,18 @@ export default function Home() {
         {/* Main Content Area */}
         <div className="flex-1 bg-section">
           <div className="max-w-4xl mx-auto py-8 pt-20 md:pt-8 px-6">
-            {hasCommittedToJourney ? (
+            {hasCommittedToJourney && hasAccount ? (
               <PlanDisplay 
                 plan={currentPlan} 
                 progress={userProgress || undefined}
                 onProgressUpdate={handleProgressUpdate}
+              />
+            ) : showGateway ? (
+              <JourneyGateway
+                plan={currentPlan}
+                userEmail={currentPlan?.assessment.email}
+                onCreateAccount={handleCreateAccount}
+                onBackToPlan={handleBackToPlan}
               />
             ) : (
               <PlanPreview
@@ -286,7 +316,7 @@ export default function Home() {
             </h1>
             
             <p className="text-subtitle text-slate-600 mb-6 max-w-3xl mx-auto">
-              Break free from digital overwhelm with a personalized 14-day practice plan. 
+              Break free from digital overwhelm with a personalized 21-day practice plan. 
               Choose your path—Christian or secular—and discover daily habits that bring calm, clarity, and purpose.
             </p>
             
@@ -379,7 +409,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-serif font-semibold text-navy-900 mb-2">AI Personalization</h3>
                 <p className="text-body text-sm">
-                  Get a custom 14-day plan based on cardinal virtues
+                  Get a custom 21-day plan based on cardinal virtues
                 </p>
               </div>
               
@@ -409,27 +439,12 @@ export default function Home() {
 
       {/* Modals */}
       {showIntake && (
-        <>
-          {/* Debug info */}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{ position: 'fixed', top: 0, left: 0, background: 'black', color: 'white', padding: '10px', zIndex: 9999, fontSize: '12px' }}>
-              <div>showIntake: {showIntake ? 'YES' : 'NO'}</div>
-              <div>Has currentPlan: {currentPlan ? 'YES' : 'NO'}</div>
-              <div>Has assessment: {currentPlan?.assessment ? 'YES' : 'NO'}</div>
-              <div>hasCommittedToJourney: {hasCommittedToJourney ? 'YES' : 'NO'}</div>
-              <div>StartStep: {currentPlan?.assessment ? 2 : 1}</div>
-              {currentPlan?.assessment && (
-                <div>Email: {currentPlan.assessment.email}</div>
-              )}
-            </div>
-          )}
-          <IntakeForm 
-            onSubmit={handleIntakeSubmit}
-            onClose={() => setShowIntake(false)}
-            initialData={currentPlan?.assessment}
-            startStep={currentPlan?.assessment ? 2 : 1}
-          />
-        </>
+        <IntakeForm 
+          onSubmit={handleIntakeSubmit}
+          onClose={() => setShowIntake(false)}
+          initialData={currentPlan?.assessment}
+          startStep={currentPlan?.assessment ? 2 : 1}
+        />
       )}
       
       {isLoading && (

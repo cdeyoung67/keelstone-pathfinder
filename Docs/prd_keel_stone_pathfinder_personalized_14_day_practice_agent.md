@@ -1,4 +1,4 @@
-# PRD — Keel Stone Pathfinder (Personalized 14‑Day Practice Agent)
+# PRD — Keel Stone Pathfinder (Personalized 21‑Day Practice Agent)
 
 **Version:** 2.0  
 **Owner:** Chris / The Keel Stone  
@@ -8,7 +8,7 @@
 ---
 
 ## 1) Summary
-The Keel Stone Pathfinder is an onboarding experience that converts new subscribers into engaged participants by creating a **personalized 14‑day practice plan** based on their struggles and preferences. It uses a short interactive intake, dynamically generates a plan through Azure OpenAI, and connects users to a daily drip sequence tailored to their chosen path.
+The Keel Stone Pathfinder is an onboarding experience that converts new subscribers into engaged participants by creating a **personalized 21‑day practice plan** based on their struggles and preferences. It uses a short interactive intake, dynamically generates a plan through Azure OpenAI, and connects users to a daily drip sequence tailored to their chosen path.
 
 **Two Doors, One Solution:**
 - **Christian Door:** Includes KJV scripture references, prayer prompts, and grace‑first framing.
@@ -50,7 +50,7 @@ PDF downloads do not build habits, and generic drip campaigns fail to address ea
 - **AC:** Multi‑select struggles, door toggle, time budget, preferred daypart, context field. Data persisted in Cosmos DB.
 
 **US‑2 Plan Generation:** User receives personalized plan instantly.
-- **AC:** 14 days of practices, anchor statement, weekly check‑in, optional stretch practice. Exportable as PDF/PNG.
+- **AC:** 21 days of practices, anchor statement, weekly check‑in, optional stretch practice. Exportable as PDF/PNG.
 
 **US‑3 Email Kickoff:** User receives Day‑1 email with plan link.
 - **AC:** Logic App tags ESP contact and triggers first email within 5 minutes.
@@ -73,18 +73,21 @@ PDF downloads do not build habits, and generic drip campaigns fail to address ea
 3. Loading state (≤2s)
 4. Personalized plan view + export option
 5. Day‑1 email trigger
-6. Day‑3/7/14 milestone nudges
+6. Day‑3/7/14/21 milestone nudges
 
 ### Micro‑Interactions
-- 14‑day progress dots
-- Confetti on Day‑7 & Day‑14
+- 21‑day progress dots
+- Confetti on Day‑7, Day‑14 & Day‑21
 - “Reply with one sentence” shortcut
 - Compassionate streak resets (no shaming)
 
 ---
 
 ## 6) Functional Requirements
-- **Frontend:** React app on Azure Static Web Apps
+- **Frontend:** React app on Azure Static Web Apps (using ShadCN/UI component library with Tailwind CSS)
+  - **UI Framework:** ShadCN/UI preferred for consistent, accessible components
+  - **Styling:** Tailwind CSS for utility-first styling approach
+  - **Components:** Leverage ShadCN's pre-built components (Dialog, Select, Button, Card, etc.)
 - **Backend:** Azure Functions for intake, plan generation, progress tracking, and exports
 - **LLM:** Azure OpenAI for plan text generation, tuned with prompt + micro‑protocol library
 - **Database:** Azure Cosmos DB (Core/SQL)
@@ -100,7 +103,7 @@ PDF downloads do not build habits, and generic drip campaigns fail to address ea
 **Secular Door:** Uses Stoic quotes, virtue framing, CBT language.
 
 **System Prompt:**
-“You are Keel Stone’s gentle guide. Generate 14 tiny daily practices (5–15 minutes) that help build wisdom, courage, justice, and temperance. Personalize based on user struggles, constraints, and door choice. Always be invitational and hopeful.”
+"You are Keel Stone's gentle guide. Generate 21 tiny daily practices (5–15 minutes) that help build wisdom, courage, justice, and temperance. Personalize based on user struggles, constraints, and door choice. Always be invitational and hopeful."
 
 **Output Schema:**
 ```json
@@ -117,7 +120,7 @@ PDF downloads do not build habits, and generic drip campaigns fail to address ea
 ---
 
 ## 8) Architecture (Azure‑Only)
-- **Frontend:** Azure Static Web Apps (React + Tailwind)
+- **Frontend:** Azure Static Web Apps (React + ShadCN/UI + Tailwind CSS)
 - **API Layer:** Azure Functions (HTTP triggers)
 - **Database:** Cosmos DB (Core/SQL)
 - **AI Layer:** Azure OpenAI Service (GPT‑4) with content filter
@@ -152,7 +155,7 @@ Partition key: `user_id`
 ## 11) Analytics & Success Metrics
 - Intake start/completion rates
 - Day‑1 open & click rates
-- Day‑3/7/14 engagement rates
+- Day‑3/7/14/21 engagement rates
 - Plan completion distribution by struggle & door
 - NPS score at Day‑7
 
@@ -160,9 +163,9 @@ Partition key: `user_id`
 
 ## 12) Email & Drip Mapping
 - **Tags:** door, primary_struggle, time_budget
-- **Sequences:** Day‑1 through Day‑14 reflections mapped to plan steps
+- **Sequences:** Day‑1 through Day‑21 reflections mapped to plan steps
 - **Re‑engagement:** Auto‑trigger if inactive 3+ days
-- **Post‑14:** Invite to weekly reflection cadence and optional community
+- **Post‑21:** Invite to weekly reflection cadence and optional community
 
 ---
 

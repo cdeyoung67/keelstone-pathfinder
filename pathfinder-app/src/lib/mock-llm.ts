@@ -173,6 +173,115 @@ function generateCommentary(
   return commentaryTemplates[virtue][door].join('\n\n');
 }
 
+// Generate Christian UX content following christianUX.md framework
+function generateChristianUXContent(
+  day: number,
+  virtue: CardinalVirtue,
+  practiceTitle: string,
+  courageTheme: string
+) {
+  const openingPrayers = [
+    "Heavenly Father, as I begin this day, guide my heart toward courage that reflects Your love. Help me to trust in Your strength when I feel weak, and to act with boldness that serves Your kingdom. Amen.",
+    "Lord Jesus, You showed us perfect courage in facing the cross. Grant me the grace to follow Your example in small ways today, choosing love over fear and faith over doubt. Amen.",
+    "God of all comfort, I come to You seeking the courage to face today's challenges. Fill me with Your peace that surpasses understanding, and help me to be a source of strength for others. Amen.",
+    "Father, You have not given me a spirit of fear, but of power, love, and sound mind. Help me to remember this truth as I practice courage today. Guide my steps and guard my heart. Amen."
+  ];
+
+  const closingPrayers = [
+    "Thank You, Lord, for walking with me through today's challenges. Help me to grow in courage tomorrow, and to trust more deeply in Your unfailing love. May my small acts of bravery bring glory to Your name. Amen.",
+    "Gracious God, I thank You for the opportunities to practice courage today. Forgive me where I fell short, and strengthen me for tomorrow's journey. Help me to rest in Your peace tonight. Amen.",
+    "Jesus, thank You for being my example of perfect courage. As I reflect on today, help me to see how You were present in my small acts of faith. Prepare my heart for tomorrow's growth. Amen.",
+    "Father, I praise You for Your faithfulness today. Thank You for the courage You provided and the growth You are working in my heart. Help me to trust You more completely each day. Amen."
+  ];
+
+  const wisdomBridges = [
+    "Throughout history, courage has been recognized as essential for human flourishing. The Stoic philosopher Seneca wrote that 'courage is not the absence of fear, but action in spite of it.' This aligns beautifully with biblical courage—not the absence of fear, but faith that acts despite fear. Both Scripture and philosophy teach us that true bravery serves something greater than ourselves.",
+    "Ancient wisdom traditions, from Aristotle to Confucius, have taught that courage is a virtue that must be practiced daily in small ways. Aristotle called it the 'golden mean' between cowardice and recklessness. This mirrors the biblical understanding of courage as wisdom in action—neither presumptuous nor paralyzed, but faithful and measured.",
+    "The great Christian thinkers like C.S. Lewis and Dietrich Bonhoeffer understood that courage is not a feeling but a choice. Lewis wrote that 'courage is not simply one of the virtues but the form of every virtue at the testing point.' Both faith and reason affirm that courage is the bridge between our values and our actions.",
+    "Military leaders, philosophers, and saints throughout history have discovered the same truth: courage grows through practice. Whether we look to Marcus Aurelius, Joan of Arc, or modern heroes, we see that bravery is built through daily choices to do what is right despite difficulty. Faith provides the 'why' while wisdom provides the 'how.'"
+  ];
+
+  const courageThemes = [
+    "Courage in Small Moments",
+    "Faith Over Fear",
+    "Speaking Truth in Love",
+    "Standing for Justice",
+    "Embracing God's Calling",
+    "Strength in Vulnerability",
+    "Hope in Uncertainty"
+  ];
+
+  const practicalChallenges = [
+    "Have a difficult but necessary conversation with someone, speaking truth in love.",
+    "Take one small step toward a goal that feels overwhelming, trusting God with the outcome.",
+    "Offer help to someone who might be struggling, even if it feels awkward.",
+    "Stand up for someone who is being treated unfairly, in whatever way feels appropriate.",
+    "Share something meaningful about your faith with someone, naturally and without pressure.",
+    "Apologize to someone you've wronged, taking full responsibility without excuses.",
+    "Try something new that stretches you, embracing the discomfort as growth."
+  ];
+
+  // Scripture & Anchor: One clear thought framing the theme of Courage
+  const scriptureAnchors = [
+    "Today I will trust in God's strength when facing what seems impossible, knowing He goes before me.",
+    "I choose to act with love-driven courage, letting faith be louder than fear in my decisions.",
+    "God has equipped me with everything I need for today's challenges; I will step forward in confidence.",
+    "I will speak truth in love today, trusting God to use my words for His purposes.",
+    "When I feel weak, I will remember that God's power is made perfect in weakness.",
+    "I choose to stand for what is right today, knowing God honors those who honor Him.",
+    "I will take the next right step in faith, trusting God to illuminate the path ahead."
+  ];
+
+  // Reflection Prompts: Journaling or prayer reflection (captured in app for tracking)
+  const reflectionPrompts = [
+    "How did I see God's faithfulness in the moments when I chose courage over comfort today?",
+    "What fears did I face today, and how did trusting in God's presence change my response?",
+    "Where did I see the fruit of the Spirit (love, peace, patience) emerging through my brave choices?",
+    "What is God teaching me about His character through today's opportunities to practice courage?",
+    "How did acting courageously today align with or challenge my understanding of following Jesus?",
+    "What small act of bravery today surprised me, and how might God be growing my faith through it?",
+    "In what ways did I partner with God's strength today rather than relying solely on my own?"
+  ];
+
+  // Fruit of the Spirit Check-In options
+  const fruitCheckInOptions = [
+    ['Love', 'Joy', 'Peace'],
+    ['Patience', 'Kindness', 'Goodness'], 
+    ['Faithfulness', 'Gentleness', 'Self-Control'],
+    ['Love', 'Patience', 'Gentleness'],
+    ['Joy', 'Peace', 'Kindness'],
+    ['Goodness', 'Faithfulness', 'Self-Control'],
+    ['Love', 'Peace', 'Faithfulness']
+  ];
+
+  // Community Touchpoints: Encouragement to share reflection or journal snippet
+  const communityPrompts = [
+    "Share one sentence about how God showed up in your courage practice today.",
+    "What's one small way you saw God's faithfulness today? Share to encourage others.",
+    "Describe in a few words how choosing courage over fear felt today.",
+    "Share a brief prayer request or praise related to today's courage challenge.",
+    "What fruit of the Spirit did you notice most today? Share your experience.",
+    "Offer one word of encouragement to someone else walking this courage journey.",
+    "Share how today's practice is changing your perspective on trusting God."
+  ];
+
+  return {
+    // Following the exact christianUX.md framework order
+    openingPrayer: openingPrayers[day % openingPrayers.length],
+    scriptureAnchor: scriptureAnchors[day % scriptureAnchors.length], 
+    wisdomBridge: wisdomBridges[day % wisdomBridges.length],
+    reflectionPrompt: reflectionPrompts[day % reflectionPrompts.length],
+    practicalChallenge: practicalChallenges[day % practicalChallenges.length],
+    fruitCheckIn: fruitCheckInOptions[day % fruitCheckInOptions.length],
+    communityPrompt: communityPrompts[day % communityPrompts.length],
+    closingPrayer: closingPrayers[day % closingPrayers.length],
+    
+    // Legacy fields for backward compatibility
+    courageTheme: courageTheme || courageThemes[day % courageThemes.length],
+    fruitFocus: fruitCheckInOptions[day % fruitCheckInOptions.length]
+  };
+}
+
 // Generate daily practices based on assessment
 function generateDailyPractices(
   assessment: Assessment,
@@ -221,11 +330,11 @@ function generateDailyPractices(
     ]
   };
 
-  // Select 14 practices, customizing based on struggles and model style
+  // Select 21 practices, customizing based on struggles and model style
   const virtuesPractices = basePractices[virtue];
   const selectedPractices = virtuesPractices.slice(0, 7); // Take first 7, then repeat with variations
   
-  for (let day = 1; day <= 14; day++) {
+  for (let day = 1; day <= 21; day++) {
     const basePractice = selectedPractices[(day - 1) % 7];
     const quote = getQuoteForDay(day, virtue, assessment.door, assessment.bibleVersion);
     
@@ -243,6 +352,11 @@ function generateDailyPractices(
     
     const commentary = generateCommentary(day, virtue, assessment.door, basePractice.title, quote);
     
+    // Generate Christian UX content for Christian door
+    const christianUX = assessment.door === 'christian' && virtue === 'courage' 
+      ? generateChristianUXContent(day, virtue, basePractice.title, '')
+      : {};
+    
     practices.push({
       day,
       title: `Day ${day}: ${basePractice.title}`,
@@ -250,7 +364,8 @@ function generateDailyPractices(
       reflection: `How did practicing ${virtue} feel today? What did you notice?`,
       quote,
       commentary,
-      estimatedTime
+      estimatedTime,
+      ...christianUX
     });
   }
   
