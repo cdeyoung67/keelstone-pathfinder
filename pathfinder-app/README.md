@@ -35,7 +35,7 @@ src/
 │   ├── intake/
 │   │   └── IntakeForm.tsx # Multi-step intake form
 │   ├── plan/
-│   │   └── PlanDisplay.tsx # 14-day plan visualization
+│   │   └── PlanDisplay.tsx # 21-day plan visualization
 │   └── ui/
 │       ├── Icons.tsx      # Professional SVG icon library
 │       ├── KeelStoneLogo.tsx # Logo component
@@ -109,7 +109,7 @@ The application uses a custom design system built on Tailwind CSS:
 - Struggle identification and virtue mapping
 
 #### `PlanDisplay.tsx`
-- 14-day plan visualization
+- 21-day plan visualization
 - Progress tracking with visual dots
 - Expandable daily practice cards
 - Quote display with Bible version support

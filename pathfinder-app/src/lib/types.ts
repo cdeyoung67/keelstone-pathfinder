@@ -35,6 +35,20 @@ export interface DailyPractice {
   quote: Quote;
   commentary: string; // 3-paragraph commentary connecting quote to practice via Fruit of the Spirit
   estimatedTime: number; // in minutes
+  
+  // Christian UX enhancements (following christianUX.md framework)
+  openingPrayer?: string;        // Opening Prayer: Short prayer asking for guidance, focus, and openness to God's wisdom
+  scriptureAnchor?: string;      // Scripture & Anchor: One clear thought framing the theme of Courage
+  wisdomBridge?: string;         // Wisdom Bridge: Secular/historical support reinforcing that faith and reason both affirm Courage
+  reflectionPrompt?: string;     // Reflection Prompt: Journaling or prayer reflection (text or audio) - captured in app for tracking
+  practicalChallenge?: string;   // Practical Challenge (Gamified): One small but tangible act of Courage - logged in app
+  fruitCheckIn?: string[];       // Fruit of the Spirit Check-In: Simple self-assessment - builds "Fruit Dashboard"
+  communityPrompt?: string;      // Community Touchpoint: Encouragement to share reflection or journal snippet
+  closingPrayer?: string;        // Closing Prayer: Short prayer asking God to guide user to improve and grow in courage tomorrow
+  
+  // Legacy fields (to be removed after migration)
+  courageTheme?: string;         // Daily courage theme/focus
+  fruitFocus?: string[];         // Specific fruits of the spirit to focus on today
 }
 
 export interface Quote {
@@ -58,6 +72,48 @@ export interface PersonalizedPlan {
   version: string; // For A/B testing different AI models
 }
 
+// Interactive tracking for Phase 2
+export interface DayReflection {
+  type: 'text' | 'audio';
+  content: string;
+  timestamp: Date;
+}
+
+export interface ChallengeCompletion {
+  completed: boolean;
+  completedAt?: Date;
+  streak: number;
+  totalCompleted: number;
+}
+
+export interface FruitSelection {
+  fruits: string[];
+  timestamp: Date;
+  dayGrowth: Record<string, number>; // How much each fruit grew this day
+}
+
+export interface CommunityShare {
+  content: string;
+  privacy: 'public' | 'community' | 'prayer';
+  timestamp: Date;
+  responses?: FruitResponse[];
+}
+
+export interface FruitResponse {
+  userId: string;
+  fruit: 'kindness' | 'encouragement' | 'peace' | 'gentleness' | 'love' | 'joy';
+  timestamp: Date;
+}
+
+export interface DayProgress {
+  day: number;
+  reflection?: DayReflection;
+  challengeCompletion?: ChallengeCompletion;
+  fruitSelection?: FruitSelection;
+  communityShare?: CommunityShare;
+  completedAt?: Date;
+}
+
 export interface UserProgress {
   planId: string;
   completedDays: number[];
@@ -65,6 +121,12 @@ export interface UserProgress {
   currentStreak: number;
   lastActivity: Date;
   feedback: UserFeedback[];
+  
+  // Phase 2: Interactive tracking
+  dailyProgress: Record<number, DayProgress>; // day number -> progress
+  totalChallengesCompleted: number;
+  fruitGrowth: Record<string, number>; // fruit name -> growth level
+  badges: string[]; // earned badges
 }
 
 export interface UserFeedback {

@@ -13,7 +13,10 @@ import {
   SparklesIcon,
   ArrowRightIcon,
   ArrowLeftIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  BookOpenIcon,
+  AcademicCapIcon,
+  StarIcon
 } from '@heroicons/react/24/outline';
 
 interface PlanPreviewProps {
@@ -62,7 +65,7 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
           <h1 className="text-display">Your Personalized Pathfinder</h1>
         </div>
         <p className="text-body text-slate-600 max-w-2xl mx-auto">
-          We've created a customized 14-day journey specifically designed to address your unique challenges and goals.
+          We've created a customized 21-day journey specifically designed to address your unique challenges and goals.
         </p>
       </div>
 
@@ -137,7 +140,7 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
             "{plan.anchor}"
           </blockquote>
           <p className="text-xs text-sand-300 mt-2">
-            This guiding principle will be woven throughout your 14-day journey
+            This guiding principle will be woven throughout your 21-day journey
           </p>
         </CardContent>
       </Card>
@@ -155,19 +158,66 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
             Here's what your first day will look like. Each day will be similarly personalized.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="flex items-center gap-4 text-sm text-slate-600">
             <Badge variant="outline" className="text-gold-700 border-gold-300">
               Day 1 • {dayOnePractice.estimatedTime} minutes
             </Badge>
           </div>
 
+          {/* Opening Prayer - Christian Door Only */}
+          {assessment.door === 'christian' && dayOnePractice.openingPrayer && (
+            <div className="bg-navy-50 rounded-lg p-4 border-l-4 border-gold-500">
+              <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center text-sm">
+                <HeartIcon className="w-4 h-4 mr-2" />
+                Opening Prayer
+              </h4>
+              <p className="text-sm text-navy-800 italic leading-relaxed">{dayOnePractice.openingPrayer}</p>
+            </div>
+          )}
+
+          {/* 2. Scripture & Anchor - Daily Bible passage (KJV) + One clear thought framing Courage */}
+          <div className="bg-sand-100 rounded-lg p-4 border-l-4 border-gold-400">
+            <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center text-sm">
+              <BookOpenIcon className="w-4 h-4 mr-2" />
+              Scripture & Anchor
+            </h4>
+            
+            <blockquote className="text-sm text-navy-800 mb-2">
+              "{dayOnePractice.quote.text}"
+            </blockquote>
+            <cite className="text-xs text-slate-600 mb-3">
+              — {dayOnePractice.quote.source}
+              {dayOnePractice.quote.bibleVersion && (
+                <span className="ml-1">({dayOnePractice.quote.bibleVersion.toUpperCase()})</span>
+              )}
+            </cite>
+            
+            {/* Scripture Anchor */}
+            {assessment.door === 'christian' && dayOnePractice.scriptureAnchor && (
+              <div className="mt-3 p-2 bg-gold-50 rounded border border-gold-200">
+                <p className="text-xs font-medium text-navy-900 italic">"{dayOnePractice.scriptureAnchor}"</p>
+              </div>
+            )}
+          </div>
+
+          {/* Wisdom Bridge - Christian Door Only */}
+          {assessment.door === 'christian' && dayOnePractice.wisdomBridge && (
+            <div className="bg-olive-50 rounded-lg p-4 border border-olive-200">
+              <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center text-sm">
+                <AcademicCapIcon className="w-4 h-4 mr-2" />
+                Wisdom Bridge
+              </h4>
+              <p className="text-sm text-olive-800 leading-relaxed">{dayOnePractice.wisdomBridge}</p>
+            </div>
+          )}
+
           {/* Practice Steps Preview */}
           <div>
-            <h4 className="font-serif font-medium text-navy-900 mb-2">Today's Practice Steps</h4>
-            <ol className="list-decimal list-inside space-y-1 text-sm text-slate-700 pl-2">
+            <h4 className="font-serif font-medium text-navy-900 mb-3">Practice Steps</h4>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-slate-700 pl-2">
               {dayOnePractice.steps.slice(0, 3).map((step, index) => (
-                <li key={index}>{step}</li>
+                <li key={index} className="leading-relaxed">{step}</li>
               ))}
               {dayOnePractice.steps.length > 3 && (
                 <li className="text-gold-600 italic">+ {dayOnePractice.steps.length - 3} more steps...</li>
@@ -175,39 +225,94 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
             </ol>
           </div>
 
-          {/* Quote Preview */}
-          <div className="bg-sand-100 rounded-lg p-4 border-l-4 border-gold-400">
-            <blockquote className="text-sm text-navy-800 mb-2">
-              "{dayOnePractice.quote.text}"
-            </blockquote>
-            <cite className="text-xs text-slate-600">
-              — {dayOnePractice.quote.source}
-              {dayOnePractice.quote.bibleVersion && (
-                <span className="ml-1">({dayOnePractice.quote.bibleVersion.toUpperCase()})</span>
-              )}
-            </cite>
+          {/* 4. Reflection Prompt (Preview) */}
+          {assessment.door === 'christian' && dayOnePractice.reflectionPrompt && (
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <h4 className="font-serif font-medium text-navy-900 mb-2 flex items-center text-sm">
+                <BookOpenIcon className="w-4 h-4 mr-2" />
+                Reflection Prompt
+              </h4>
+              <p className="text-sm text-blue-800 leading-relaxed">{dayOnePractice.reflectionPrompt}</p>
+              <p className="text-xs text-blue-600 mt-2 italic">Journaling or prayer reflection - captured in app for tracking.</p>
+            </div>
+          )}
+
+          {/* 5. Practical Challenge (Gamified) */}
+          {assessment.door === 'christian' && dayOnePractice.practicalChallenge && (
+            <div className="bg-gradient-to-r from-gold-50 to-gold-100 rounded-lg p-4 border border-gold-200">
+              <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center text-sm">
+                <StarIcon className="w-4 h-4 mr-2 text-gold-600" />
+                Practical Challenge (Gamified)
+              </h4>
+              <p className="text-sm text-navy-800 leading-relaxed">{dayOnePractice.practicalChallenge}</p>
+              <p className="text-xs text-gold-700 mt-2 italic">One small but tangible act of Courage - logged in app → tracked streaks, badges, or fruit icons as rewards.</p>
+            </div>
+          )}
+
+          {/* 6. Fruit of the Spirit Check-In (Preview) */}
+          {assessment.door === 'christian' && dayOnePractice.fruitCheckIn && dayOnePractice.fruitCheckIn.length > 0 && (
+            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+              <h4 className="font-serif font-medium text-navy-900 mb-2 flex items-center text-sm">
+                <SparklesIcon className="w-4 h-4 mr-2 text-green-600" />
+                Fruit of the Spirit Check-In
+              </h4>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {dayOnePractice.fruitCheckIn.map((fruit) => (
+                  <Badge key={fruit} variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                    {fruit}
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-xs text-green-600 italic">Simple self-assessment - builds a "Fruit Dashboard"</p>
+            </div>
+          )}
+
+          {/* 7. Community Touchpoint (Preview) */}
+          {assessment.door === 'christian' && dayOnePractice.communityPrompt && (
+            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+              <h4 className="font-serif font-medium text-navy-900 mb-2 flex items-center text-sm">
+                <HeartIcon className="w-4 h-4 mr-2 text-purple-600" />
+                Community Touchpoint
+              </h4>
+              <p className="text-sm text-purple-800 leading-relaxed">{dayOnePractice.communityPrompt}</p>
+              <p className="text-xs text-purple-600 mt-2 italic">Encouragement to share reflection - prompts supportive replies with Fruits</p>
+            </div>
+          )}
+
+          {/* Reflection Preview */}
+          <div>
+            <h4 className="font-serif font-medium text-navy-900 mb-3">Today's Reflection</h4>
+            <p className="text-sm text-slate-700 leading-relaxed">{dayOnePractice.reflection}</p>
           </div>
 
           {/* Commentary - Connecting Quote to Practice via Fruit of the Spirit */}
-          <div>
+          <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
             <h4 className="font-serif font-medium text-navy-900 mb-3">
-              Connecting {plan.virtue.charAt(0).toUpperCase() + plan.virtue.slice(1)} to Practice
+              Daily Commentary: Connecting {plan.virtue.charAt(0).toUpperCase() + plan.virtue.slice(1)} to Practice
               {assessment.door === 'christian' && (
                 <span className="text-xs font-normal text-slate-600 ml-2">(through the Fruit of the Spirit)</span>
               )}
             </h4>
             <div className="space-y-3 text-sm text-slate-700 leading-relaxed">
-              {dayOnePractice.commentary.split('\n\n').map((paragraph, index) => (
+              {dayOnePractice.commentary.split('\n\n').slice(0, 2).map((paragraph, index) => (
                 <p key={index}>{paragraph}</p>
               ))}
+              {dayOnePractice.commentary.split('\n\n').length > 2 && (
+                <p className="text-gold-600 italic text-xs">+ Additional commentary in full practice...</p>
+              )}
             </div>
           </div>
 
-          {/* Reflection Preview */}
-          <div>
-            <h4 className="font-serif font-medium text-navy-900 mb-1">Today's Reflection</h4>
-            <p className="text-sm text-slate-700">{dayOnePractice.reflection}</p>
-          </div>
+          {/* Closing Prayer - Christian Door Only */}
+          {assessment.door === 'christian' && dayOnePractice.closingPrayer && (
+            <div className="bg-navy-50 rounded-lg p-4 border-l-4 border-gold-500">
+              <h4 className="font-serif font-medium text-navy-900 mb-3 flex items-center text-sm">
+                <HeartIcon className="w-4 h-4 mr-2" />
+                Closing Prayer
+              </h4>
+              <p className="text-sm text-navy-800 italic leading-relaxed">{dayOnePractice.closingPrayer}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -216,7 +321,7 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
         <CardHeader>
           <CardTitle>What Happens Next?</CardTitle>
           <CardDescription>
-            Your complete 14-day journey will be delivered via email at your preferred time
+            Your complete 21-day journey will be delivered via email at your preferred time
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -241,7 +346,7 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
             </div>
             <div className="space-y-2">
               <div className="w-12 h-12 bg-gold-100 text-gold-600 rounded-full flex items-center justify-center mx-auto">
-                <span className="font-bold">14</span>
+                <span className="font-bold">21</span>
               </div>
               <h4 className="font-medium text-navy-900">Journey Complete</h4>
               <p className="text-xs text-slate-600">
@@ -271,7 +376,7 @@ export default function PlanPreview({ plan, onStartJourney, onReconfigure }: Pla
           size="lg"
           className="w-full sm:w-auto bg-gold-500 hover:bg-gold-600 text-navy-900 font-semibold px-8"
         >
-          Start My 14-Day Journey
+          Start My 21-Day Journey
           <ArrowRightIcon className="w-4 h-4 ml-2" />
         </Button>
       </div>
