@@ -49,7 +49,7 @@ Simple, doable daily steps that create momentum
 
 A sense of meaning and connection — spiritual or philosophical
 
-The satisfaction of seeing progress over 14 days
+The satisfaction of seeing progress over 21 days
 
 A clear framework that can be repeated and shared with others
 
@@ -58,7 +58,7 @@ Products & Services
 
 Interactive Pathfinder Assessment: Identifies struggles and preferences (door, time, context)
 
-AI-Generated Personalized Plan: 14-day micro-practice program
+AI-Generated Personalized Plan: 21-day micro-practice program
 
 Day-1 Email & Landing Experience: Immediate, practical starting point
 

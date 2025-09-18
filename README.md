@@ -2,13 +2,13 @@
 
 > **Find Your Path to Inner Steadiness**
 
-A personalized 14-day practice agent that helps users break free from digital overwhelm through contemplative practices. Choose your path—Christian or secular—and discover daily habits that bring calm, clarity, and purpose.
+A personalized 21-day practice agent that helps users break free from digital overwhelm through contemplative practices. Choose your path—Christian or secular—and discover daily habits that bring calm, clarity, and purpose.
 
 ![Keel Stone Pathfinder](./pathfinder-app/public/keel-stone-logo.png)
 
 ## 🎯 Project Overview
 
-The Keel Stone Pathfinder is an onboarding experience that converts new subscribers into engaged participants by creating personalized 14-day practice plans based on their struggles and preferences. It uses a short interactive intake, dynamically generates plans through Azure OpenAI, and connects users to daily drip sequences tailored to their chosen path.
+The Keel Stone Pathfinder is an onboarding experience that converts new subscribers into engaged participants by creating personalized 21-day practice plans based on their struggles and preferences. It uses a short interactive intake, dynamically generates plans through Azure OpenAI, and connects users to daily drip sequences tailored to their chosen path.
 
 ### Two Doors, One Solution
 
@@ -144,7 +144,7 @@ pathfinderV1/
 ### 🔄 Phase 4: Email Integration (Planned)
 - [ ] ConvertKit API integration
 - [ ] Azure Logic Apps setup
-- [ ] 14-day email sequences
+- [ ] 21-day email sequences
 - [ ] User segmentation and tagging
 
 ## 📊 Success Metrics

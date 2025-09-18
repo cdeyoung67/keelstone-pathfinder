@@ -22,10 +22,6 @@ interface IntakeFormProps {
 }
 
 export default function IntakeForm({ onSubmit, onClose, initialData, startStep = 1 }: IntakeFormProps) {
-  // Debug logging
-  console.log('IntakeForm initialData:', initialData);
-  console.log('IntakeForm startStep:', startStep);
-  
   const [currentStep, setCurrentStep] = useState(startStep);
   const [formData, setFormData] = useState({
     firstName: initialData?.firstName || '',
@@ -41,14 +37,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
   
   // State for popup modal in struggles step
   const [selectedCategoryPopup, setSelectedCategoryPopup] = useState<string | null>(null);
-  
-  // Debug logging for popup state
-  console.log('selectedCategoryPopup:', selectedCategoryPopup);
 
   // Update form data when initialData changes
   useEffect(() => {
     if (initialData) {
-      console.log('useEffect updating formData with initialData:', initialData);
       setFormData(prev => ({
         firstName: initialData.firstName || prev.firstName,
         lastName: initialData.lastName || prev.lastName,
@@ -114,9 +106,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
   };
 
   const openCategoryPopup = (categoryId: string) => {
-    console.log('openCategoryPopup called with categoryId:', categoryId);
     setSelectedCategoryPopup(categoryId);
-    console.log('selectedCategoryPopup set to:', categoryId);
   };
 
   const closeCategoryPopup = () => {
@@ -195,7 +185,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
             <div className="space-y-4">
               <div className="text-center">
                 <h3 className="text-lg font-serif font-semibold text-navy-900">Tell us about yourself</h3>
-                <p className="text-sm text-slate-600 mt-1">We'll use this to personalize your experience and send your 14-day plan.</p>
+                <p className="text-sm text-slate-600 mt-1">We'll use this to personalize your experience and send your 21-day plan.</p>
               </div>
               
               <div className="grid md:grid-cols-2 gap-3">
@@ -261,12 +251,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                           ? 'border-gold-500 bg-gold-50 shadow-sm'
                           : 'hover:border-gold-400 hover:bg-gold-50/50'
                       }`}
-                      onClick={(e) => {
-                        console.log('Card clicked for category:', category.id);
-                        e.preventDefault();
-                        e.stopPropagation();
-                        openCategoryPopup(category.id);
-                      }}
+                      onClick={() => openCategoryPopup(category.id)}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">
@@ -362,19 +347,17 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                         Bible Version Preference
                       </Label>
                       <Select 
-                        value={formData.bibleVersion} 
+                        value={formData.bibleVersion}
+                        defaultValue={formData.bibleVersion}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, bibleVersion: value as BibleVersion }))}
                       >
                         <SelectTrigger className="bg-sand-100 border-sand-400 focus:border-gold-500 h-8 text-sm">
                           <SelectValue placeholder="Choose your preferred Bible version" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="z-[100]">
                           {BIBLE_VERSIONS.map((version) => (
                             <SelectItem key={version.value} value={version.value}>
-                              <div className="flex flex-col">
-                                <span className="font-medium text-sm">{version.label}</span>
-                                <span className="text-xs text-slate-600">{version.description}</span>
-                              </div>
+                              {version.label} - {version.description}
                             </SelectItem>
                           ))}
                         </SelectContent>
