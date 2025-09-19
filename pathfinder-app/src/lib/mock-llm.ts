@@ -290,81 +290,156 @@ function generateDailyPractices(
 ): DailyPractice[] {
   const practices: DailyPractice[] = [];
   
-  // Base practices by virtue (these would be AI-generated in real implementation)
-  const basePractices = {
-    wisdom: [
-      { title: 'Morning Reflection', baseSteps: ['Take 3 deep breaths', 'Ask: What do I need to understand today?'] },
-      { title: 'Decision Pause', baseSteps: ['Before major decisions, pause for 30 seconds', 'Consider long-term consequences'] },
-      { title: 'Evening Review', baseSteps: ['Review one decision from today', 'What would I do differently?'] },
-      { title: 'Seek Understanding', baseSteps: ['Listen more than you speak in one conversation', 'Ask clarifying questions'] },
-      { title: 'Knowledge vs Wisdom', baseSteps: ['Identify one fact you learned', 'How can you apply it wisely?'] },
-      { title: 'Humble Learning', baseSteps: ['Admit you don\'t know something', 'Ask someone to teach you'] },
-      { title: 'Pattern Recognition', baseSteps: ['Notice a recurring pattern in your day', 'What is it teaching you?'] }
-    ],
-    courage: [
-      { title: 'Small Brave Act', baseSteps: ['Do one thing that scares you slightly', 'Notice how you feel afterward'] },
-      { title: 'Speak Truth Gently', baseSteps: ['Share an honest opinion with kindness', 'Focus on being helpful, not right'] },
-      { title: 'Face the Difficult', baseSteps: ['Address one task you\'ve been avoiding', 'Break it into smaller steps'] },
-      { title: 'Stand for Values', baseSteps: ['Identify one value that matters to you', 'Take one small action aligned with it'] },
-      { title: 'Comfort Zone Stretch', baseSteps: ['Try something new for 5 minutes', 'Embrace the discomfort'] },
-      { title: 'Encourage Another', baseSteps: ['Offer genuine encouragement to someone', 'Be specific about what you appreciate'] },
-      { title: 'Inner Strength', baseSteps: ['When feeling weak, remember past victories', 'Draw strength from that memory'] }
-    ],
-    justice: [
-      { title: 'Fair Listening', baseSteps: ['Listen to understand, not to respond', 'Repeat back what you heard'] },
-      { title: 'Acts of Service', baseSteps: ['Do something helpful without being asked', 'Expect nothing in return'] },
-      { title: 'Boundary Setting', baseSteps: ['Say no to one request that overextends you', 'Explain kindly why'] },
-      { title: 'Gratitude Practice', baseSteps: ['Thank someone who serves others', 'Be specific about their impact'] },
-      { title: 'Equity Check', baseSteps: ['Notice who might be overlooked today', 'Include them in some way'] },
-      { title: 'Forgiveness Step', baseSteps: ['Release one small resentment', 'Focus on your own peace'] },
-      { title: 'Community Care', baseSteps: ['Do something that benefits your community', 'Even if no one notices'] }
-    ],
-    temperance: [
-      { title: 'Digital Boundary', baseSteps: ['Set phone to silent for 1 hour', 'Notice what you do instead'] },
-      { title: 'Mindful Consumption', baseSteps: ['Before consuming news/media, ask why', 'Set a time limit'] },
-      { title: 'Emotional Pause', baseSteps: ['When feeling reactive, count to 10', 'Respond from calm, not emotion'] },
-      { title: 'Moderation Practice', baseSteps: ['Choose less of something good', 'Appreciate quality over quantity'] },
-      { title: 'Present Moment', baseSteps: ['Spend 5 minutes fully present', 'No multitasking, just being'] },
-      { title: 'Balance Check', baseSteps: ['Notice where you feel out of balance', 'Make one small adjustment'] },
-      { title: 'Gentle Discipline', baseSteps: ['Keep one small promise to yourself', 'Celebrate the follow-through'] }
-    ]
+  // WHITEPAPER ALIGNMENT: Four daily micro-habits (one per virtue) scaled by time budget
+  // TODO: Replace with AI agent calls that generate personalized micro-habits based on:
+  // - User's primary virtue and struggles
+  // - Time budget (determines depth, not structure)  
+  // - Door preference (Christian vs Secular framing)
+  // - Context and previous day's performance
+  
+  const timeScaling = {
+    '5-10': { wisdom: 2, courage: 2, justice: 1, temperance: 2 }, // 7 min total
+    '10-15': { wisdom: 3, courage: 4, justice: 3, temperance: 3 }, // 13 min total  
+    '15-20': { wisdom: 5, courage: 5, justice: 4, temperance: 4 }  // 18 min total
+  };
+  
+  const dailyMicroHabitsTemplates = {
+    wisdom: {
+      // TODO: AI Agent Prompt: "Generate wisdom micro-habit for Day X based on user struggles: [struggles], time: [minutes], door: [christian/secular]"
+      templates: [
+        { action: 'Ask + Listen', steps: ['Prayerful asking for wisdom', 'Read one verse', 'Jot one actionable insight'] },
+        { action: 'Mindful Check-in', steps: ['60-second breath awareness', 'Ask: What do I need to understand?', 'Listen for inner wisdom'] },
+        { action: 'Decision Pause', steps: ['Before next decision, pause', 'Consider long-term impact', 'Choose wisely'] }
+      ]
+    },
+    courage: {
+      // TODO: AI Agent Prompt: "Generate courage micro-habit for Day X based on user struggles: [struggles], time: [minutes], door: [christian/secular]"  
+      templates: [
+        { action: 'First Step', steps: ['Identify one 5-minute task you\'ve avoided', 'Take the first small step', 'Notice the feeling'] },
+        { action: 'Brave Truth', steps: ['Share one honest thought with kindness', 'Focus on being helpful', 'Trust the outcome'] },
+        { action: 'Comfort Edge', steps: ['Do something slightly uncomfortable', 'Breathe through the discomfort', 'Celebrate the courage'] }
+      ]
+    },
+    justice: {
+      // TODO: AI Agent Prompt: "Generate justice micro-habit for Day X based on user struggles: [struggles], time: [minutes], door: [christian/secular]"
+      templates: [
+        { action: 'Micro-Service', steps: ['Do something helpful without being asked', 'Expect nothing in return'] },
+        { action: 'Fair Listening', steps: ['Listen to understand, not respond', 'Repeat back what you heard'] },
+        { action: 'Include Others', steps: ['Notice who might be overlooked', 'Include them in some small way'] }
+      ]
+    },
+    temperance: {
+      // TODO: AI Agent Prompt: "Generate temperance micro-habit for Day X based on user struggles: [struggles], time: [minutes], door: [christian/secular]"
+      templates: [
+        { action: 'Tiny Restraint', steps: ['Choose one small "no" to impulse', 'Pause before reacting', 'Choose response from calm'] },
+        { action: 'Digital Boundary', steps: ['Set phone to silent for set time', 'Notice what you do instead'] },
+        { action: 'Mindful Pause', steps: ['Before consuming media/food, pause', 'Ask "why am I doing this?"', 'Choose consciously'] }
+      ]
+    }
   };
 
-  // Select 21 practices, customizing based on struggles and model style
-  const virtuesPractices = basePractices[virtue];
-  const selectedPractices = virtuesPractices.slice(0, 7); // Take first 7, then repeat with variations
-  
+  // Generate four complementary micro-habits for a single virtue
+  function generateFourMicroHabitsForVirtue(
+    primaryVirtue: CardinalVirtue, 
+    day: number, 
+    timeAllocation: any, 
+    assessment: Assessment
+  ) {
+    const totalTime = Object.values(timeAllocation).reduce((sum: number, time: number) => sum + time, 0);
+    const timePerHabit = Math.ceil(totalTime / 4);
+    
+    // Four complementary approaches to practicing the same virtue
+    const approaches = {
+      wisdom: [
+        { approach: 'Prepare', action: 'Pray or be open to change', steps: ['Take 3 deep breaths', 'Ask for wisdom in today\'s decisions', 'Set intention to learn'] },
+        { approach: 'Learn', action: 'Take first step toward understanding', steps: ['Read one paragraph about today\'s challenge', 'Ask one clarifying question', 'Write down one insight'] },
+        { approach: 'Apply', action: 'Do one wise micro-action', steps: ['Choose quality over speed in one task', 'Pause before making one decision', 'Consider long-term impact'] },
+        { approach: 'Reflect', action: 'Temper judgment with humility', steps: ['Notice one assumption you made', 'Ask "What don\'t I know?"', 'Practice intellectual humility'] }
+      ],
+      courage: [
+        { approach: 'Prepare', action: 'Pray or be open to courage', steps: ['Take 3 centering breaths', 'Recall one time you were brave', 'Set intention to act despite fear'] },
+        { approach: 'Act', action: 'Take first brave step', steps: ['Do one thing that scares you slightly', 'Start before you feel ready', 'Move toward your fear'] },
+        { approach: 'Serve', action: 'Do one courageous service', steps: ['Speak up for someone who can\'t', 'Offer help when it\'s uncomfortable', 'Stand for what\'s right'] },
+        { approach: 'Reflect', action: 'Temper boldness with wisdom', steps: ['Notice where courage became reckless', 'Ask "Is this brave or foolish?"', 'Balance courage with prudence'] }
+      ],
+      justice: [
+        { approach: 'Prepare', action: 'Pray or be open to fairness', steps: ['Take 3 breaths for perspective', 'Ask for eyes to see injustice', 'Set intention to act justly'] },
+        { approach: 'Act', action: 'Take first step toward fairness', steps: ['Give someone their due credit', 'Correct one unfair situation', 'Stand up for equal treatment'] },
+        { approach: 'Serve', action: 'Do one micro-service', steps: ['Help someone without being asked', 'Share resources fairly', 'Include someone who\'s left out'] },
+        { approach: 'Reflect', action: 'Temper justice with mercy', steps: ['Notice where justice became harsh', 'Ask "Is this fair or vindictive?"', 'Balance justice with compassion'] }
+      ],
+      temperance: [
+        { approach: 'Prepare', action: 'Pray or be open to moderation', steps: ['Take 3 calming breaths', 'Ask for strength to choose well', 'Set intention for self-control'] },
+        { approach: 'Act', action: 'Take first step toward balance', steps: ['Choose one small "no" to excess', 'Pause before one impulse', 'Practice moderation in one area'] },
+        { approach: 'Serve', action: 'Do one temperate service', steps: ['Help someone find balance', 'Model restraint for others', 'Share rather than hoard'] },
+        { approach: 'Reflect', action: 'Temper restraint with joy', steps: ['Notice where discipline became rigid', 'Ask "Is this balanced or extreme?"', 'Balance control with freedom'] }
+      ]
+    };
+    
+    const virtueApproaches = approaches[primaryVirtue];
+    
+    // TODO: Replace with AI agent call for personalized habits:
+    // const personalizedHabits = await generatePersonalizedMicroHabits({
+    //   virtue: primaryVirtue,
+    //   day: day,
+    //   approaches: approaches[primaryVirtue],
+    //   userStruggles: assessment.struggles,
+    //   door: assessment.door,
+    //   timePerHabit: timePerHabit,
+    //   context: assessment.context
+    // });
+    
+    return virtueApproaches.map((approach, index) => ({
+      virtue: primaryVirtue,
+      approach: approach.approach,
+      timeMinutes: timePerHabit,
+      action: approach.action,
+      steps: approach.steps
+    }));
+  }
+
+  // WHITEPAPER IMPLEMENTATION: Generate 21 days of focused micro-habits for the PRIMARY virtue
   for (let day = 1; day <= 21; day++) {
-    const basePractice = selectedPractices[(day - 1) % 7];
+    const timeAllocation = timeScaling[assessment.timeBudget];
     const quote = getQuoteForDay(day, virtue, assessment.door, assessment.bibleVersion);
     
-    // Adjust steps based on model style
-    let steps = [...basePractice.baseSteps];
-    if (modelStyle === 'detailed') {
-      steps.push('Journal one sentence about this experience');
-    } else if (modelStyle === 'concise') {
-      steps = steps.slice(0, -1); // Remove last step for brevity
-    }
+    // Generate four complementary micro-habits for the PRIMARY virtue only
+    const dailyMicroHabits: string[] = [];
     
-    // Adjust for time budget
-    const timeMap = { '5-10': 8, '10-15': 12, '15-20': 18 };
-    const estimatedTime = timeMap[assessment.timeBudget];
+    // Four approaches to practicing the same virtue: Prepare, Act, Serve, Reflect
+    const primaryVirtueHabits = generateFourMicroHabitsForVirtue(virtue, day, timeAllocation, assessment);
     
-    const commentary = generateCommentary(day, virtue, assessment.door, basePractice.title, quote);
+    primaryVirtueHabits.forEach(habit => {
+      dailyMicroHabits.push(`**${habit.approach.toUpperCase()} (${habit.timeMinutes} min):** ${habit.action} - ${habit.steps.join(', ')}`);
+    });
+    
+    // WHITEPAPER ALIGNMENT: Generate structured micro-habits data focused on primary virtue
+    const structuredMicroHabits = primaryVirtueHabits;
+    
+    // Calculate total time first
+    const totalTime = Object.values(timeAllocation).reduce((sum, time) => sum + time, 0);
+    
+    // Keep legacy steps format for backward compatibility (will be replaced by PracticeSteps component)
+    const steps = [
+      `Day ${day}: ${virtue.charAt(0).toUpperCase() + virtue.slice(1)} Focus - ${totalTime} minutes total`,
+      `This practice focuses on developing ${virtue} through four complementary micro-habits: Prepare, Act, Serve, and Reflect.`
+    ];
+    const commentary = generateCommentary(day, virtue, assessment.door, `${virtue.charAt(0).toUpperCase() + virtue.slice(1)} Focus`, quote);
     
     // Generate Christian UX content for Christian door
-    const christianUX = assessment.door === 'christian' && virtue === 'courage' 
-      ? generateChristianUXContent(day, virtue, basePractice.title, '')
+    const christianUX = assessment.door === 'christian' 
+      ? generateChristianUXContent(day, virtue, `${virtue.charAt(0).toUpperCase() + virtue.slice(1)} Focus`, '')
       : {};
     
     practices.push({
       day,
-      title: `Day ${day}: ${basePractice.title}`,
+      title: `Day ${day}: ${virtue.charAt(0).toUpperCase() + virtue.slice(1)} Focus`,
       steps,
-      reflection: `How did practicing ${virtue} feel today? What did you notice?`,
+      reflection: `Which of the four micro-habits felt most natural today? Which was most challenging? What did you notice about practicing all four virtues together?`,
       quote,
       commentary,
-      estimatedTime,
+      estimatedTime: totalTime,
+      microHabits: structuredMicroHabits, // WHITEPAPER ALIGNMENT: Structured micro-habits data
       ...christianUX
     });
   }

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue } from '@/lib/types';
+import { useState, useEffect, useCallback } from 'react';
+import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue, IfThenPlan } from '@/lib/types';
 import { STRUGGLE_CATEGORIES, BIBLE_VERSIONS, StruggleCategory } from '@/lib/types';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
-import { XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, ChevronDownIcon, CheckCircleIcon, LightBulbIcon } from '@heroicons/react/24/outline';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,9 +30,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
     struggles: initialData?.struggles || [] as string[],
     door: initialData?.door || 'secular' as Door,
     bibleVersion: initialData?.bibleVersion || 'niv' as BibleVersion,
-    timeBudget: initialData?.timeBudget || '10-15' as TimeBudget,
+    timeBudget: initialData?.timeBudget || '5-10' as TimeBudget,
     daypart: initialData?.daypart || 'morning' as Daypart,
-    context: initialData?.context || ''
+    context: initialData?.context || '',
+    ifThenPlans: initialData?.ifThenPlans || [] as IfThenPlan[]
   });
   
   // State for popup modal in struggles step
@@ -50,12 +51,13 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
         bibleVersion: initialData.bibleVersion || prev.bibleVersion,
         timeBudget: initialData.timeBudget || prev.timeBudget,
         daypart: initialData.daypart || prev.daypart,
-        context: initialData.context || prev.context
+        context: initialData.context || prev.context,
+        ifThenPlans: initialData.ifThenPlans || prev.ifThenPlans
       }));
     }
   }, [initialData]);
 
-  const totalSteps = 5;
+  const totalSteps = 6; // Added if-then planning step
 
   // Determine primary virtue based on selected struggles
   const getPrimaryVirtue = (struggles: string[]): CardinalVirtue => {
@@ -77,6 +79,76 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
     )[0] as CardinalVirtue;
   };
 
+  // Helper functions for if-then planning
+  const initializeIfThenPlans = useCallback(() => {
+    if (formData.ifThenPlans.length === 0) {
+      const allVirtues: CardinalVirtue[] = ['wisdom', 'courage', 'justice', 'temperance'];
+      
+      // Pre-populate with suggested cues based on daypart
+      const daypartCues = {
+        morning: {
+          wisdom: 'after my morning coffee',
+          courage: 'when I check my morning tasks',
+          justice: 'during my commute',
+          temperance: 'before I check my phone'
+        },
+        midday: {
+          wisdom: 'during my lunch break',
+          courage: 'when I feel stuck on a task',
+          justice: 'when interacting with colleagues',
+          temperance: 'before afternoon snacking'
+        },
+        evening: {
+          wisdom: 'when I get home',
+          courage: 'during my evening routine',
+          justice: 'when spending time with family',
+          temperance: 'before dinner'
+        },
+        flexible: {
+          wisdom: 'when I have a quiet moment',
+          courage: 'when I face something difficult',
+          justice: 'when I interact with others',
+          temperance: 'when I feel reactive'
+        }
+      };
+
+      const defaultActions = {
+        wisdom: 'pause and ask for guidance',
+        courage: 'take one small brave step',
+        justice: 'do something kind for someone',
+        temperance: 'make one mindful choice'
+      };
+
+      const newPlans: IfThenPlan[] = allVirtues.map(virtue => ({
+        virtue,
+        cue: daypartCues[formData.daypart][virtue],
+        action: defaultActions[virtue],
+        context: formData.daypart === 'flexible' ? 'anywhere' : 'at home/work'
+      }));
+
+      setFormData(prev => ({
+        ...prev,
+        ifThenPlans: newPlans
+      }));
+    }
+  }, [formData.ifThenPlans.length, formData.daypart]);
+
+  const updateIfThenPlan = (virtue: CardinalVirtue, field: keyof IfThenPlan, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      ifThenPlans: prev.ifThenPlans.map(plan => 
+        plan.virtue === virtue ? { ...plan, [field]: value } : plan
+      )
+    }));
+  };
+
+  // Initialize if-then plans when entering step 5
+  useEffect(() => {
+    if (currentStep === 5 && formData.ifThenPlans.length === 0) {
+      initializeIfThenPlans();
+    }
+  }, [currentStep, initializeIfThenPlans]);
+
   const handleSubmit = () => {
     const assessment: Assessment = {
       id: `assessment_${Date.now()}`,
@@ -90,6 +162,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
       daypart: formData.daypart,
       primaryVirtue: getPrimaryVirtue(formData.struggles),
       context: formData.context || undefined,
+      ifThenPlans: formData.ifThenPlans.length > 0 ? formData.ifThenPlans : undefined,
       createdAt: new Date()
     };
     
@@ -123,7 +196,8 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
       case 2: return formData.struggles.length > 0;
       case 3: return true; // Door selection always valid
       case 4: return true; // Time/daypart always valid
-      case 5: return true; // Context is optional
+      case 5: return formData.ifThenPlans.length === 4; // Must have all four if-then plans
+      case 6: return true; // Context is optional
       default: return false;
     }
   };
@@ -279,7 +353,8 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
               {formData.struggles.length > 0 && (
                 <div className="mt-4 flex justify-center">
                   <Badge variant="secondary" className="bg-accent text-sand-100 px-4 py-2">
-                    ✓ {formData.struggles.length} area{formData.struggles.length === 1 ? '' : 's'} selected
+                    <CheckCircleIcon className="w-3 h-3 mr-1" />
+                    {formData.struggles.length} area{formData.struggles.length === 1 ? '' : 's'} selected
                   </Badge>
                 </div>
               )}
@@ -381,9 +456,9 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                 <h4 className="text-xs font-medium text-navy-900">Time Budget</h4>
                 <div className="space-y-1.5">
                   {[
-                    { value: '5-10', label: '5-10 min', description: 'Quick practices' },
-                    { value: '10-15', label: '10-15 min', description: 'Balanced (recommended)' },
-                    { value: '15-20', label: '15-20 min', description: 'Deeper reflection' }
+                    { value: '5-10', label: '10 min or less', description: 'Four 2-minute micro-habits (recommended)' },
+                    { value: '10-15', label: '10-15 min', description: 'Four 3-4 minute practices' },
+                    { value: '15-20', label: '15-20 min', description: 'Four 4-5 minute practices' }
                   ].map((option) => (
                     <Card
                       key={option.value}
@@ -401,7 +476,9 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                             <div className="text-xs text-slate-600">{option.description}</div>
                           </div>
                           {formData.timeBudget === option.value && (
-                            <Badge className="bg-gold-500 text-xs px-1.5 py-0.5">✓</Badge>
+                            <Badge className="bg-gold-500 text-xs px-1.5 py-0.5">
+                              <CheckCircleIcon className="w-3 h-3" />
+                            </Badge>
                           )}
                         </div>
                       </CardContent>
@@ -433,7 +510,9 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                           <div className="font-semibold text-navy-900 text-xs mb-0.5">{option.label}</div>
                           <div className="text-xs text-slate-600 leading-tight">{option.description}</div>
                           {formData.daypart === option.value && (
-                            <Badge className="bg-gold-500 text-xs px-1 py-0.5 mt-1">✓</Badge>
+                            <Badge className="bg-gold-500 text-xs px-1 py-0.5 mt-1">
+                              <CheckCircleIcon className="w-3 h-3" />
+                            </Badge>
                           )}
                         </div>
                       </CardContent>
@@ -444,8 +523,73 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
             </div>
           )}
 
-          {/* Step 5: Context (Optional) */}
+          {/* Step 5: If-Then Planning */}
           {currentStep === 5 && (
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="text-lg font-serif font-semibold text-navy-900">Create Your If-Then Plans</h3>
+                <p className="text-sm text-slate-600 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four simple plans.</p>
+              </div>
+
+              {/* Plans are initialized via useEffect when entering this step */}
+
+              <div className="space-y-4">
+                {formData.ifThenPlans.map((plan) => {
+                  const virtue = VIRTUE_DESCRIPTIONS[plan.virtue];
+                  return (
+                    <Card key={plan.virtue} className="bg-sand-50 border-sand-300">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-sm font-semibold text-navy-900 capitalize">
+                          {virtue.title} - {virtue.subtitle}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-medium text-slate-700">
+                            If (trigger/cue):
+                          </Label>
+                          <Input
+                            value={plan.cue}
+                            onChange={(e) => updateIfThenPlan(plan.virtue, 'cue', e.target.value)}
+                            placeholder="e.g., after my morning coffee"
+                            className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-8 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-medium text-slate-700">
+                            Then I will:
+                          </Label>
+                          <Input
+                            value={plan.action}
+                            onChange={(e) => updateIfThenPlan(plan.virtue, 'action', e.target.value)}
+                            placeholder="e.g., pause and ask for guidance"
+                            className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-8 text-sm"
+                          />
+                        </div>
+                        <div className="text-xs text-slate-500 italic">
+                          "If {plan.cue}, then I will {plan.action}"
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              <div className="bg-gold-50 border border-gold-200 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <LightBulbIcon className="w-4 h-4 text-gold-600" />
+                  <h4 className="font-medium text-gold-900 text-sm">Why This Works</h4>
+                </div>
+                <p className="text-xs text-gold-800 leading-relaxed">
+                  Implementation intentions ("if-then" plans) are one of the most powerful tools in behavioral science. 
+                  They help your brain automatically link situations to actions, making your new habits feel natural and effortless.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Step 6: Context (Optional) */}
+          {currentStep === 6 && (
             <div className="space-y-4">
               <div className="text-center">
                 <h3 className="text-lg font-serif font-semibold text-navy-900">Anything else we should know?</h3>
