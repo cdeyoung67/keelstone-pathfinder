@@ -257,12 +257,14 @@ export default function ProgressMarkers({
                         </h4>
                         {isCompleted && (
                           <Badge className="bg-green-100 text-green-800 text-xs">
-                            ✓ Complete
+                            <CheckCircleIcon className="w-3 h-3 mr-1" />
+                            Complete
                           </Badge>
                         )}
                         {isNext && (
                           <Badge className="bg-gold-100 text-gold-800 text-xs">
-                            ⭐ Next Goal
+                            <StarIcon className="w-3 h-3 mr-1" />
+                            Next Goal
                           </Badge>
                         )}
                       </div>

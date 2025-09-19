@@ -12,6 +12,14 @@ export interface Struggle {
   virtue: CardinalVirtue; // Which virtue primarily addresses this struggle
 }
 
+// WHITEPAPER ALIGNMENT: Implementation intentions for habit formation
+export interface IfThenPlan {
+  virtue: CardinalVirtue;
+  cue: string; // "If [this happens]"
+  action: string; // "then I will [do this]"
+  context: string; // Where/when this typically happens
+}
+
 export interface Assessment {
   id: string;
   firstName: string;
@@ -24,7 +32,21 @@ export interface Assessment {
   daypart: Daypart;
   primaryVirtue: CardinalVirtue; // Determined from struggles
   context?: string; // Optional additional context
+  
+  // WHITEPAPER ENHANCEMENT: Implementation intentions
+  ifThenPlans?: IfThenPlan[]; // Four if-then plans (one per virtue)
+  
   createdAt: Date;
+}
+
+// WHITEPAPER ALIGNMENT: Micro-habit structure for four daily virtues
+export interface MicroHabit {
+  virtue: CardinalVirtue;
+  approach?: string; // e.g., "Prepare", "Act", "Serve", "Reflect"
+  action: string; // e.g., "Ask + Listen", "First Step", "Micro-Service", "Tiny Restraint"
+  steps: string[];
+  timeMinutes: number;
+  ifThenPrompt?: string; // Implementation intention placeholder
 }
 
 export interface DailyPractice {
@@ -35,6 +57,9 @@ export interface DailyPractice {
   quote: Quote;
   commentary: string; // 3-paragraph commentary connecting quote to practice via Fruit of the Spirit
   estimatedTime: number; // in minutes
+  
+  // WHITEPAPER ENHANCEMENT: Four micro-habits per day
+  microHabits?: MicroHabit[]; // Structured micro-habits data for proper rendering
   
   // Christian UX enhancements (following christianUX.md framework)
   openingPrayer?: string;        // Opening Prayer: Short prayer asking for guidance, focus, and openness to God's wisdom
@@ -105,12 +130,22 @@ export interface FruitResponse {
   timestamp: Date;
 }
 
+export interface WeeklyReflectionData {
+  week: number;
+  whatWorked: string;
+  whereCuesFailed: string;
+  whatToTweak: string;
+  nextWeekPlans: string;
+  completedAt: Date;
+}
+
 export interface DayProgress {
   day: number;
   reflection?: DayReflection;
   challengeCompletion?: ChallengeCompletion;
   fruitSelection?: FruitSelection;
   communityShare?: CommunityShare;
+  weeklyReflection?: WeeklyReflectionData; // For days 7, 14, 21
   completedAt?: Date;
 }
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { StarIcon, CheckCircleIcon, FireIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { StarIcon, CheckCircleIcon, FireIcon, TrophyIcon, BoltIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 interface PracticalChallengeProps {
   challenge: string;
@@ -42,10 +42,10 @@ export default function PracticalChallenge({
   };
 
   const getStreakBadge = () => {
-    if (currentStreak >= 21) return { icon: '👑', label: 'Champion', color: 'bg-purple-100 text-purple-800' };
-    if (currentStreak >= 14) return { icon: '🔥', label: 'On Fire', color: 'bg-red-100 text-red-800' };
-    if (currentStreak >= 7) return { icon: '⚡', label: 'Warrior', color: 'bg-yellow-100 text-yellow-800' };
-    if (currentStreak >= 3) return { icon: '💪', label: 'Strong', color: 'bg-blue-100 text-blue-800' };
+    if (currentStreak >= 21) return { icon: TrophyIcon, label: 'Champion', color: 'bg-purple-100 text-purple-800' };
+    if (currentStreak >= 14) return { icon: BoltIcon, label: 'On Fire', color: 'bg-red-100 text-red-800' };
+    if (currentStreak >= 7) return { icon: ShieldCheckIcon, label: 'Warrior', color: 'bg-yellow-100 text-yellow-800' };
+    if (currentStreak >= 3) return { icon: StarIcon, label: 'Strong', color: 'bg-blue-100 text-blue-800' };
     return null;
   };
 
@@ -67,11 +67,12 @@ export default function PracticalChallenge({
               {currentStreak} day streak
             </Badge>
           )}
-          {streakBadge && (
-            <Badge className={`text-xs ${streakBadge.color}`}>
-              {streakBadge.icon} {streakBadge.label}
-            </Badge>
-          )}
+        {streakBadge && (
+          <Badge className={`text-xs ${streakBadge.color}`}>
+            <streakBadge.icon className="w-3 h-3 mr-1" />
+            {streakBadge.label}
+          </Badge>
+        )}
         </div>
       </div>
       
@@ -95,7 +96,10 @@ export default function PracticalChallenge({
                   Challenge Complete!
                 </>
               ) : (
-                "✓ Mark Challenge Complete"
+                <>
+                  <CheckCircleIcon className="w-4 h-4 mr-1" />
+                  Mark Challenge Complete
+                </>
               )}
             </Button>
             
