@@ -6,7 +6,7 @@ import PlanDisplay from '@/components/plan/PlanDisplay';
 import PlanPreview from '@/components/plan/PlanPreview';
 import JourneyGateway from '@/components/journey/JourneyGateway';
 import LoadingState from '@/components/ui/LoadingState';
-import KeelStoneLogo from '@/components/ui/KeelStoneLogo';
+import AppLayout from '@/components/ui/AppLayout';
 import {
   UserIcon,
   ClockIcon,
@@ -21,7 +21,6 @@ import {
   ExclamationTriangleIcon,
   MapIcon,
   ArrowRightIcon,
-  ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 import { Assessment, PersonalizedPlan, UserProgress } from '@/lib/types';
 import { generateMockPlan } from '@/lib/mock-llm';
@@ -219,90 +218,38 @@ export default function Home() {
 
   if (currentPlan) {
     return (
-      <div className="min-h-screen flex">
-      {/* Vertical Sidebar - Hidden on mobile */}
-      <div className="hidden md:flex w-32 bg-navy-900 flex-col">
-        {/* Logo at top */}
-        <div className="px-3 py-6 border-b border-navy-700 flex justify-center">
-          <KeelStoneLogo size="md" />
-        </div>
-        
-        {/* Navigation */}
-        <div className="flex-1 px-3 py-6 flex justify-center">
-          <button
-            onClick={handleStartOver}
-            className="text-caption text-sand-200 hover:text-sand-100 underline focus-ring text-center"
-          >
-            <ArrowLeftIcon className="w-4 h-4 inline mr-1" />
-            Start Over
-          </button>
-        </div>
-      </div>
+      <AppLayout 
+        showBackButton 
+        onBackClick={handleStartOver}
+        backButtonText="Start Over"
+      >
 
-        {/* Mobile Header - Visible only on mobile */}
-        <div className="md:hidden fixed top-0 left-0 right-0 bg-navy-900 py-3 px-4 z-10 flex justify-between items-center">
-          <KeelStoneLogo size="sm" />
-          <button
-            onClick={handleStartOver}
-            className="text-caption text-sand-200 hover:text-sand-100 underline focus-ring"
-          >
-            <ArrowLeftIcon className="w-4 h-4 inline mr-1" />
-            Start Over
-          </button>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 bg-section">
-          <div className="max-w-4xl mx-auto py-8 pt-20 md:pt-8 px-6">
-            {hasCommittedToJourney && hasAccount ? (
-              <PlanDisplay 
-                plan={currentPlan} 
-                progress={userProgress || undefined}
-                onProgressUpdate={handleProgressUpdate}
-              />
-            ) : showGateway ? (
-              <JourneyGateway
-                plan={currentPlan}
-                userEmail={currentPlan?.assessment.email}
-                onCreateAccount={handleCreateAccount}
-                onBackToPlan={handleBackToPlan}
-              />
-            ) : (
-              <PlanPreview
-                plan={currentPlan}
-                onStartJourney={handleStartJourney}
-                onReconfigure={handleReconfigure}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+        {hasCommittedToJourney && hasAccount ? (
+          <PlanDisplay 
+            plan={currentPlan} 
+            progress={userProgress || undefined}
+            onProgressUpdate={handleProgressUpdate}
+          />
+        ) : showGateway ? (
+          <JourneyGateway
+            plan={currentPlan}
+            userEmail={currentPlan?.assessment.email}
+            onCreateAccount={handleCreateAccount}
+            onBackToPlan={handleBackToPlan}
+          />
+        ) : (
+          <PlanPreview
+            plan={currentPlan}
+            onStartJourney={handleStartJourney}
+            onReconfigure={handleReconfigure}
+          />
+        )}
+      </AppLayout>
     );
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Vertical Sidebar - Hidden on mobile */}
-      <div className="hidden md:flex w-32 bg-navy-900 flex-col">
-        {/* Logo at top */}
-        <div className="px-3 py-6 border-b border-navy-700 flex justify-center">
-          <KeelStoneLogo size="md" />
-        </div>
-        
-        {/* Navigation space for future use */}
-        <div className="flex-1 px-3 py-6">
-          {/* Future navigation items can go here */}
-        </div>
-      </div>
-
-      {/* Mobile Header - Visible only on mobile */}
-      <div className="md:hidden fixed top-0 left-0 right-0 bg-navy-900 py-3 px-4 z-10">
-        <KeelStoneLogo size="sm" />
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 bg-hero">
-        <div className="max-w-4xl mx-auto px-6 py-12 md:py-12 pt-20 md:pt-12">
+    <AppLayout>
           {/* Main Content */}
           <div className="text-center mb-12 animate-gentle-fade">
             
@@ -433,9 +380,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </div>
         </div>
-      </div>
 
       {/* Modals */}
       {showIntake && (
@@ -456,6 +401,6 @@ export default function Home() {
           }}
         />
       )}
-    </div>
+    </AppLayout>
   );
 }

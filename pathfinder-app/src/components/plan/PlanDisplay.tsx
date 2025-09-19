@@ -16,6 +16,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import IdentityPrompt from '@/components/ui/IdentityPrompt';
+import PracticeSteps from '@/components/ui/PracticeSteps';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -28,6 +30,7 @@ import ReflectionPrompt from '@/components/interactive/ReflectionPrompt';
 import PracticalChallenge from '@/components/interactive/PracticalChallenge';
 import FruitCheckIn from '@/components/interactive/FruitCheckIn';
 import CommunityShare from '@/components/interactive/CommunityShare';
+import WeeklyReflection, { WeeklyReflectionData } from '@/components/interactive/WeeklyReflection';
 
 // Phase 3: Gamification components
 import FruitDashboard from '@/components/gamification/FruitDashboard';
@@ -46,6 +49,7 @@ interface PlanDisplayProps {
   onChallengeComplete?: (day: number, completed: boolean, timestamp: Date) => void;
   onFruitUpdate?: (day: number, selectedFruits: string[], timestamp: Date) => void;
   onCommunityShare?: (day: number, share: { content: string; privacy: 'public' | 'community' | 'prayer'; timestamp: Date }) => void;
+  onWeeklyReflection?: (day: number, reflection: WeeklyReflectionData) => void;
 }
 
 export default function PlanDisplay({ 
@@ -56,7 +60,8 @@ export default function PlanDisplay({
   onReflectionSave,
   onChallengeComplete,
   onFruitUpdate,
-  onCommunityShare
+  onCommunityShare,
+  onWeeklyReflection
 }: PlanDisplayProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -325,15 +330,25 @@ export default function PlanDisplay({
                           </div>
                         )}
 
-                        {/* Practice Steps (integrated into the flow) */}
-                        <div>
-                          <h4 className="font-serif font-medium text-navy-900 mb-3">Practice Steps</h4>
-                          <ol className="list-decimal list-inside space-y-2 text-body">
-                            {practice.steps.map((step, index) => (
-                              <li key={index} className="text-sm leading-relaxed">{step}</li>
-                            ))}
-                          </ol>
-                        </div>
+                        {/* WHITEPAPER ALIGNMENT: Structured Practice Steps */}
+                        {practice.microHabits ? (
+                          <PracticeSteps
+                            day={practice.day}
+                            virtue={plan.virtue}
+                            microHabits={practice.microHabits}
+                            estimatedTime={practice.estimatedTime}
+                          />
+                        ) : (
+                          /* Fallback for legacy format */
+                          <div>
+                            <h4 className="font-serif font-medium text-navy-900 mb-3">Practice Steps</h4>
+                            <ol className="list-decimal list-inside space-y-2 text-body">
+                              {practice.steps.map((step, index) => (
+                                <li key={index} className="text-sm leading-relaxed">{step}</li>
+                              ))}
+                            </ol>
+                          </div>
+                        )}
 
                         {/* 4. Reflection Prompt - Interactive component */}
                         {plan.door === 'christian' && practice.reflectionPrompt && (
@@ -390,6 +405,16 @@ export default function PlanDisplay({
                               ))}
                             </div>
                           </div>
+                        )}
+
+                        {/* WHITEPAPER ALIGNMENT: Weekly Reflection (Kolb Cycle) - Days 7, 14, 21 */}
+                        {(practice.day === 7 || practice.day === 14 || practice.day === 21) && (
+                          <WeeklyReflection
+                            day={practice.day}
+                            week={practice.day === 7 ? 1 : practice.day === 14 ? 2 : 3}
+                            onSave={(reflection) => onWeeklyReflection?.(practice.day, reflection)}
+                            existingReflection={safeProgress?.dailyProgress[practice.day]?.weeklyReflection}
+                          />
                         )}
 
                         {/* 8. Closing Prayer */}
