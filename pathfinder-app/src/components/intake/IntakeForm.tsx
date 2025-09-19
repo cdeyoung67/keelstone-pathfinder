@@ -82,48 +82,139 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
   // Helper functions for if-then planning
   const initializeIfThenPlans = useCallback(() => {
     if (formData.ifThenPlans.length === 0) {
-      const allVirtues: CardinalVirtue[] = ['wisdom', 'courage', 'justice', 'temperance'];
+      const primaryVirtue = getPrimaryVirtue(formData.struggles);
+      const approaches = ['prepare', 'act', 'serve', 'reflect'];
       
-      // Pre-populate with suggested cues based on daypart
-      const daypartCues = {
-        morning: {
-          wisdom: 'after my morning coffee',
-          courage: 'when I check my morning tasks',
-          justice: 'during my commute',
-          temperance: 'before I check my phone'
-        },
-        midday: {
-          wisdom: 'during my lunch break',
-          courage: 'when I feel stuck on a task',
-          justice: 'when interacting with colleagues',
-          temperance: 'before afternoon snacking'
-        },
-        evening: {
-          wisdom: 'when I get home',
-          courage: 'during my evening routine',
-          justice: 'when spending time with family',
-          temperance: 'before dinner'
-        },
-        flexible: {
-          wisdom: 'when I have a quiet moment',
-          courage: 'when I face something difficult',
-          justice: 'when I interact with others',
-          temperance: 'when I feel reactive'
+      // Enhanced path-specific cue suggestions with time/context anchoring
+      const getDaypartCues = (door: Door) => {
+        if (door === 'christian') {
+          return {
+            morning: {
+              prepare: 'after I wake up, during my quiet time with God',
+              act: 'when I start my day after morning prayer or devotion',
+              serve: 'during my commute or as I prepare for the day',
+              reflect: 'after breakfast, before the busyness begins'
+            },
+            midday: {
+              prepare: 'when I pause for a midday prayer or breath',
+              act: 'before tackling my biggest afternoon challenge',
+              serve: 'during interactions with colleagues or family',
+              reflect: 'when I feel mid-day stress and need God\'s peace'
+            },
+            evening: {
+              prepare: 'when I arrive home and thank God for the day',
+              act: 'before dinner, as I transition to family time',
+              serve: 'during evening time with family or community',
+              reflect: 'before my bedtime routine, reviewing the day with God'
+            },
+            flexible: {
+              prepare: 'when I need God\'s presence and feel scattered',
+              act: 'when facing a challenge and need to trust God',
+              serve: 'when God puts someone in my path who needs help',
+              reflect: 'when I notice stress and need to surrender to God'
+            }
+          };
+        } else {
+          return {
+            morning: {
+              prepare: 'after I wake up and before checking my phone',
+              act: 'when I start my morning routine (coffee/breakfast)',
+              serve: 'during my commute or morning preparation',
+              reflect: 'after my morning meal, before work begins'
+            },
+            midday: {
+              prepare: 'when I return from lunch and reset my focus',
+              act: 'before tackling my biggest afternoon task',
+              serve: 'during a natural break in my workday',
+              reflect: 'when I feel mid-day fatigue and need to recharge'
+            },
+            evening: {
+              prepare: 'when I arrive home and transition from work',
+              act: 'before dinner preparation begins',
+              serve: 'during family/personal time',
+              reflect: 'before my bedtime routine, reviewing the day'
+            },
+            flexible: {
+              prepare: 'when I need centering or feel scattered',
+              act: 'when facing a challenge or important decision',
+              serve: 'when I encounter others who could use help',
+              reflect: 'when I notice stress, tension, or reactivity'
+            }
+          };
         }
       };
 
-      const defaultActions = {
-        wisdom: 'pause and ask for guidance',
-        courage: 'take one small brave step',
-        justice: 'do something kind for someone',
-        temperance: 'make one mindful choice'
+      const daypartCues = getDaypartCues(formData.door);
+
+      // Path-specific virtue actions (Christian vs Secular)
+      const getVirtueActions = (door: Door) => {
+        if (door === 'christian') {
+          return {
+            wisdom: {
+              prepare: 'pray for wisdom and ask God to guide my decisions today',
+              act: 'read one Bible verse and ask "What is God nudging me to do?"',
+              serve: 'choose quality over speed, trusting God\'s timing in one task',
+              reflect: 'notice one assumption and ask "Lord, what don\'t I see here?"'
+            },
+            courage: {
+              prepare: 'pray for courage and remember how God has been faithful before',
+              act: 'take one step forward trusting God, even when afraid',
+              serve: 'speak truth in love or stand up for someone who needs it',
+              reflect: 'ask "Am I being brave or reckless?" and seek God\'s wisdom'
+            },
+            justice: {
+              prepare: 'pray for eyes to see injustice and a heart like Christ\'s',
+              act: 'give someone their due credit or correct an unfair situation',
+              serve: 'do one act of mercy or include someone who\'s left out',
+              reflect: 'ask "Am I seeking justice or revenge?" and choose mercy'
+            },
+            temperance: {
+              prepare: 'pray for self-control and strength to choose what honors God',
+              act: 'choose one small "no" to excess, trusting God\'s provision',
+              serve: 'help someone find balance or model godly restraint',
+              reflect: 'ask "Is this balanced or extreme?" and seek God\'s heart'
+            }
+          };
+        } else {
+          return {
+            wisdom: {
+              prepare: 'take 3 mindful breaths and set intention to learn today',
+              act: 'read one paragraph from a wisdom source and ask one clarifying question',
+              serve: 'choose quality over speed in one task, considering long-term impact',
+              reflect: 'notice one assumption I made and practice intellectual humility'
+            },
+            courage: {
+              prepare: 'center yourself and recall one time you acted with courage',
+              act: 'do one thing that challenges you slightly, starting before you feel ready',
+              serve: 'speak up for someone who needs it or offer help when it\'s uncomfortable',
+              reflect: 'ask "Is this brave or reckless?" and balance courage with wisdom'
+            },
+            justice: {
+              prepare: 'take perspective and consider how your actions affect others',
+              act: 'give someone their due credit or address one unfair situation',
+              serve: 'do one act of kindness without being asked or include someone left out',
+              reflect: 'ask "Is this fair or vindictive?" and choose compassion over revenge'
+            },
+            temperance: {
+              prepare: 'pause mindfully and set intention for balanced choices',
+              act: 'choose one small "no" to excess or pause before reacting impulsively',
+              serve: 'help someone find balance or model healthy restraint',
+              reflect: 'ask "Is this balanced or extreme?" and adjust toward the middle way'
+            }
+          };
+        }
       };
 
-      const newPlans: IfThenPlan[] = allVirtues.map(virtue => ({
-        virtue,
-        cue: daypartCues[formData.daypart][virtue],
-        action: defaultActions[virtue],
-        context: formData.daypart === 'flexible' ? 'anywhere' : 'at home/work'
+      const virtueActions = getVirtueActions(formData.door);
+
+      const newPlans: IfThenPlan[] = approaches.map(approach => ({
+        virtue: primaryVirtue,
+        approach: approach,
+        cue: daypartCues[formData.daypart][approach as keyof typeof daypartCues.morning],
+        action: virtueActions[primaryVirtue][approach as keyof typeof virtueActions.wisdom],
+        context: formData.door === 'christian' 
+          ? `${formData.daypart} practice - ${approach} approach to ${primaryVirtue} through faith`
+          : `${formData.daypart} practice - ${approach} approach to ${primaryVirtue} through mindfulness`
       }));
 
       setFormData(prev => ({
@@ -131,13 +222,13 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
         ifThenPlans: newPlans
       }));
     }
-  }, [formData.ifThenPlans.length, formData.daypart]);
+  }, [formData.ifThenPlans.length, formData.daypart, formData.struggles, formData.door]);
 
-  const updateIfThenPlan = (virtue: CardinalVirtue, field: keyof IfThenPlan, value: string) => {
+  const updateIfThenPlan = (virtue: CardinalVirtue, approach: string | undefined, field: keyof IfThenPlan, value: string) => {
     setFormData(prev => ({
       ...prev,
       ifThenPlans: prev.ifThenPlans.map(plan => 
-        plan.virtue === virtue ? { ...plan, [field]: value } : plan
+        plan.virtue === virtue && plan.approach === approach ? { ...plan, [field]: value } : plan
       )
     }));
   };
@@ -528,20 +619,32 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
             <div className="space-y-4">
               <div className="text-center">
                 <h3 className="text-lg font-serif font-semibold text-navy-900">Create Your If-Then Plans</h3>
-                <p className="text-sm text-slate-600 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four simple plans.</p>
+                <p className="text-sm text-slate-600 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four focused plans for {getPrimaryVirtue(formData.struggles)}.</p>
+                <div className="mt-2 text-xs text-gold-700 bg-gold-50 border border-gold-200 rounded-lg px-3 py-2 inline-block">
+                  <LightBulbIcon className="w-3 h-3 inline mr-1" />
+                  These plans are customized for your {formData.door === 'christian' ? 'Christian faith journey' : 'secular wisdom path'}
+                </div>
               </div>
 
               {/* Plans are initialized via useEffect when entering this step */}
 
               <div className="space-y-4">
-                {formData.ifThenPlans.map((plan) => {
+                {formData.ifThenPlans.map((plan, index) => {
                   const virtue = VIRTUE_DESCRIPTIONS[plan.virtue];
                   return (
-                    <Card key={plan.virtue} className="bg-sand-50 border-sand-300">
+                    <Card key={`${plan.virtue}-${plan.approach || index}`} className="bg-sand-50 border-sand-300">
                       <CardHeader className="pb-3">
                         <CardTitle className="text-sm font-semibold text-navy-900 capitalize">
-                          {virtue.title} - {virtue.subtitle}
+                          {plan.approach ? `${plan.approach.toUpperCase()} - ${virtue.title}` : `${virtue.title} - ${virtue.subtitle}`}
                         </CardTitle>
+                        {plan.approach && (
+                          <CardDescription className="text-xs text-slate-600">
+                            {plan.approach === 'prepare' && 'Set intention and center yourself'}
+                            {plan.approach === 'act' && 'Take your first small step'}
+                            {plan.approach === 'serve' && 'Practice through service to others'}
+                            {plan.approach === 'reflect' && 'Balance and learn from the experience'}
+                          </CardDescription>
+                        )}
                       </CardHeader>
                       <CardContent className="space-y-3">
                         <div className="space-y-2">
@@ -550,7 +653,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                           </Label>
                           <Input
                             value={plan.cue}
-                            onChange={(e) => updateIfThenPlan(plan.virtue, 'cue', e.target.value)}
+                            onChange={(e) => updateIfThenPlan(plan.virtue, plan.approach, 'cue', e.target.value)}
                             placeholder="e.g., after my morning coffee"
                             className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-8 text-sm"
                           />
@@ -561,7 +664,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                           </Label>
                           <Input
                             value={plan.action}
-                            onChange={(e) => updateIfThenPlan(plan.virtue, 'action', e.target.value)}
+                            onChange={(e) => updateIfThenPlan(plan.virtue, plan.approach, 'action', e.target.value)}
                             placeholder="e.g., pause and ask for guidance"
                             className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-8 text-sm"
                           />
