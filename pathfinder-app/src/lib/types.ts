@@ -15,6 +15,7 @@ export interface Struggle {
 // WHITEPAPER ALIGNMENT: Implementation intentions for habit formation
 export interface IfThenPlan {
   virtue: CardinalVirtue;
+  approach?: string; // e.g., "prepare", "act", "serve", "reflect"
   cue: string; // "If [this happens]"
   action: string; // "then I will [do this]"
   context: string; // Where/when this typically happens
@@ -147,6 +148,15 @@ export interface DayProgress {
   communityShare?: CommunityShare;
   weeklyReflection?: WeeklyReflectionData; // For days 7, 14, 21
   completedAt?: Date;
+  
+  // Gratitude & Mindfulness features
+  gratitudeEntries?: any[]; // GratitudeEntry[] from component
+  gratitudeCompleted?: boolean;
+  mindfulSession?: {
+    duration: number;
+    completedAt: Date;
+    notes?: string;
+  };
 }
 
 export interface UserProgress {
@@ -156,6 +166,10 @@ export interface UserProgress {
   currentStreak: number;
   lastActivity: Date;
   feedback: UserFeedback[];
+  
+  // Social accountability features
+  fruitLevel?: number; // 1-5 levels of growth
+  totalPoints?: number; // Points for leaderboard
   
   // Phase 2: Interactive tracking
   dailyProgress: Record<number, DayProgress>; // day number -> progress

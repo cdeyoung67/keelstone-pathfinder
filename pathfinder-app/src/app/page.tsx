@@ -229,11 +229,19 @@ export default function Home() {
             plan={currentPlan} 
             progress={userProgress || undefined}
             onProgressUpdate={handleProgressUpdate}
+            onGratitudeSave={(day, entries) => {
+              // TODO: Persist gratitude entries
+              console.log('Gratitude saved for day', day, ':', entries);
+            }}
+            onMindfulMinuteComplete={(day, duration, notes) => {
+              // TODO: Persist mindful minute session
+              console.log('Mindful minute completed for day', day, ':', { duration, notes });
+            }}
           />
         ) : showGateway ? (
           <JourneyGateway
             plan={currentPlan}
-            userEmail={currentPlan?.assessment.email}
+            userEmail={currentPlan?.assessment?.email}
             onCreateAccount={handleCreateAccount}
             onBackToPlan={handleBackToPlan}
           />

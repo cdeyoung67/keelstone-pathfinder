@@ -37,6 +37,15 @@ import FruitDashboard from '@/components/gamification/FruitDashboard';
 import AchievementSystem from '@/components/gamification/AchievementSystem';
 import ProgressMarkers from '@/components/gamification/ProgressMarkers';
 import AlwaysOnDashboard from '@/components/gamification/AlwaysOnDashboard';
+import ProgressRing from '@/components/gamification/ProgressRing';
+import SocialAccountabilityDashboard from '@/components/gamification/SocialAccountabilityDashboard';
+
+// Enhanced Progress Monitoring
+import WeeklyShareOut from '@/components/interactive/WeeklyShareOut';
+
+// Gratitude & Mindfulness Features
+import GratitudeLog from '@/components/interactive/GratitudeLog';
+import MindfulMinute from '@/components/interactive/MindfulMinute';
 
 interface PlanDisplayProps {
   plan: PersonalizedPlan;
@@ -50,6 +59,15 @@ interface PlanDisplayProps {
   onFruitUpdate?: (day: number, selectedFruits: string[], timestamp: Date) => void;
   onCommunityShare?: (day: number, share: { content: string; privacy: 'public' | 'community' | 'prayer'; timestamp: Date }) => void;
   onWeeklyReflection?: (day: number, reflection: WeeklyReflectionData) => void;
+  
+  // Enhanced Social Accountability callbacks
+  onWeeklyShare?: (shareData: { week: number; content: string; privacy: 'public' | 'community' | 'private'; highlights: string[]; timestamp: Date }) => void;
+  onEncourageMember?: (shareId: string) => void;
+  onPrayForMember?: (shareId: string) => void;
+  
+  // Gratitude & Mindfulness callbacks
+  onGratitudeSave?: (day: number, entries: any[]) => void;
+  onMindfulMinuteComplete?: (day: number, duration: number, notes?: string) => void;
 }
 
 export default function PlanDisplay({ 
@@ -61,7 +79,12 @@ export default function PlanDisplay({
   onChallengeComplete,
   onFruitUpdate,
   onCommunityShare,
-  onWeeklyReflection
+  onWeeklyReflection,
+  onWeeklyShare,
+  onEncourageMember,
+  onPrayForMember,
+  onGratitudeSave,
+  onMindfulMinuteComplete
 }: PlanDisplayProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [showExportOptions, setShowExportOptions] = useState(false);
@@ -204,15 +227,18 @@ export default function PlanDisplay({
 
       {/* Daily Practices */}
       <Tabs defaultValue="practices" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-sand-200">
+        <TabsList className="grid w-full grid-cols-5 bg-sand-200">
           <TabsTrigger value="practices" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
             Daily Practices
           </TabsTrigger>
           <TabsTrigger value="progress" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
-            Progress & Growth
+            Progress
+          </TabsTrigger>
+          <TabsTrigger value="community" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
+            Community
           </TabsTrigger>
           <TabsTrigger value="insights" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
-            Weekly Insights
+            Insights
           </TabsTrigger>
           <TabsTrigger value="resources" className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900">
             Resources
@@ -438,21 +464,46 @@ export default function PlanDisplay({
         </TabsContent>
         
         <TabsContent value="progress" className="mt-6">
-          <div className="space-y-6">
-            {/* Always-On Dashboard */}
-            <AlwaysOnDashboard
-              stats={{
-                currentStreak: safeProgress?.currentStreak || 0,
-                longestStreak: Math.max(safeProgress?.currentStreak || 0, completedDays.length),
-                totalDays: 21,
-                completedDays: completedDays.length,
-                currentDay: currentDay,
-                totalFruitGrowth: Object.values(safeProgress?.fruitGrowth || {}).reduce((sum, level) => sum + level, 0),
-                unlockedAchievements: safeProgress?.badges?.length || 0,
-                totalAchievements: 7, // Total possible achievements
-                todayCompleted: completedDays.includes(currentDay)
-              }}
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Progress Ring - Left Column */}
+            <div className="lg:col-span-1">
+              <ProgressRing
+                currentDay={currentDay}
+                completedDays={completedDays}
+                totalDays={21}
+                virtue={plan.virtue}
+                weeklySharePrompt={`Share one win from your ${plan.virtue} practice this week!`}
+                onWeeklyShare={(content) => {
+                  const currentWeek = Math.ceil(currentDay / 7);
+                  onWeeklyShare?.({
+                    week: currentWeek,
+                    content,
+                    privacy: 'community',
+                    highlights: [],
+                    timestamp: new Date()
+                  });
+                }}
+                lastSharedWeek={0} // TODO: Track from user progress
+                streakCount={safeProgress?.currentStreak || 0}
+              />
+            </div>
+
+            {/* Dashboard and Markers - Right Columns */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Always-On Dashboard */}
+              <AlwaysOnDashboard
+                stats={{
+                  currentStreak: safeProgress?.currentStreak || 0,
+                  longestStreak: Math.max(safeProgress?.currentStreak || 0, completedDays.length),
+                  totalDays: 21,
+                  completedDays: completedDays.length,
+                  currentDay: currentDay,
+                  totalFruitGrowth: Object.values(safeProgress?.fruitGrowth || {}).reduce((sum, level) => sum + level, 0),
+                  unlockedAchievements: safeProgress?.badges?.length || 0,
+                  totalAchievements: 7, // Total possible achievements
+                  todayCompleted: completedDays.includes(currentDay)
+                }}
+              />
             
             {/* Progress Markers */}
             <ProgressMarkers
@@ -473,6 +524,42 @@ export default function PlanDisplay({
             
             {/* Achievement System */}
             <AchievementSystem />
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="community" className="mt-6">
+          <div className="space-y-6">
+            {/* Weekly Share-Out */}
+            {[7, 14, 21].includes(currentDay) && (
+              <WeeklyShareOut
+                week={Math.ceil(currentDay / 7)}
+                virtue={plan.virtue}
+                completedDays={completedDays}
+                weekDays={currentDay <= 7 ? [1,2,3,4,5,6,7] : currentDay <= 14 ? [8,9,10,11,12,13,14] : [15,16,17,18,19,20,21]}
+                onShare={(shareData) => onWeeklyShare?.(shareData)}
+                isChristianPath={plan.door === 'christian'}
+              />
+            )}
+            
+            {/* Social Accountability Dashboard */}
+            <SocialAccountabilityDashboard
+              userProgress={{
+                virtue: plan.virtue,
+                currentDay: currentDay,
+                completionRate: (completedDays.length / Math.min(currentDay, 21)) * 100,
+                currentStreak: safeProgress?.currentStreak || 0,
+                fruitLevel: safeProgress?.fruitLevel || 1,
+                totalPoints: safeProgress?.totalPoints || Math.round((completedDays.length / Math.min(currentDay, 21)) * 100 * 10 + (safeProgress?.currentStreak || 0) * 20)
+              }}
+              onEncourage={onEncourageMember}
+              onPrayFor={onPrayForMember}
+              onViewProfile={(memberId) => {
+                // TODO: Implement profile viewing
+                console.log('View profile:', memberId);
+              }}
+              isChristianPath={plan.door === 'christian'}
+            />
           </div>
         </TabsContent>
         
@@ -541,6 +628,42 @@ export default function PlanDisplay({
                       </Badge>
                     )}
                   </div>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              {/* Gratitude & Mindfulness Features */}
+              <div className="space-y-4">
+                <h4 className="font-medium text-navy-900">Optional Practices</h4>
+                <p className="text-sm text-slate-600">
+                  These evidence-based practices enhance well-being and strengthen virtue development.
+                </p>
+                
+                <div className="space-y-4">
+                  {/* Gratitude Log - Available from day 15+ or weekly */}
+                  {(currentDay >= 15 || [7, 14, 21].includes(currentDay)) && (
+                    <GratitudeLog
+                      day={currentDay}
+                      isChristianPath={plan.door === 'christian'}
+                      existingEntries={safeProgress?.dailyProgress[currentDay]?.gratitudeEntries || []}
+                      onSave={(entries) => onGratitudeSave?.(currentDay, entries)}
+                      onComplete={() => {
+                        // Mark gratitude practice as completed
+                        console.log('Gratitude practice completed for day', currentDay);
+                      }}
+                      isCompleted={!!safeProgress?.dailyProgress[currentDay]?.gratitudeCompleted}
+                    />
+                  )}
+                  
+                  {/* Mindful Minute - Always available */}
+                  <MindfulMinute
+                    day={currentDay}
+                    trigger="your next challenging task"
+                    isChristianPath={plan.door === 'christian'}
+                    onComplete={(duration, notes) => onMindfulMinuteComplete?.(currentDay, duration, notes)}
+                    existingSession={safeProgress?.dailyProgress[currentDay]?.mindfulSession}
+                  />
                 </div>
               </div>
               
