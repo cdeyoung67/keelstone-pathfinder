@@ -8,6 +8,7 @@ const nextConfig = {
     // Ignore TypeScript errors during builds for deployment
     ignoreBuildErrors: true,
   },
+  output: 'standalone',
 }
 
 module.exports = nextConfig
