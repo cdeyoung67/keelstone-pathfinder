@@ -39,9 +39,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -49,13 +46,6 @@ jobs:
         with:
           name: node-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8EEAB2F3D263437A9EA2F95DBF38EB7D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C76F6AD6618C4CED84716F678B731C61 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2B060D2427754E8A9EB4B1AEE6868B29 }}
-
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -63,3 +53,4 @@ jobs:
           app-name: 'ks-pathfinder'
           slot-name: 'Production'
           package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8F1A5EDEFBEB488B8304222A0D27A83B }}
