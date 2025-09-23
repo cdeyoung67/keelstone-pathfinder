@@ -19,6 +19,10 @@ param repositoryUrl string = ''
 @description('Repository branch')
 param repositoryBranch string = 'main'
 
+@description('GitHub personal access token for repository access')
+@secure()
+param githubToken string = ''
+
 // Static Web App
 resource staticWebApp 'Microsoft.Web/staticSites@2023-01-01' = {
   name: staticWebAppName
@@ -31,10 +35,14 @@ resource staticWebApp 'Microsoft.Web/staticSites@2023-01-01' = {
   properties: {
     repositoryUrl: repositoryUrl
     branch: repositoryBranch
+    repositoryToken: githubToken
     buildProperties: {
       appLocation: '/pathfinder-app'
       apiLocation: ''
       outputLocation: 'out'
+      appBuildCommand: 'npm run build'
+      apiBuildCommand: ''
+      skipGithubActionWorkflowGeneration: false
     }
     stagingEnvironmentPolicy: 'Enabled'
     allowConfigFileUpdates: true

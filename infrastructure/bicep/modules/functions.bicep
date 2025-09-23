@@ -57,6 +57,9 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
   location: location
   tags: tags
   kind: 'functionapp,linux'
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
@@ -138,15 +141,7 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
   }
 }
 
-// Enable system-assigned managed identity
-resource functionAppIdentity 'Microsoft.Web/sites@2023-01-01' = {
-  name: functionApp.name
-  location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
-  properties: functionApp.properties
-}
+// System-assigned managed identity is configured in the main functionApp resource above
 
 // Outputs
 output functionAppName string = functionApp.name
