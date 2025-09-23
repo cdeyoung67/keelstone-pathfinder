@@ -9,7 +9,7 @@ param deploymentName string = 'gpt-4'
 
 @description('The model name and version')
 param modelName string = 'gpt-4'
-param modelVersion string = '0613'
+param modelVersion string = '1106-Preview'
 
 @description('Tags for the Azure OpenAI account')
 param tags object = {}
@@ -53,44 +53,7 @@ resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-
   }
 }
 
-// Content Filter (optional, for production safety)
-resource contentFilter 'Microsoft.CognitiveServices/accounts/raiPolicies@2023-05-01' = {
-  parent: openAIAccount
-  name: 'pathfinder-content-filter'
-  properties: {
-    mode: 'Default'
-    contentFilters: [
-      {
-        name: 'hate'
-        allowedContentLevel: 'medium'
-        blocking: true
-        enabled: true
-        source: 'Prompt'
-      }
-      {
-        name: 'sexual'
-        allowedContentLevel: 'medium'
-        blocking: true
-        enabled: true
-        source: 'Prompt'
-      }
-      {
-        name: 'selfharm'
-        allowedContentLevel: 'medium'
-        blocking: true
-        enabled: true
-        source: 'Prompt'
-      }
-      {
-        name: 'violence'
-        allowedContentLevel: 'medium'
-        blocking: true
-        enabled: true
-        source: 'Prompt'
-      }
-    ]
-  }
-}
+// Content filtering is handled by default Azure OpenAI policies
 
 // Outputs
 output accountName string = openAIAccount.name

@@ -1,6 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getDatabase } from '../shared/database';
-import { getOpenAIService } from '../shared/openai-service';
+import { getDatabaseService, getOpenAIServiceSafe } from '../shared/service-factory';
 import { Assessment, IntakeRequest, IntakeResponse, CardinalVirtue } from '../shared/types';
 
 // Helper function to determine primary virtue from struggles
@@ -100,9 +99,9 @@ export async function intake(request: HttpRequest, context: InvocationContext): 
     context.log(`Processing assessment for ${firstName} ${lastName} (${email})`);
     context.log(`Primary virtue: ${assessment.primaryVirtue}, Struggles: ${struggles.join(', ')}`);
 
-    // Initialize services
-    const db = getDatabase();
-    const openai = getOpenAIService();
+    // Initialize services (real or mock based on configuration)
+    const db = getDatabaseService();
+    const openai = getOpenAIServiceSafe();
 
     // Check if user already exists
     let user = await db.getUserByEmail(email);
