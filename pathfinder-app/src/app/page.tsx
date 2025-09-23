@@ -23,6 +23,7 @@ import {
   ArrowRightIcon,
 } from '@heroicons/react/24/outline';
 import { Assessment, PersonalizedPlan, UserProgress } from '@/lib/types';
+import { generatePlan } from '@/lib/api';
 import { generateMockPlan } from '@/lib/mock-llm';
 
 export default function Home() {
@@ -126,8 +127,8 @@ export default function Home() {
       //   }
       // });
       
-      // Mock delay and plan generation
-      const plan = await generateMockPlan(assessment);
+      // Generate plan using Azure backend API
+      const plan = await generatePlan(assessment);
       setCurrentPlan(plan);
       
       // Initialize progress tracking
