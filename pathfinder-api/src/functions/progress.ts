@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getDatabase } from '../shared/database';
+import { getDatabaseService } from '../shared/service-factory';
 import { ProgressRequest, ProgressResponse } from '../shared/types';
 
 export async function progress(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
@@ -22,7 +22,7 @@ export async function progress(request: HttpRequest, context: InvocationContext)
   }
 
   try {
-    const db = getDatabase();
+    const db = getDatabaseService();
 
     if (request.method === 'GET') {
       // Get progress for a plan

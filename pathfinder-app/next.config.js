@@ -8,6 +8,12 @@ const nextConfig = {
     // Ignore TypeScript errors during builds for deployment
     ignoreBuildErrors: true,
   },
+  // Configure for static export (Azure Static Web Apps)
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  }
 }
 
 module.exports = nextConfig
