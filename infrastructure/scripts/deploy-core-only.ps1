@@ -41,7 +41,7 @@ if (-not $ResourceGroupName) {
 
 # Override parameters with environment variables if available
 if ([Environment]::GetEnvironmentVariable("RESOURCE_GROUP_NAME")) {
-    $ResourceGroupName = [Environment]::GetEnvironmentVariable("RESOURCE_GROUP_NAME") + "-core"
+    $ResourceGroupName = [Environment]::GetEnvironmentVariable("RESOURCE_GROUP_NAME")
 }
 if ([Environment]::GetEnvironmentVariable("AZURE_LOCATION")) {
     $Location = [Environment]::GetEnvironmentVariable("AZURE_LOCATION")
