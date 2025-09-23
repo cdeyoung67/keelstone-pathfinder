@@ -1,5 +1,7 @@
 # 🧭 Keel Stone Pathfinder
 
+[![Azure Static Web Apps CI/CD](https://github.com/cdeyoung67/keelstone-pathfinder/actions/workflows/azure-static-web-apps.yml/badge.svg)](https://github.com/cdeyoung67/keelstone-pathfinder/actions/workflows/azure-static-web-apps.yml)
+
 > **Find Your Path to Inner Steadiness**
 
 A personalized 21-day practice agent that helps users break free from digital overwhelm through contemplative practices. Choose your path—Christian or secular—and discover daily habits that bring calm, clarity, and purpose.
