@@ -184,19 +184,147 @@ Needs 5-10 minute practices with easy wins and flexibility
 - **Privacy First**: No tracking without consent
 - **Secure Storage**: Azure-native security features
 
-## 🚀 Deployment
+## 🚀 Environments & Deployment
 
-### Current (Development)
-```bash
-npm run build
-npm start
+### 🎭 Demo Environment (Always Working)
+**Purpose**: Prospective user demonstrations with mock data
+
+- **URL**: https://purple-coast-078b3150f.2.azurestaticapps.net
+- **Resource Group**: `rg-pathfinder-demo`
+- **Data Source**: Mock data only (no backend dependencies)
+- **Status**: ✅ Always stable and functional
+- **Use Case**: Sales demos, user testing, stakeholder presentations
+
+**Deploy Demo Environment:**
+```powershell
+.\infrastructure\scripts\deploy-demo-environment.ps1
 ```
 
-### Planned (Production)
-- **Azure Static Web Apps**: Automatic deployment from GitHub
-- **Custom Domain**: Professional domain with SSL
-- **Global CDN**: Fast loading worldwide
-- **Auto-scaling**: Handle traffic spikes gracefully
+### 🔧 Development Environment (Real Cloud Services)
+**Purpose**: Development and testing with real Azure services
+
+- **URL**: https://purple-island-09347f60f.1.azurestaticapps.net
+- **Resource Group**: `rg-keelstone-dev-core-2`
+- **Data Source**: Azure Functions + Cosmos DB + OpenAI
+- **Status**: ⚠️ Can be broken during development
+- **Use Case**: Feature development, integration testing, debugging
+
+**Deploy Development Environment:**
+```powershell
+# Deploy core infrastructure
+.\infrastructure\scripts\deploy-core-only.ps1
+
+# Deploy Azure Functions code
+.\infrastructure\scripts\deploy-functions.ps1
+
+# Deploy Static Web App manually
+.\infrastructure\scripts\deploy-static-web-app-manual.ps1
+```
+
+### 💻 Local Development Environment
+**Purpose**: Development without cloud dependencies
+
+- **URL**: http://localhost:3000 (frontend) + http://localhost:7071 (backend)
+- **Data Source**: Mock services (configurable)
+- **Cost**: $0 (no cloud resources)
+- **Use Case**: Feature development, rapid iteration
+
+**Start Local Development:**
+```bash
+# Frontend
+cd pathfinder-app
+npm run dev
+
+# Backend (optional - uses mock services)
+cd pathfinder-api
+npm run start
+# OR use pure Node.js dev server
+node dev-server.js
+```
+
+### 🏭 Production Environment (Future)
+**Purpose**: Live production system for real users
+
+- **Status**: Not yet deployed
+- **Planned Stack**: Azure Static Web Apps + Functions + Cosmos DB + OpenAI
+- **Domain**: Custom domain with SSL
+- **Monitoring**: Application Insights + Azure Monitor
+
+## 📋 Environment Configuration
+
+### Environment Variables
+
+**Demo Environment:**
+```bash
+NEXT_PUBLIC_USE_MOCK_DATA=true
+NEXT_PUBLIC_DEMO_MODE=true
+NEXT_PUBLIC_ENVIRONMENT=demo
+NEXT_PUBLIC_API_BASE_URL=""
+```
+
+**Development Environment:**
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://pathfinder-test-functions-uxt4dm.azurewebsites.net
+NEXT_PUBLIC_ENVIRONMENT=development
+NEXT_PUBLIC_USE_MOCK_DATA=false
+```
+
+**Local Development:**
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:7071
+NEXT_PUBLIC_ENVIRONMENT=development
+# Mock services used automatically if backend not available
+```
+
+### Service Configuration
+
+The application uses a **Service Factory Pattern** to automatically switch between:
+- **Real Services**: When Azure credentials are configured
+- **Mock Services**: When running locally or when real services are unavailable
+
+This ensures the app always works, even during development or service outages.
+
+## 🛠️ Infrastructure as Code
+
+### Available Deployment Scripts
+
+| Script | Purpose | Creates |
+|--------|---------|---------|
+| `deploy-demo-environment.ps1` | Demo with mock data | Static Web App only |
+| `deploy-core-only.ps1` | Core infrastructure | Functions, Cosmos DB, OpenAI, Storage |
+| `deploy-functions.ps1` | Deploy API code | Updates existing Function App |
+| `deploy-static-web-app-manual.ps1` | Frontend deployment | Static Web App with manual GitHub setup |
+| `deploy-full-iac.ps1` | Complete with CI/CD | Everything + GitHub Actions |
+
+### Bicep Templates
+
+- `infrastructure/bicep/main.bicep` - Complete infrastructure
+- `infrastructure/bicep/main-core-only.bicep` - Core services only
+- `infrastructure/bicep/staticwebapp-demo.bicep` - Demo environment
+- `infrastructure/bicep/modules/` - Individual service modules
+
+### GitHub Actions Workflows
+
+- `.github/workflows/azure-static-web-apps.yml` - Development environment
+- `.github/workflows/azure-static-web-apps-demo.yml` - Demo environment
+- `.github/workflows/azure-static-web-apps-core-2.yml` - Alternative development
+
+## 🎯 Quick Start Guide
+
+### For Demos
+1. Use the demo environment: https://purple-coast-078b3150f.2.azurestaticapps.net
+2. Always works with realistic mock data
+3. Perfect for showing prospective users
+
+### For Development
+1. **Local**: `npm run dev` in `pathfinder-app/`
+2. **Cloud**: Use development environment URL
+3. **Testing**: Run `node pathfinder-api/test-intake.js`
+
+### For Deployment
+1. **Demo**: `.\infrastructure\scripts\deploy-demo-environment.ps1`
+2. **Development**: `.\infrastructure\scripts\deploy-core-only.ps1`
+3. **Full Stack**: `.\infrastructure\scripts\deploy-full-iac.ps1`
 
 ## 🤝 Contributing
 
