@@ -1,0 +1,11 @@
+{
+  "assessment": {
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "test@example.com",
+    "struggles": ["social-media-overwhelm"],
+    "door": "secular",
+    "timeBudget": "10-15",
+    "daypart": "morning"
+  }
+}

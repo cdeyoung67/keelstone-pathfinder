@@ -52,7 +52,7 @@ async function testIntakeEndpoint(testName, testData) {
   console.log('📤 Request body:', JSON.stringify(testData, null, 2));
   
   try {
-    const response = await axios.post(`${BASE_URL}/intake-test`, testData, {
+    const response = await axios.post(`${BASE_URL}/intake`, testData, {
       headers: { 'Content-Type': 'application/json' },
       timeout: 10000 // 10 second timeout
     });
@@ -150,7 +150,7 @@ async function testValidationErrors() {
       }
     };
     
-    const response = await axios.post(`${BASE_URL}/intake-test`, invalidData, {
+    const response = await axios.post(`${BASE_URL}/intake`, invalidData, {
       headers: { 'Content-Type': 'application/json' }
     });
     
