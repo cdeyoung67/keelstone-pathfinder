@@ -2,7 +2,7 @@
   "name": "pathfinder-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -19,6 +19,8 @@
     "@azure/identity": "^4.12.0",
     "@types/node": "^24.5.2",
     "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "openai": "^5.22.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
