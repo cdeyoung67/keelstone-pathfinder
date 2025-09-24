@@ -9,7 +9,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:demo": "cross-env NEXT_PUBLIC_DEMO_MODE=true NEXT_PUBLIC_USE_MOCK_DATA=true NEXT_PUBLIC_AGENT_VERBOSITY=off NEXT_PUBLIC_DEBUG_MODE=false next build",
+    "build:dev": "cross-env NEXT_PUBLIC_ENVIRONMENT=development NEXT_PUBLIC_AGENT_VERBOSITY=high NEXT_PUBLIC_DEBUG_MODE=true NEXT_PUBLIC_SHOW_RESPONSE_TIMES=true next build",
+    "build:prod": "cross-env NEXT_PUBLIC_ENVIRONMENT=production NEXT_PUBLIC_AGENT_VERBOSITY=low NEXT_PUBLIC_DEBUG_MODE=false next build",
+    "start:demo": "npm run build:demo && npm start",
+    "start:dev": "npm run build:dev && npm start"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -41,6 +46,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "tailwindcss": "^4",

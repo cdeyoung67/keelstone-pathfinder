@@ -25,6 +25,9 @@ import {
 import { Assessment, PersonalizedPlan, UserProgress } from '@/lib/types';
 import { generatePlan } from '@/lib/api';
 import { generateMockPlan } from '@/lib/mock-llm';
+import MultiAgentProgress from '@/components/ui/MultiAgentProgress';
+import EnvironmentBanner from '@/components/ui/EnvironmentBanner';
+import { config, getVerbosityLevel } from '@/lib/config';
 
 export default function Home() {
   const [showIntake, setShowIntake] = useState(false);
@@ -35,6 +38,10 @@ export default function Home() {
   const [hasCommittedToJourney, setHasCommittedToJourney] = useState(false);
   const [showGateway, setShowGateway] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
+  const [showMultiAgentProgress, setShowMultiAgentProgress] = useState(false);
+  const [progressMessage, setProgressMessage] = useState<string>('');
+  const [apiInProgress, setApiInProgress] = useState(false);
+  const [showPlan, setShowPlan] = useState(false);
 
   const handleStartPathfinder = () => {
     setShowIntake(true);
@@ -108,9 +115,17 @@ export default function Home() {
     setIsLoading(true);
     setShowIntake(false);
     setError(null);
+    setProgressMessage('');
     
     // Clear currentPlan now that we have new assessment data
     setCurrentPlan(null);
+    setShowPlan(false);
+
+    // Show multi-agent progress if enabled
+    const verbosity = getVerbosityLevel();
+    if (verbosity !== 'off' && config.enableMultiAgentDisplay) {
+      setShowMultiAgentProgress(true);
+    }
 
     try {
       // TODO: In production, integrate with Kit.com API here
@@ -127,9 +142,21 @@ export default function Home() {
       //   }
       // });
       
-      // Generate plan using Azure backend API
-      const plan = await generatePlan(assessment);
+      // Set API in progress flag
+      setApiInProgress(true);
+      
+      // Generate plan using multi-agent Azure backend API with progress tracking
+      const plan = await generatePlan(assessment, (step: string) => {
+        setProgressMessage(step);
+        console.log(`Multi-agent progress: ${step}`);
+      });
+      
+      // Plan is ready - now set it but DON'T show it yet
+      console.log('🎯 Plan generated, storing plan but keeping progress open:', plan.id);
       setCurrentPlan(plan);
+      
+      // CRITICAL: Don't close progress or show plan - wait for user to click Next
+      console.log('⏳ Plan ready, progress tracker should show Next button now');
       
       // Initialize progress tracking
       setUserProgress({
@@ -147,8 +174,15 @@ export default function Home() {
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate plan');
+      console.error('Multi-agent plan generation failed:', err);
+      // Close progress on error
+      setShowMultiAgentProgress(false);
     } finally {
       setIsLoading(false);
+      setApiInProgress(false);
+      // Don't close progress here - let the success path handle it
+      // setShowMultiAgentProgress(false); 
+      setProgressMessage('');
     }
   };
 
@@ -217,13 +251,15 @@ export default function Home() {
     );
   }
 
-  if (currentPlan) {
+  if (currentPlan && showPlan) {
     return (
-      <AppLayout 
-        showBackButton 
-        onBackClick={handleStartOver}
-        backButtonText="Start Over"
-      >
+      <>
+        <EnvironmentBanner />
+        <AppLayout 
+          showBackButton 
+          onBackClick={handleStartOver}
+          backButtonText="Start Over"
+        >
 
         {hasCommittedToJourney && hasAccount ? (
           <PlanDisplay 
@@ -254,11 +290,14 @@ export default function Home() {
           />
         )}
       </AppLayout>
+      </>
     );
   }
 
   return (
-    <AppLayout>
+    <>
+      <EnvironmentBanner />
+      <AppLayout>
           {/* Main Content */}
           <div className="text-center mb-12 animate-gentle-fade">
             
@@ -410,6 +449,23 @@ export default function Home() {
           }}
         />
       )}
+      
+      {/* Multi-Agent Progress Overlay */}
+      {showMultiAgentProgress && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <MultiAgentProgress 
+            isActive={showMultiAgentProgress}
+            onComplete={() => {
+              console.log('🎉 User clicked Next - showing plan now');
+              setShowMultiAgentProgress(false);
+              setShowPlan(true);
+            }}
+            currentStep={progressMessage}
+            apiInProgress={apiInProgress}
+          />
+        </div>
+      )}
     </AppLayout>
+    </>
   );
 }
