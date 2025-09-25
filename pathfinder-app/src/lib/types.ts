@@ -1,6 +1,18 @@
 // Core types for Keel Stone Pathfinder
 
 export type Door = 'christian' | 'secular';
+
+// Campaign tracking for flexible entry points
+export interface CampaignContext {
+  source: 'day-6-underground' | 'direct' | 'social-media' | 'referral' | 'other';
+  campaignId?: string; // e.g., "underground-calls-2024"
+  referrer?: string;
+  entryPoint?: string; // e.g., "landing-page", "email-link", "social-post"
+  priorContext?: string[]; // What they've already experienced (e.g., ["day-1", "day-2", "day-3", "day-4", "day-5"])
+}
+
+// Campaign source type for better type safety
+export type CampaignSource = 'day-6-underground' | 'social-media' | 'referral' | 'direct';
 export type CardinalVirtue = 'wisdom' | 'courage' | 'justice' | 'temperance';
 export type BibleVersion = 'kjv' | 'niv' | 'esv' | 'nlt' | 'msg';
 export type TimeBudget = '5-10' | '10-15' | '15-20';
@@ -36,6 +48,9 @@ export interface Assessment {
   
   // WHITEPAPER ENHANCEMENT: Implementation intentions
   ifThenPlans?: IfThenPlan[]; // Four if-then plans (one per virtue)
+  
+  // Campaign tracking for flexible entry points
+  campaignContext?: CampaignContext;
   
   createdAt: Date;
 }

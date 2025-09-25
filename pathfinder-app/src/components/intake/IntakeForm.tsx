@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue, IfThenPlan } from '@/lib/types';
+import { Assessment, Door, BibleVersion, TimeBudget, Daypart, CardinalVirtue, IfThenPlan, CampaignContext } from '@/lib/types';
 import { STRUGGLE_CATEGORIES, BIBLE_VERSIONS, StruggleCategory } from '@/lib/types';
 import { VIRTUE_DESCRIPTIONS } from '@/lib/content-library';
 import { XMarkIcon, ChevronDownIcon, CheckCircleIcon, LightBulbIcon } from '@heroicons/react/24/outline';
@@ -19,9 +19,10 @@ interface IntakeFormProps {
   onClose: () => void;
   initialData?: Partial<Assessment>;
   startStep?: number;
+  campaignContext?: CampaignContext | null;
 }
 
-export default function IntakeForm({ onSubmit, onClose, initialData, startStep = 1 }: IntakeFormProps) {
+export default function IntakeForm({ onSubmit, onClose, initialData, startStep = 1, campaignContext }: IntakeFormProps) {
   const [currentStep, setCurrentStep] = useState(startStep);
   const [formData, setFormData] = useState({
     firstName: initialData?.firstName || '',
@@ -233,6 +234,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
     }));
   };
 
+
   // Initialize if-then plans when entering step 5
   useEffect(() => {
     if (currentStep === 5 && formData.ifThenPlans.length === 0) {
@@ -254,6 +256,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
       primaryVirtue: getPrimaryVirtue(formData.struggles),
       context: formData.context || undefined,
       ifThenPlans: formData.ifThenPlans.length > 0 ? formData.ifThenPlans : undefined,
+      campaignContext: campaignContext || undefined,
       createdAt: new Date()
     };
     

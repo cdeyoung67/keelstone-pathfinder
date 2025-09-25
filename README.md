@@ -28,6 +28,205 @@ Your plan adapts to your struggles, schedule, and spiritual preferences
 ### 🚪 **Two Paths**
 Christian (with Scripture) or Secular (with philosophy)—your choice
 
+### 🎪 **Multi-Campaign Support**
+Flexible campaign system that adapts the user experience based on how they discovered the app
+
+## 🎪 Campaign System
+
+The Keel Stone Pathfinder uses a sophisticated campaign system that provides different user experiences based on how people discover the app. This allows for personalized onboarding flows that match users' expectations and context.
+
+### 🏗️ Architecture Overview
+
+```
+📁 Campaign System Structure
+├── 🔧 config/campaigns.ts          # Campaign configurations
+├── 🪝 hooks/useCampaign.ts         # Campaign state management
+├── 🧭 components/campaign/
+│   ├── CampaignRouter.tsx          # Routes to appropriate flows
+│   └── flows/                      # Campaign-specific experiences
+│       ├── Day6UndergroundFlow.tsx # 5-day email series completion
+│       ├── SocialMediaFlow.tsx     # Social media optimized
+│       └── DefaultFlow.tsx         # Standard experience
+```
+
+### 🎯 Supported Campaigns
+
+| Campaign | URL Pattern | Experience |
+|----------|-------------|------------|
+| **Day 6 Underground** | `?campaign=day-6-underground` | Special welcome for 5-day email series completers |
+| **Social Media** | `?source=social` | Social proof focused onboarding |
+| **Referral** | `?source=referral` | Trust-based welcome for referred users |
+| **Direct** | No parameters | Standard professional landing page |
+
+### 🚀 Adding New Campaigns
+
+Adding a new campaign is simple and follows a clear pattern:
+
+#### **Step 1: Add Campaign Configuration**
+
+Edit `pathfinder-app/src/config/campaigns.ts`:
+
+```typescript
+export const CAMPAIGN_CONFIGS: Record<string, CampaignConfig> = {
+  // ... existing campaigns ...
+  
+  'my-new-campaign': {
+    id: 'my-new-campaign',
+    name: 'My New Campaign',
+    description: 'Description of this campaign',
+    urlPatterns: [
+      'campaign=my-new-campaign',
+      'utm_campaign=my-campaign-2024',
+      'source=my-source'
+    ],
+    priority: 75, // Higher = higher priority
+    enabled: true,
+    metadata: {
+      source: 'email-campaign',
+      medium: 'email',
+      emotionalTone: 'excitement-and-curiosity'
+    }
+  }
+};
+```
+
+#### **Step 2: Create Campaign Flow (Optional)**
+
+Create `pathfinder-app/src/components/campaign/flows/MyNewCampaignFlow.tsx`:
+
+```typescript
+'use client';
+
+import { useState } from 'react';
+import { useCampaign } from '@/hooks/useCampaign';
+import DefaultFlow from './DefaultFlow';
+
+export default function MyNewCampaignFlow() {
+  const { campaign, context } = useCampaign();
+  const [showWelcome, setShowWelcome] = useState(true);
+
+  if (!showWelcome) {
+    return <DefaultFlow campaignContext={context} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-sand-light to-sand-dark">
+      {/* Your custom welcome experience */}
+      <h1>Welcome from My New Campaign!</h1>
+      <button onClick={() => setShowWelcome(false)}>
+        Continue to Pathfinder
+      </button>
+    </div>
+  );
+}
+```
+
+#### **Step 3: Add to Router (Optional)**
+
+Edit `pathfinder-app/src/components/campaign/CampaignRouter.tsx`:
+
+```typescript
+switch (campaign.id) {
+  // ... existing cases ...
+  
+  case 'my-new-campaign':
+    return <MyNewCampaignFlow />;
+    
+  default:
+    return <DefaultFlow campaignContext={context} />;
+}
+```
+
+### 🧪 Testing Campaigns
+
+Test your campaigns locally:
+
+```bash
+# Default experience
+http://localhost:3000
+
+# Day 6 Underground
+http://localhost:3000?campaign=day-6-underground
+
+# Social Media
+http://localhost:3000?source=social
+
+# Your new campaign
+http://localhost:3000?campaign=my-new-campaign
+```
+
+### 🔧 Campaign Hook Usage
+
+Use the `useCampaign` hook in any component:
+
+```typescript
+import { useCampaign } from '@/hooks/useCampaign';
+
+export default function MyComponent() {
+  const { 
+    campaign,           // Current campaign config
+    context,            // Campaign context data
+    isDay6Underground,  // Convenience boolean
+    isSocialMedia,      // Convenience boolean
+    shouldShowWelcome   // Whether to show welcome screen
+  } = useCampaign();
+
+  if (isDay6Underground) {
+    return <SpecialDay6Content />;
+  }
+
+  return <RegularContent />;
+}
+```
+
+### 📊 Campaign Analytics
+
+Campaign data is automatically included in user assessments:
+
+```typescript
+// Assessment object includes campaign context
+{
+  firstName: "John",
+  email: "john@example.com",
+  // ... other fields ...
+  campaignContext: {
+    source: 'day-6-underground',
+    campaignId: 'underground-calls-2024',
+    entryPoint: 'email-link',
+    priorContext: ['day-1', 'day-2', 'day-3', 'day-4', 'day-5']
+  }
+}
+```
+
+### 🎨 Campaign Best Practices
+
+1. **Keep URLs Simple**: Use clear, memorable parameter names
+2. **Set Appropriate Priorities**: Higher numbers override lower ones
+3. **Test Thoroughly**: Always test new campaigns locally first
+4. **Use DefaultFlow**: Leverage the existing flow for consistency
+5. **Consider Mobile**: All campaign experiences should be responsive
+6. **Track Context**: Campaign data is automatically saved for analytics
+
+### 🐛 Debugging Campaigns
+
+Enable debug logging by checking the browser console:
+
+```javascript
+// You'll see logs like:
+🎯 Campaign detected: { campaign: "Day 6 Underground", id: "day-6-underground" }
+🔍 Campaign detection - URL params: { campaign: "day-6-underground" }
+✅ Day 6 Underground campaign detected
+```
+
+### 🔄 Campaign Migration
+
+When updating campaigns:
+
+1. **Backward Compatibility**: Keep old URL patterns working
+2. **Gradual Rollout**: Use the `enabled` flag to control visibility
+3. **A/B Testing**: Create multiple campaigns with different priorities
+4. **Analytics**: Monitor campaign performance through assessment data
+
 ## 🏗️ Architecture
 
 ### Current Implementation (UI-First)
