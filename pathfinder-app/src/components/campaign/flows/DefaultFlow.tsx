@@ -1,10 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Assessment, PersonalizedPlan, UserProgress, CampaignContext } from '@/lib/types';
+import { Program } from '@/lib/types-programs';
+import { mockProgramAPI } from '@/lib/mock-data/programs';
 import IntakeForm from '@/components/intake/IntakeForm';
 import PlanDisplay from '@/components/plan/PlanDisplay';
 import PlanPreview from '@/components/plan/PlanPreview';
+import ProgramPreview from '@/components/programs/ProgramPreview';
 import JourneyGateway from '@/components/journey/JourneyGateway';
 import LoadingState from '@/components/ui/LoadingState';
 import MultiAgentProgress from '@/components/ui/MultiAgentProgress';
@@ -45,6 +49,8 @@ export default function DefaultFlow({
   initialStep = 'landing',
   day6Reflection 
 }: DefaultFlowProps) {
+  const { user, isAuthenticated } = useAuth();
+  
   // All the original state from page.tsx
   const [showIntake, setShowIntake] = useState(initialStep === 'intake');
   const [isLoading, setIsLoading] = useState(false);
@@ -71,32 +77,28 @@ export default function DefaultFlow({
   };
 
   const handleCreateAccount = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setHasAccount(true);
-      setHasCommittedToJourney(true);
-      
-      if (currentPlan) {
-        setUserProgress({
-          planId: currentPlan.id,
-          completedDays: [],
-          skippedDays: [],
-          currentStreak: 0,
-          lastActivity: new Date(),
-          feedback: [],
-          dailyProgress: {},
-          totalChallengesCompleted: 0,
-          fruitGrowth: {},
-          badges: []
-        });
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create account');
-    } finally {
-      setIsLoading(false);
-    }
+    // This now just prompts user to use the floating auth card
+    // The actual account creation happens through the floating auth system
+    console.log('Prompting user to create account via floating auth card');
   };
+
+  const handleStartProgram = async (program: Program) => {
+    // Redirect to dashboard to show the active program
+    window.location.href = '/dashboard';
+  };
+
+  const handleSaveProgram = async (program: Program) => {
+    // Redirect to dashboard to show the saved program
+    window.location.href = '/dashboard';
+  };
+
+  // Check if user is authenticated and redirect to dashboard with their program
+  useEffect(() => {
+    if (isAuthenticated && user && currentPlan && hasCommittedToJourney) {
+      // User just authenticated after generating a plan, redirect to dashboard
+      window.location.href = '/dashboard';
+    }
+  }, [isAuthenticated, user, currentPlan, hasCommittedToJourney]);
 
   const handleBackToPlan = () => {
     setShowGateway(false);
@@ -268,28 +270,31 @@ export default function DefaultFlow({
     );
   }
 
-  // Early return for plan with gateway
+  // Early return for plan with gateway - now using ProgramPreview
   if (currentPlan && showGateway) {
     return (
       <AppLayout>
-        <JourneyGateway 
+        <ProgramPreview 
           plan={currentPlan}
-          userEmail={currentPlan.assessment?.email}
-          onCreateAccount={handleCreateAccount}
-          onBackToPlan={handleBackToPlan}
+          onStartProgram={handleStartProgram}
+          onSaveProgram={handleSaveProgram}
+          onClose={handleBackToPlan}
+          showAuthPrompt={!isAuthenticated}
         />
       </AppLayout>
     );
   }
 
-  // Early return for plan preview
+  // Early return for plan preview - Skip directly to ProgramPreview for better UX
   if (currentPlan && !hasCommittedToJourney && !showGateway) {
     return (
       <AppLayout>
-        <PlanPreview 
-          plan={currentPlan} 
-          onStartJourney={handleStartJourney}
-          onReconfigure={handleReconfigure}
+        <ProgramPreview 
+          plan={currentPlan}
+          onStartProgram={handleStartProgram}
+          onSaveProgram={handleSaveProgram}
+          onClose={handleReconfigure}
+          showAuthPrompt={!isAuthenticated}
         />
       </AppLayout>
     );
