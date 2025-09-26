@@ -117,42 +117,51 @@ export default function PlanDisplay({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 card">
+    <div className="max-w-4xl mx-auto p-8 card-elevated bg-gradient-to-b from-sand-50 to-white shadow-2xl">
       {/* Header */}
-      <div className="text-center mb-8 animate-gentle-fade">
-        <div className="inline-flex items-center px-3 py-1 bg-gold-100 text-gold-800 rounded-full text-sm font-medium mb-4 border border-gold-200">
+      <div className="text-center mb-12 animate-gentle-fade relative">
+        <div className="absolute -top-2 -left-2 w-20 h-20 bg-gradient-to-br from-gold-200/30 to-olive-200/30 rounded-full blur-xl"></div>
+        <div className="absolute -top-2 -right-2 w-16 h-16 bg-gradient-to-br from-olive-200/30 to-gold-200/30 rounded-full blur-lg"></div>
+        
+        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gold-100 to-gold-200 text-gold-800 rounded-2xl text-sm font-semibold mb-6 border border-gold-300 shadow-soft relative z-10">
           {plan.door === 'christian' ? (
-            <HeartIcon className="w-5 h-5 inline mr-2" />
+            <HeartIcon className="w-5 h-5 inline mr-2 text-gold-600" />
           ) : (
-            <BuildingLibraryIcon className="w-5 h-5 inline mr-2" />
+            <BuildingLibraryIcon className="w-5 h-5 inline mr-2 text-gold-600" />
           )} 
           {plan.door === 'christian' ? 'Christian Path' : 'Secular Path'}
           {plan.door === 'christian' && <span className="ml-2 text-xs opacity-75">({plan.daily[0]?.quote.bibleVersion?.toUpperCase()})</span>}
         </div>
         
-        <h1 className="text-hero mb-2">
+        <h1 className="text-hero mb-4 bg-gradient-to-r from-navy-900 to-navy-700 bg-clip-text text-transparent animate-float">
           {plan.assessment?.firstName}'s 21-Day {virtue.title} Practice
         </h1>
-        <p className="text-subtitle mb-4">{virtue.subtitle}</p>
+        <p className="text-subtitle mb-6 text-slate-600 leading-relaxed max-w-2xl mx-auto">{virtue.subtitle}</p>
         
         {/* Anchor Statement */}
-        <Card className="bg-accent border-olive-500 mb-6">
-          <CardContent className="p-6 text-sand-100">
-            <h2 className="text-lg font-semibold mb-2">Your Daily Anchor</h2>
-            <p className="text-quote text-sand-100">&ldquo;{plan.anchor}&rdquo;</p>
+        <Card className="bg-gradient-to-br from-navy-900 to-navy-800 border-navy-700 mb-8 shadow-large overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-500/10 to-transparent"></div>
+          <CardContent className="p-8 text-sand-100 relative z-10">
+            <div className="flex items-center justify-center mb-4">
+              <StarIcon className="w-6 h-6 text-gold-400 mr-2" />
+              <h2 className="text-xl font-serif font-semibold text-gold-100">Your Daily Anchor</h2>
+              <StarIcon className="w-6 h-6 text-gold-400 ml-2" />
+            </div>
+            <p className="text-quote text-sand-100 text-xl leading-relaxed italic font-light">&ldquo;{plan.anchor}&rdquo;</p>
           </CardContent>
         </Card>
 
         {/* Progress Overview */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-center text-lg">Progress Overview</CardTitle>
-            <CardDescription className="text-center">
-              {completedDays.length} of 21 days completed • Day {currentDay} is next
+        <Card className="mb-8 bg-gradient-to-br from-sand-50 to-sand-100 border-sand-300 shadow-medium">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-center text-xl font-serif text-navy-900">Progress Overview</CardTitle>
+            <CardDescription className="text-center text-slate-600">
+              <span className="font-semibold text-gold-600">{completedDays.length}</span> of 21 days completed • 
+              <span className="font-semibold text-navy-600"> Day {currentDay}</span> is next
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex justify-center flex-wrap gap-2 mb-4">
+            <div className="flex justify-center flex-wrap gap-3 mb-6">
               {Array.from({ length: 21 }, (_, i) => i + 1).map((day) => {
                 const isCompleted = completedDays.includes(day);
                 const isCurrent = day === currentDay && !isCompleted;
@@ -161,14 +170,14 @@ export default function PlanDisplay({
                   <button
                     key={day}
                     onClick={() => handleDayClick(day)}
-                    className={`progress-dot focus-ring ${
+                    className={`w-10 h-10 rounded-xl font-semibold text-sm transition-all duration-300 focus-ring transform hover:scale-110 ${
                       isCompleted
-                        ? 'progress-dot-completed'
+                        ? 'bg-gradient-to-br from-olive-500 to-olive-600 text-white shadow-soft hover:shadow-medium'
                         : isCurrent
-                        ? 'progress-dot-current'
+                        ? 'bg-gradient-to-br from-gold-400 to-gold-500 text-navy-900 shadow-medium ring-2 ring-gold-300 animate-gentle-pulse'
                         : selectedDay === day
-                        ? 'bg-gold-100 text-gold-800 ring-2 ring-gold-300'
-                        : 'progress-dot-pending'
+                        ? 'bg-gradient-to-br from-gold-100 to-gold-200 text-gold-800 ring-2 ring-gold-400'
+                        : 'bg-sand-200 text-slate-600 hover:bg-sand-300'
                     }`}
                   >
                     {isCompleted ? '✓' : day}
@@ -176,10 +185,18 @@ export default function PlanDisplay({
                 );
               })}
             </div>
-            <Progress 
-              value={(completedDays.length / 21) * 100} 
-              className="w-full h-2 bg-sand-300"
-            />
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-slate-600 font-medium">
+                <span>Progress</span>
+                <span>{Math.round((completedDays.length / 21) * 100)}%</span>
+              </div>
+              <div className="w-full h-3 bg-sand-300 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-olive-500 via-gold-500 to-olive-500 transition-all duration-700 ease-out rounded-full"
+                  style={{ width: `${(completedDays.length / 21) * 100}%` }}
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
 

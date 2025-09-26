@@ -309,10 +309,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
   };
 
   return (
-    <div className="fixed inset-0 bg-navy-900 bg-opacity-50 flex items-center justify-center p-4 z-[100]">
-      <div className="card max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-gradient-to-br from-navy-900/60 to-navy-800/60 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 z-[100] animate-gentle-fade">
+      <div className="card-elevated max-w-3xl w-full max-h-[92vh] md:max-h-[90vh] overflow-y-auto animate-scale-in shadow-2xl">
         {/* Header */}
-        <div className="p-4 border-b border-sand-300">
+        <div className="p-6 border-b border-sand-300/50 bg-gradient-to-r from-sand-50 to-sand-100 rounded-t-xl">
           <div className="flex justify-between items-start">
             <div className="flex-1">
               <h2 className="text-xl font-serif font-semibold text-navy-900">Your Pathfinder Assessment</h2>
@@ -320,34 +320,36 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
             </div>
             <button 
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 focus-ring p-1 rounded ml-4"
+              className="text-slate-400 hover:text-slate-600 hover:bg-sand-200/50 focus-ring p-2 rounded-xl ml-4 transition-all duration-200 hover:scale-105"
             >
-              <XMarkIcon className="w-5 h-5" />
+              <XMarkIcon className="w-6 h-6" />
             </button>
           </div>
           
           {/* Progress bar */}
-          <div className="mt-3">
-            <div className="flex justify-between text-xs mb-2">
-              <span className="flex items-center gap-2">
+          <div className="mt-6">
+            <div className="flex justify-between text-sm mb-3">
+              <span className="flex items-center gap-2 text-slate-600 font-medium">
                 Step {currentStep} of {totalSteps}
                 {currentStep === 2 && formData.struggles.length > 0 && (
-                  <Badge variant="secondary" className="bg-gold-100 text-gold-800 text-xs px-2 py-0.5">
-                    {formData.struggles.length}
+                  <Badge variant="secondary" className="bg-gradient-to-r from-gold-100 to-gold-200 text-gold-800 text-xs px-2 py-1 rounded-full">
+                    {formData.struggles.length} selected
                   </Badge>
                 )}
               </span>
-              <span>{Math.round((currentStep / totalSteps) * 100)}%</span>
+              <span className="text-slate-600 font-medium">{Math.round((currentStep / totalSteps) * 100)}%</span>
             </div>
-            <Progress 
-              value={(currentStep / totalSteps) * 100} 
-              className="w-full h-1.5 bg-sand-300"
-            />
+            <div className="w-full h-2 bg-sand-300 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-gold-500 to-olive-500 transition-all duration-500 ease-out rounded-full"
+                style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+              />
+            </div>
           </div>
         </div>
 
         {/* Form Content */}
-        <div className="p-4 flex-1 overflow-y-auto">
+        <div className="p-6 flex-1 overflow-y-auto bg-gradient-to-b from-transparent to-sand-50/30">
           {/* Step 1: Your Information */}
           {currentStep === 1 && (
             <div className="space-y-4">
@@ -725,13 +727,13 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-sand-300 flex justify-between items-center">
+        <div className="p-6 border-t border-sand-300/50 flex justify-between items-center bg-gradient-to-r from-sand-50 to-sand-100 rounded-b-xl">
           <Button
             onClick={prevStep}
             disabled={currentStep === 1}
             variant="ghost"
             size="sm"
-            className="text-slate-600 hover:text-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-slate-600 hover:text-slate-800 hover:bg-sand-200/50 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-xl transition-all duration-200"
           >
             Back
           </Button>
@@ -741,7 +743,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
               onClick={nextStep}
               disabled={!canProceed()}
               size="sm"
-              className="bg-navy-900 hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed px-6"
+              className="bg-gradient-to-r from-navy-900 to-navy-800 hover:from-navy-800 hover:to-navy-700 disabled:opacity-50 disabled:cursor-not-allowed px-8 py-2 rounded-xl shadow-soft hover:shadow-medium transition-all duration-200 hover:scale-105"
             >
               Next
             </Button>
@@ -749,9 +751,9 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
             <Button
               onClick={handleSubmit}
               size="sm"
-              className="bg-gold-500 hover:bg-gold-600 text-navy-900 px-6"
+              className="bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-navy-900 disabled:opacity-50 disabled:cursor-not-allowed px-8 py-2 rounded-xl shadow-soft hover:shadow-medium transition-all duration-200 hover:scale-105 font-semibold"
             >
-              Create My Plan
+              Create My Plan ✨
             </Button>
           )}
         </div>
