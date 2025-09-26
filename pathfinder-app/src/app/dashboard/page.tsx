@@ -1,19 +1,38 @@
 'use client';
 
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect } from 'react';
+import ProgramHub from '@/components/programs/ProgramHub';
 import PersonalDashboard from '@/components/personal/shared/PersonalDashboard';
+import { Program } from '@/lib/types-programs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import AppLayout from '@/components/ui/AppLayout';
 import { 
   UserIcon,
   ExclamationTriangleIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  RocketLaunchIcon,
+  BookOpenIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
+  const [activeTab, setActiveTab] = useState('programs');
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+
+  const handleCreateProgram = () => {
+    // TODO: Implement program creation flow
+    console.log('Create program clicked');
+  };
+
+  const handleSelectProgram = (program: Program) => {
+    setSelectedProgram(program);
+    // TODO: Navigate to program detail view
+    console.log('Selected program:', program);
+  };
 
   // Show loading state
   if (isLoading) {
@@ -76,7 +95,50 @@ export default function DashboardPage() {
       onBackClick={() => window.location.href = '/'}
       backButtonText="Home"
     >
-      <PersonalDashboard />
+      <div className="space-y-6">
+        {/* Welcome Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-serif font-bold text-navy-900 mb-2">
+            Welcome back, {user.firstName}!
+          </h1>
+          <p className="text-slate-600">
+            Continue your journey and discover new programs to grow your practice.
+          </p>
+        </div>
+
+        {/* Main Dashboard Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 bg-sand-200 mb-6">
+            <TabsTrigger 
+              value="programs" 
+              className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900 flex items-center gap-2"
+            >
+              <RocketLaunchIcon className="w-4 h-4" />
+              Programs
+            </TabsTrigger>
+            <TabsTrigger 
+              value="collection" 
+              className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900 flex items-center gap-2"
+            >
+              <HeartIcon className="w-4 h-4" />
+              Personal Collection
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Programs Tab */}
+          <TabsContent value="programs">
+            <ProgramHub 
+              onCreateProgram={handleCreateProgram}
+              onSelectProgram={handleSelectProgram}
+            />
+          </TabsContent>
+
+          {/* Personal Collection Tab */}
+          <TabsContent value="collection">
+            <PersonalDashboard />
+          </TabsContent>
+        </Tabs>
+      </div>
     </AppLayout>
   );
 }
