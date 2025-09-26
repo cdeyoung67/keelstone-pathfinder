@@ -301,32 +301,35 @@ export default function DefaultFlow({
       <EnvironmentBanner />
       <AppLayout>
         {/* Main Content */}
-        <div className="text-center mb-12 animate-gentle-fade">
+        <div className="text-center mb-16 relative z-10">
           
-          <h1 className="text-hero mb-6">
+          <h1 className="text-hero mb-8 animate-gentle-fade">
             Find Your Path to{" "}
-            <span className="text-transparent bg-clip-text" style={{
+            <span className="text-transparent bg-clip-text animate-float inline-block" style={{
               backgroundImage: 'linear-gradient(135deg, #C9A45C 0%, #708C69 100%)'
             }}>
               Inner Steadiness
             </span>
           </h1>
           
-          <p className="text-subtitle text-slate-600 mb-6 max-w-3xl mx-auto">
+          <p className="text-subtitle text-slate-600 mb-8 max-w-3xl mx-auto animate-slide-up leading-relaxed">
             Break free from digital overwhelm with a personalized 21-day practice plan. 
             Choose your path—Christian or secular—and discover daily habits that bring calm, clarity, and purpose.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+          <div className="flex flex-col gap-4 justify-center items-center mb-12 animate-scale-in">
             <button
               onClick={handleStartPathfinder}
-              className="btn-primary group"
+              className="btn-primary group transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto"
             >
               <MapIcon className="w-5 h-5 mr-2" />
               Start Your Pathfinder
               <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
-            <p className="text-caption">Takes less than 90 seconds • No account required</p>
+            <div className="flex items-center gap-2 text-caption text-slate-500 text-center">
+              <ClockIcon className="w-4 h-4 flex-shrink-0" />
+              <span>Takes less than 90 seconds • No account required</span>
+            </div>
           </div>
 
           {/* Campaign Context Display (for debugging) */}
@@ -341,62 +344,68 @@ export default function DefaultFlow({
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="text-center space-contemplative">
-            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
-              <UserIcon className="w-6 h-6 text-slate-700" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20 animate-slide-up px-4 md:px-0">
+          <div className="text-center space-contemplative group">
+            <div className="w-16 h-16 bg-gradient-to-br from-gold-50 to-gold-100 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gold-200 shadow-soft group-hover:shadow-medium transition-all duration-300 group-hover:scale-105">
+              <UserIcon className="w-8 h-8 text-gold-600" />
             </div>
-            <h3 className="font-serif font-semibold text-navy-900 mb-2">Personalized</h3>
-            <p className="text-body text-sm">
+            <h3 className="font-serif font-semibold text-navy-900 mb-3 text-lg">Personalized</h3>
+            <p className="text-body text-sm leading-relaxed">
               Your plan adapts to your struggles, schedule, and spiritual preferences
             </p>
           </div>
 
-          <div className="text-center space-contemplative">
-            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
-              <ClockIcon className="w-6 h-6 text-slate-700" />
+          <div className="text-center space-contemplative group">
+            <div className="w-16 h-16 bg-gradient-to-br from-olive-50 to-olive-100 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-olive-200 shadow-soft group-hover:shadow-medium transition-all duration-300 group-hover:scale-105">
+              <ClockIcon className="w-8 h-8 text-olive-600" />
             </div>
-            <h3 className="font-serif font-semibold text-navy-900 mb-2">Bite-Sized</h3>
-            <p className="text-body text-sm">
+            <h3 className="font-serif font-semibold text-navy-900 mb-3 text-lg">Bite-Sized</h3>
+            <p className="text-body text-sm leading-relaxed">
               5-20 minute daily practices that fit into your real life
             </p>
           </div>
 
-          <div className="text-center space-contemplative">
-            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
-              <ArrowPathRoundedSquareIcon className="w-6 h-6 text-slate-700" />
+          <div className="text-center space-contemplative group">
+            <div className="w-16 h-16 bg-gradient-to-br from-navy-50 to-navy-100 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-navy-200 shadow-soft group-hover:shadow-medium transition-all duration-300 group-hover:scale-105">
+              <ArrowPathRoundedSquareIcon className="w-8 h-8 text-navy-600" />
             </div>
-            <h3 className="font-serif font-semibold text-navy-900 mb-2">Two Paths</h3>
-            <p className="text-body text-sm">
+            <h3 className="font-serif font-semibold text-navy-900 mb-3 text-lg">Two Paths</h3>
+            <p className="text-body text-sm leading-relaxed">
               Christian (with Scripture) or Secular (with philosophy)—your choice
             </p>
           </div>
         </div>
 
         {/* Social Proof */}
-        <div className="text-center mb-16">
-          <h2 className="text-section mb-8">Join others finding peace in a chaotic world</h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center space-contemplative">
-              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
-                <ChartBarIcon className="w-6 h-6 text-slate-700" />
+        <div className="text-center mb-16 md:mb-20 bg-section rounded-2xl md:rounded-3xl p-6 md:p-12 relative overflow-hidden mx-4 md:mx-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-50/30 to-transparent"></div>
+          <div className="relative z-10">
+            <h2 className="text-display mb-8 md:mb-12 animate-gentle-fade">Join others finding peace in a chaotic world</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="text-center space-contemplative group">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-200 shadow-soft group-hover:shadow-medium transition-all duration-300">
+                  <ChartBarIcon className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="font-serif font-semibold text-navy-900 mb-2 text-lg">94% report reduced anxiety</h3>
+                <p className="text-sm text-slate-600">Based on 21-day program completers</p>
               </div>
-              <h3 className="font-serif font-semibold text-navy-900 mb-2">94% report reduced anxiety</h3>
-            </div>
 
-            <div className="text-center space-contemplative">
-              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
-                <StarIcon className="w-6 h-6 text-slate-700" />
+              <div className="text-center space-contemplative group">
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-amber-200 shadow-soft group-hover:shadow-medium transition-all duration-300">
+                  <StarIcon className="w-8 h-8 text-amber-600" />
+                </div>
+                <h3 className="font-serif font-semibold text-navy-900 mb-2 text-lg">4.8/5 average rating</h3>
+                <p className="text-sm text-slate-600">From over 2,000 participants</p>
               </div>
-              <h3 className="font-serif font-semibold text-navy-900 mb-2">4.8/5 average rating</h3>
-            </div>
 
-            <div className="text-center space-contemplative">
-              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200">
-                <ShieldCheckIcon className="w-6 h-6 text-slate-700" />
+              <div className="text-center space-contemplative group">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-200 shadow-soft group-hover:shadow-medium transition-all duration-300">
+                  <ShieldCheckIcon className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="font-serif font-semibold text-navy-900 mb-2 text-lg">Private & secure</h3>
+                <p className="text-sm text-slate-600">Your data is never shared or sold</p>
               </div>
-              <h3 className="font-serif font-semibold text-navy-900 mb-2">Private & secure</h3>
             </div>
           </div>
         </div>

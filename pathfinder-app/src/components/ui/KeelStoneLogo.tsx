@@ -12,17 +12,17 @@ export default function KeelStoneLogo({
   priority = false
 }: KeelStoneLogoProps) {
   const sizeClasses = {
-    sm: 'w-15 h-8',  // ~60x32px
+    sm: 'w-16 h-8',  // ~64x32px
     md: 'w-20 h-10', // ~80x40px  
-    lg: 'w-30 h-15', // ~120x60px
-    xl: 'w-40 h-20'  // ~160x80px
+    lg: 'w-28 h-14', // ~112x56px
+    xl: 'w-36 h-18'  // ~144x72px
   };
 
   const sizesMap = {
-    sm: '60px',
+    sm: '64px',
     md: '80px', 
-    lg: '120px',
-    xl: '160px'
+    lg: '112px',
+    xl: '144px'
   };
 
   const containerClass = sizeClasses[size];
