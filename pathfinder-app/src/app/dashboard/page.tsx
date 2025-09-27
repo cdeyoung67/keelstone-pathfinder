@@ -108,17 +108,17 @@ export default function DashboardPage() {
 
         {/* Main Dashboard Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-sand-200 mb-6">
+          <TabsList className="grid w-full grid-cols-2 bg-muted mb-6">
             <TabsTrigger 
               value="programs" 
-              className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900 flex items-center gap-2"
+              className="data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-card flex items-center gap-2"
             >
               <RocketLaunchIcon className="w-4 h-4" />
               Programs
             </TabsTrigger>
             <TabsTrigger 
               value="collection" 
-              className="data-[state=active]:bg-gold-100 data-[state=active]:text-navy-900 flex items-center gap-2"
+              className="data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-card flex items-center gap-2"
             >
               <HeartIcon className="w-4 h-4" />
               Personal Collection

@@ -309,92 +309,94 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-navy-900/60 to-navy-800/60 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 z-[100] animate-gentle-fade">
-      <div className="card-elevated max-w-3xl w-full max-h-[92vh] md:max-h-[90vh] overflow-y-auto animate-scale-in shadow-2xl">
+    <div className="fixed inset-0 bg-gradient-to-br from-primary/95 via-primary/98 to-primary/95 flex items-center justify-center p-2 md:p-4 z-[100] animate-gentle-fade">
+      <Card className="max-w-3xl w-full max-h-[92vh] md:max-h-[90vh] overflow-y-auto animate-scale-in shadow-2xl drop-shadow-lg bg-gradient-to-b from-[#E8E5DC] to-[#F1F0EA] text-popup-foreground border-2 border-gold-500">
         {/* Header */}
-        <div className="p-6 border-b border-sand-300/50 bg-gradient-to-r from-sand-50 to-sand-100 rounded-t-xl">
+        <CardHeader className="border-b border-gold-400 rounded-t-xl">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h2 className="text-xl font-serif font-semibold text-navy-900">Your Pathfinder Assessment</h2>
-              <p className="text-sm text-slate-600">Less than 90 seconds</p>
+              <CardTitle className="text-xl font-serif text-navy-900">Your Pathfinder Assessment</CardTitle>
+              <CardDescription className="text-gray-600">Less than 90 seconds</CardDescription>
             </div>
-            <button 
+            <Button 
+              variant="ghost"
+              size="icon"
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 hover:bg-sand-200/50 focus-ring p-2 rounded-xl ml-4 transition-all duration-200 hover:scale-105"
+              className="text-gray-600 hover:text-gray-900 hover:bg-muted/50 ml-4"
             >
               <XMarkIcon className="w-6 h-6" />
-            </button>
+            </Button>
           </div>
           
           {/* Progress bar */}
           <div className="mt-6">
             <div className="flex justify-between text-sm mb-3">
-              <span className="flex items-center gap-2 text-slate-600 font-medium">
+              <span className="flex items-center gap-2 text-gray-600 font-medium">
                 Step {currentStep} of {totalSteps}
                 {currentStep === 2 && formData.struggles.length > 0 && (
-                  <Badge variant="secondary" className="bg-gradient-to-r from-gold-100 to-gold-200 text-gold-800 text-xs px-2 py-1 rounded-full">
+                  <Badge variant="secondary" className="bg-selected/20 text-selected-foreground text-xs">
                     {formData.struggles.length} selected
                   </Badge>
                 )}
               </span>
-              <span className="text-slate-600 font-medium">{Math.round((currentStep / totalSteps) * 100)}%</span>
+              <span className="text-gray-600 font-medium">{Math.round((currentStep / totalSteps) * 100)}%</span>
             </div>
-            <div className="w-full h-2 bg-sand-300 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-gold-500 to-olive-500 transition-all duration-500 ease-out rounded-full"
+                className="h-full bg-gradient-to-r from-selected to-accent transition-all duration-500 ease-out rounded-full animate-progress-fill"
                 style={{ width: `${(currentStep / totalSteps) * 100}%` }}
               />
             </div>
           </div>
-        </div>
+        </CardHeader>
 
         {/* Form Content */}
-        <div className="p-6 flex-1 overflow-y-auto bg-gradient-to-b from-transparent to-sand-50/30">
+        <CardContent className="flex-1 overflow-y-auto">
           {/* Step 1: Your Information */}
           {currentStep === 1 && (
-            <div className="space-y-4">
+            <div className="space-y-4 bg-popup rounded-lg p-6 m-4 border border-gold-400 shadow-md">
               <div className="text-center">
                 <h3 className="text-lg font-serif font-semibold text-navy-900">Tell us about yourself</h3>
-                <p className="text-sm text-slate-600 mt-1">We'll use this to personalize your experience and send your 21-day plan.</p>
+                <p className="text-sm text-gray-500 mt-1">We'll use this to personalize your experience and send your 21-day plan.</p>
               </div>
               
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="firstName" className="text-xs font-medium text-slate-700">First Name</Label>
+                  <Label htmlFor="firstName" className="text-sm font-medium text-navy-900">First Name</Label>
                   <Input
                     id="firstName"
                     type="text"
                     placeholder="First name"
                     value={formData.firstName}
                     onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                    className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-9"
+                    className="bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700"
                     autoFocus
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="lastName" className="text-xs font-medium text-slate-700">Last Name</Label>
+                  <Label htmlFor="lastName" className="text-sm font-medium text-navy-900">Last Name</Label>
                   <Input
                     id="lastName"
                     type="text"
                     placeholder="Last name"
                     value={formData.lastName}
                     onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                    className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-9"
+                    className="bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700"
                   />
                 </div>
               </div>
               
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs font-medium text-slate-700">Email Address</Label>
+                <Label htmlFor="email" className="text-sm font-medium text-navy-900">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="your@email.com"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-9"
+                  className="bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700"
                 />
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-gray-500">
                   We'll send your personalized plan here and add you to our community updates.
                 </p>
               </div>
@@ -403,10 +405,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
           {/* Step 2: Struggles */}
           {currentStep === 2 && (
-            <div className="space-y-4">
+            <div className="space-y-4 bg-popup rounded-lg p-6 m-4 border border-gold-400 shadow-md">
               <div className="text-center">
-                <h3 className="text-title">What are you struggling with most?</h3>
-                <p className="text-body mt-1">Click on any category that resonates with you.</p>
+                <h3 className="text-lg font-serif font-semibold text-navy-900">What are you struggling with most?</h3>
+                <p className="text-sm text-gray-500 mt-1">Click on any category that resonates with you.</p>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -416,28 +418,28 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                   return (
                     <Card 
                       key={category.id}
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
-                        selectedCount > 0
-                          ? 'border-gold-500 bg-gold-50 shadow-sm'
-                          : 'hover:border-gold-400 hover:bg-gold-50/50'
-                      }`}
+                      variant="default"
                       onClick={() => openCategoryPopup(category.id)}
+                      className={selectedCount > 0 
+                        ? "bg-gradient-to-r from-selected to-accent border-2 border-gold-500 shadow-md hover:shadow-lg transition-all duration-200"
+                        : "bg-[#F1F0EA] border-gray-200 shadow-sm hover:border-selected/50 hover:shadow-md transition-all duration-200"
+                      }
                     >
-                      <CardContent className="p-4">
+                      <CardContent className="p-2.5">
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-semibold text-navy-900 text-sm leading-tight">{category.title}</h4>
+                              <h4 className="font-semibold text-gray-900 text-xs leading-tight">{category.title}</h4>
                               {selectedCount > 0 && (
-                                <Badge className="bg-gold-500 text-xs px-1.5 py-0.5 h-5">
+                                <Badge className="bg-selected text-selected-foreground text-xs px-1.5 py-0.5 h-5">
                                   {selectedCount}
                                 </Badge>
                               )}
                             </div>
-                            <p className="text-xs text-slate-600 leading-relaxed">{category.description}</p>
+                            <p className="text-xs text-gray-600 leading-tight">{category.description}</p>
                           </div>
-                          <div className="ml-2 text-slate-400 flex-shrink-0">
-                            <ChevronDownIcon className="w-4 h-4" />
+                          <div className="ml-2 flex-shrink-0">
+                            <ChevronDownIcon className="w-4 h-4 text-gray-600" />
                           </div>
                         </div>
                       </CardContent>
@@ -459,51 +461,45 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
           {/* Step 3: Door Selection */}
           {currentStep === 3 && (
-            <div className="space-y-4">
+            <div className="space-y-3 bg-popup rounded-lg p-4 m-4 border border-gold-400 shadow-md">
               <div className="text-center">
                 <h3 className="text-lg font-serif font-semibold text-navy-900">Choose your approach</h3>
-                <p className="text-sm text-slate-600 mt-1">Both paths lead to the same virtues, just with different framing.</p>
+                <p className="text-sm text-gray-500 mt-1">Both paths lead to the same virtues, just with different framing.</p>
               </div>
               
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Card 
-                  className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.01] ${
-                    formData.door === 'christian'
-                      ? 'border-gold-500 bg-gold-50 shadow-sm'
-                      : 'hover:border-gold-400 hover:bg-gold-50/50'
-                  }`}
+                  variant="default"
                   onClick={() => setFormData(prev => ({ ...prev, door: 'christian' }))}
+                  className={formData.door === 'christian'
+                    ? "bg-gradient-to-r from-selected to-accent border-2 border-gold-500 shadow-md hover:shadow-lg transition-all duration-200"
+                    : "bg-[#F1F0EA] border-gray-200 shadow-sm hover:border-selected/50 hover:shadow-md transition-all duration-200"
+                  }
                 >
-                  <CardContent className="p-4">
+                  <CardContent className="p-2">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-navy-900 text-sm mb-1">Christian Path</h4>
-                        <p className="text-xs text-slate-600">Scripture-based practices with biblical wisdom and prayer</p>
+                        <h4 className="font-semibold text-gray-900 text-xs mb-0.5">Christian Path</h4>
+                        <p className="text-xs text-gray-600">Scripture-based practices with biblical wisdom and prayer</p>
                       </div>
-                      {formData.door === 'christian' && (
-                        <Badge className="bg-gold-500 text-xs px-2 py-1 ml-3">Selected</Badge>
-                      )}
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card 
-                  className={`cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.01] ${
-                    formData.door === 'secular'
-                      ? 'border-gold-500 bg-gold-50 shadow-sm'
-                      : 'hover:border-gold-400 hover:bg-gold-50/50'
-                  }`}
+                  variant="default"
                   onClick={() => setFormData(prev => ({ ...prev, door: 'secular' }))}
+                  className={formData.door === 'secular'
+                    ? "bg-gradient-to-r from-selected to-accent border-2 border-gold-500 shadow-md hover:shadow-lg transition-all duration-200"
+                    : "bg-[#F1F0EA] border-gray-200 shadow-sm hover:border-selected/50 hover:shadow-md transition-all duration-200"
+                  }
                 >
-                  <CardContent className="p-4">
+                  <CardContent className="p-2">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-navy-900 text-sm mb-1">Secular Path</h4>
-                        <p className="text-xs text-slate-600">Philosophy-based practices with Stoic wisdom and reflection</p>
+                        <h4 className="font-semibold text-gray-900 text-xs mb-0.5">Secular Path</h4>
+                        <p className="text-xs text-gray-600">Philosophy-based practices with Stoic wisdom and reflection</p>
                       </div>
-                      {formData.door === 'secular' && (
-                        <Badge className="bg-gold-500 text-xs px-2 py-1 ml-3">Selected</Badge>
-                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -511,24 +507,26 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
               {/* Bible Version Selection for Christian Door */}
               {formData.door === 'christian' && (
-                <Card className="bg-gold-50 border-gold-200">
-                  <CardContent className="p-3">
+                <Card variant="default" className="bg-[#F1F0EA] border-gold-400 shadow-sm">
+                  <CardContent className="p-2">
                     <div className="space-y-2">
-                      <Label htmlFor="bibleVersion" className="text-xs font-medium text-navy-900">
+                      <Label htmlFor="bibleVersion" className="text-sm font-medium text-navy-900">
                         Bible Version Preference
                       </Label>
                       <Select 
                         value={formData.bibleVersion}
-                        defaultValue={formData.bibleVersion}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, bibleVersion: value as BibleVersion }))}
                       >
-                        <SelectTrigger className="bg-sand-100 border-sand-400 focus:border-gold-500 h-8 text-sm">
+                        <SelectTrigger className="bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700 h-10">
                           <SelectValue placeholder="Choose your preferred Bible version" />
                         </SelectTrigger>
-                        <SelectContent className="z-[100]">
+                        <SelectContent className="z-[110] bg-white border-gray-200 shadow-lg">
                           {BIBLE_VERSIONS.map((version) => (
-                            <SelectItem key={version.value} value={version.value}>
-                              {version.label} - {version.description}
+                            <SelectItem key={version.value} value={version.value} className="text-sm">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{version.label}</span>
+                                <span className="text-xs text-gray-500">{version.description}</span>
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -544,12 +542,12 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
           {currentStep === 4 && (
             <div className="space-y-3">
               <div className="text-center">
-                <h3 className="text-lg font-serif font-semibold text-navy-900">When will you practice?</h3>
-                <p className="text-xs text-slate-600 mt-0.5">Choose your time commitment and schedule</p>
+                <h3 className="text-lg font-serif font-semibold text-gray-900">When will you practice?</h3>
+                <p className="text-xs text-gray-600 mt-0.5">Choose your time commitment and schedule</p>
               </div>
               
               <div className="space-y-2">
-                <h4 className="text-xs font-medium text-navy-900">Time Budget</h4>
+                <h4 className="text-xs font-medium text-gray-900">Time Budget</h4>
                 <div className="space-y-1.5">
                   {[
                     { value: '5-10', label: '10 min or less', description: 'Four 2-minute micro-habits (recommended)' },
@@ -558,24 +556,16 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                   ].map((option) => (
                     <Card
                       key={option.value}
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-sm ${
-                        formData.timeBudget === option.value
-                          ? 'border-gold-500 bg-gold-50 shadow-sm'
-                          : 'hover:border-gold-400 hover:bg-gold-50/50'
-                      }`}
+                      variant={formData.timeBudget === option.value ? "selected" : "selectable"}
                       onClick={() => setFormData(prev => ({ ...prev, timeBudget: option.value as TimeBudget }))}
+                      className="bg-background border-muted hover:border-selected/50"
                     >
                       <CardContent className="p-2.5">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="font-semibold text-navy-900 text-xs">{option.label}</div>
-                            <div className="text-xs text-slate-600">{option.description}</div>
+                            <div className="font-semibold text-gray-900 text-xs">{option.label}</div>
+                            <div className="text-xs text-gray-600">{option.description}</div>
                           </div>
-                          {formData.timeBudget === option.value && (
-                            <Badge className="bg-gold-500 text-xs px-1.5 py-0.5">
-                              <CheckCircleIcon className="w-3 h-3" />
-                            </Badge>
-                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -584,7 +574,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-xs font-medium text-navy-900">Best Time of Day</h4>
+                <h4 className="text-xs font-medium text-gray-900">Best Time of Day</h4>
                 <div className="grid grid-cols-2 gap-1.5">
                   {[
                     { value: 'morning', label: 'Morning', description: 'Start centered' },
@@ -594,22 +584,14 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                   ].map((option) => (
                     <Card
                       key={option.value}
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-sm ${
-                        formData.daypart === option.value
-                          ? 'border-gold-500 bg-gold-50 shadow-sm'
-                          : 'hover:border-gold-400 hover:bg-gold-50/50'
-                      }`}
+                      variant={formData.daypart === option.value ? "selected" : "selectable"}
                       onClick={() => setFormData(prev => ({ ...prev, daypart: option.value as Daypart }))}
+                      className="bg-background border-muted hover:border-selected/50"
                     >
                       <CardContent className="p-2">
                         <div className="text-center">
-                          <div className="font-semibold text-navy-900 text-xs mb-0.5">{option.label}</div>
-                          <div className="text-xs text-slate-600 leading-tight">{option.description}</div>
-                          {formData.daypart === option.value && (
-                            <Badge className="bg-gold-500 text-xs px-1 py-0.5 mt-1">
-                              <CheckCircleIcon className="w-3 h-3" />
-                            </Badge>
-                          )}
+                          <div className="font-semibold text-gray-900 text-xs mb-0.5">{option.label}</div>
+                          <div className="text-xs text-gray-600 leading-tight mb-2">{option.description}</div>
                         </div>
                       </CardContent>
                     </Card>
@@ -623,9 +605,9 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
           {currentStep === 5 && (
             <div className="space-y-4">
               <div className="text-center">
-                <h3 className="text-lg font-serif font-semibold text-navy-900">Create Your If-Then Plans</h3>
-                <p className="text-sm text-slate-600 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four focused plans for {getPrimaryVirtue(formData.struggles)}.</p>
-                <div className="mt-2 text-xs text-gold-700 bg-gold-50 border border-gold-200 rounded-lg px-3 py-2 inline-block">
+                <h3 className="text-lg font-serif font-semibold text-gray-900">Create Your If-Then Plans</h3>
+                <p className="text-sm text-gray-600 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four focused plans for {getPrimaryVirtue(formData.struggles)}.</p>
+                <div className="mt-2 text-xs text-ring bg-gold-50 border border-gold-200 rounded-lg px-3 py-2 inline-block">
                   <LightBulbIcon className="w-3 h-3 inline mr-1" />
                   These plans are customized for your {formData.door === 'christian' ? 'Christian faith journey' : 'secular wisdom path'}
                 </div>
@@ -685,10 +667,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
               <div className="bg-gold-50 border border-gold-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <LightBulbIcon className="w-4 h-4 text-gold-600" />
-                  <h4 className="font-medium text-gold-900 text-sm">Why This Works</h4>
+                  <LightBulbIcon className="w-4 h-4 text-ring" />
+                  <h4 className="font-medium text-ring text-sm">Why This Works</h4>
                 </div>
-                <p className="text-xs text-gold-800 leading-relaxed">
+                <p className="text-xs text-ring leading-relaxed">
                   Implementation intentions ("if-then" plans) are one of the most powerful tools in behavioral science. 
                   They help your brain automatically link situations to actions, making your new habits feel natural and effortless.
                 </p>
@@ -700,13 +682,13 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
           {currentStep === 6 && (
             <div className="space-y-4">
               <div className="text-center">
-                <h3 className="text-lg font-serif font-semibold text-navy-900">Anything else we should know?</h3>
-                <p className="text-sm text-slate-600 mt-1">Optional: Share context to help us personalize your plan better</p>
+                <h3 className="text-lg font-serif font-semibold text-gray-900">Anything else we should know?</h3>
+                <p className="text-sm text-gray-600 mt-1">Optional: Share context to help us personalize your plan better</p>
               </div>
               
               <Card className="bg-sand-50 border-sand-300">
                 <CardContent className="p-4">
-                  <Label htmlFor="context" className="text-xs font-medium text-slate-700 mb-2 block">
+                  <Label htmlFor="context" className="text-xs font-medium text-gray-900 mb-2 block">
                     Additional Context (Optional)
                   </Label>
                   <textarea
@@ -724,88 +706,96 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
               </Card>
             </div>
           )}
-        </div>
+        </CardContent>
 
         {/* Footer */}
-        <div className="p-6 border-t border-sand-300/50 flex justify-between items-center bg-gradient-to-r from-sand-50 to-sand-100 rounded-b-xl">
-          <Button
-            onClick={prevStep}
-            disabled={currentStep === 1}
-            variant="ghost"
-            size="sm"
-            className="text-slate-600 hover:text-slate-800 hover:bg-sand-200/50 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-xl transition-all duration-200"
-          >
-            Back
-          </Button>
-          
-          {currentStep < totalSteps ? (
+        <CardContent className="border-t border-gold-400 rounded-b-xl pt-6">
+          <div className="flex justify-between items-center">
             <Button
-              onClick={nextStep}
-              disabled={!canProceed()}
+              onClick={prevStep}
+              disabled={currentStep === 1}
+              variant="ghost"
               size="sm"
-              className="bg-gradient-to-r from-navy-900 to-navy-800 hover:from-navy-800 hover:to-navy-700 disabled:opacity-50 disabled:cursor-not-allowed px-8 py-2 rounded-xl shadow-soft hover:shadow-medium transition-all duration-200 hover:scale-105"
+              className="text-gray-600 hover:text-gray-900 hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed border border-gold-400 shadow-md hover:shadow-lg transition-all duration-200"
             >
-              Next
+              Back
             </Button>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              size="sm"
-              className="bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-navy-900 disabled:opacity-50 disabled:cursor-not-allowed px-8 py-2 rounded-xl shadow-soft hover:shadow-medium transition-all duration-200 hover:scale-105 font-semibold"
-            >
-              Create My Plan ✨
-            </Button>
-          )}
-        </div>
-      </div>
+            
+            {currentStep < totalSteps ? (
+              <Button
+                onClick={nextStep}
+                disabled={!canProceed()}
+                className="bg-gradient-to-r from-selected to-accent hover:from-selected/90 hover:to-accent/90 text-selected-foreground disabled:opacity-50 disabled:cursor-not-allowed px-8 border border-gold-400 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                className="bg-gradient-to-r from-selected to-accent hover:from-selected/90 hover:to-accent/90 text-selected-foreground disabled:opacity-50 disabled:cursor-not-allowed px-8 border border-gold-400 shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                Create My Plan ✨
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* ShadCN Dialog for Category Selection */}
       <Dialog open={!!selectedCategoryPopup} onOpenChange={(open) => !open && closeCategoryPopup()}>
-        <DialogContent className="max-w-md max-h-[80vh] overflow-hidden z-[200]">
+        <DialogContent className="max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden z-[200] bg-gradient-to-b from-[#E8E5DC] to-[#F1F0EA] border-2 border-gold-500 shadow-2xl drop-shadow-lg">
           {(() => {
             const category = STRUGGLE_CATEGORIES.find(cat => cat.id === selectedCategoryPopup);
             if (!category) return null;
             
             return (
               <>
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-semibold text-navy-900">{category.title}</DialogTitle>
-                  <DialogDescription className="text-slate-600">{category.description}</DialogDescription>
+                <DialogHeader className="pb-4 border-b border-gold-400">
+                  <DialogTitle className="text-xl font-serif font-semibold text-navy-900">{category.title}</DialogTitle>
+                  <DialogDescription className="text-gray-500 text-sm">{category.description}</DialogDescription>
                 </DialogHeader>
                 
                 {/* Dialog Content */}
-                <div className="max-h-96 overflow-y-auto">
-                  <p className="text-sm text-slate-600 mb-4">Select all that apply to you:</p>
+                <div className="flex-1 overflow-y-auto py-4 px-2">
+                  <p className="text-sm text-gray-500 mb-6">Select all that apply to you:</p>
                   <div className="space-y-3">
                     {category.struggles.map((struggle) => (
-                      <button
+                      <Card
                         key={struggle.id}
-                        type="button"
+                        variant="default"
                         onClick={() => toggleStruggle(struggle.id)}
-                        className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
-                          formData.struggles.includes(struggle.id)
-                            ? 'border-gold-500 bg-gold-50 text-navy-900'
-                            : 'border-slate-200 hover:border-gold-400 hover:bg-gold-50/50'
-                        }`}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleStruggle(struggle.id);
+                          }
+                        }}
+                        className={formData.struggles.includes(struggle.id) 
+                          ? "bg-gradient-to-r from-selected to-accent border-2 border-gold-500 shadow-md" 
+                          : "bg-[#F1F0EA] border-gray-200 shadow-sm hover:border-selected/50 hover:shadow-md transition-all duration-200"
+                        }
                       >
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium">{struggle.label}</span>
-                          {formData.struggles.includes(struggle.id) && (
-                            <div className="w-5 h-5 rounded-full bg-gold-500 flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full" />
-                            </div>
-                          )}
-                        </div>
-                      </button>
+                        <CardContent className="p-4 min-h-[3rem]">
+                          <span className={`font-medium leading-relaxed ${
+                            formData.struggles.includes(struggle.id) 
+                              ? "text-navy-900" 
+                              : "text-gray-900"
+                          }`}>{struggle.label}</span>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
                 </div>
                 
-                <DialogFooter className="flex justify-between items-center">
-                  <span className="text-sm text-slate-600">
-                    {getCategorySelectedCount(category)} of {category.struggles.length} selected
-                  </span>
-                  <Button onClick={closeCategoryPopup} className="bg-navy-900 hover:bg-navy-800">
+                <DialogFooter className="flex justify-between items-center pt-6 border-t border-gold-400">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="bg-selected/20 text-selected-foreground border border-gold-400 shadow-sm">
+                      {getCategorySelectedCount(category)} of {category.struggles.length} selected
+                    </Badge>
+                  </div>
+                  <Button onClick={closeCategoryPopup} className="bg-gradient-to-r from-selected to-accent hover:from-selected/90 hover:to-accent/90 text-selected-foreground border border-gold-400 shadow-md hover:shadow-lg transition-all duration-200">
                     Done
                   </Button>
                 </DialogFooter>

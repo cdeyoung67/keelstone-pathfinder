@@ -128,43 +128,43 @@ export default function ProgramHub({ onCreateProgram, onSelectProgram }: Program
       {/* Stats Overview (Authenticated Users) */}
       {isAuthenticated && stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
+          <Card className="bg-card border-border shadow-card hover:shadow-lg transition-all duration-300">
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center mb-2">
-                <BookOpenIcon className="w-5 h-5 text-blue-600 mr-2" />
-                <span className="text-2xl font-bold text-blue-600">{stats.activePrograms}</span>
+                <BookOpenIcon className="w-5 h-5 text-primary mr-2" />
+                <span className="text-2xl font-bold text-primary">{stats.activePrograms}</span>
               </div>
-              <p className="text-sm text-slate-600">Active Programs</p>
+              <p className="text-sm text-muted-foreground">Active Programs</p>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-card border-border shadow-card hover:shadow-lg transition-all duration-300">
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center mb-2">
-                <TrophyIcon className="w-5 h-5 text-green-600 mr-2" />
-                <span className="text-2xl font-bold text-green-600">{stats.completedPrograms}</span>
+                <TrophyIcon className="w-5 h-5 text-accent mr-2" />
+                <span className="text-2xl font-bold text-accent">{stats.completedPrograms}</span>
               </div>
-              <p className="text-sm text-slate-600">Completed</p>
+              <p className="text-sm text-muted-foreground">Completed</p>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-card border-border shadow-card hover:shadow-lg transition-all duration-300">
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center mb-2">
-                <FireIcon className="w-5 h-5 text-orange-600 mr-2" />
-                <span className="text-2xl font-bold text-orange-600">{stats.currentStreak}</span>
+                <FireIcon className="w-5 h-5 text-destructive mr-2" />
+                <span className="text-2xl font-bold text-destructive">{stats.currentStreak}</span>
               </div>
-              <p className="text-sm text-slate-600">Current Streak</p>
+              <p className="text-sm text-muted-foreground">Current Streak</p>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-card border-border shadow-card hover:shadow-lg transition-all duration-300">
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center mb-2">
-                <ChartBarIcon className="w-5 h-5 text-purple-600 mr-2" />
-                <span className="text-2xl font-bold text-purple-600">{stats.totalDaysCompleted}</span>
+                <ChartBarIcon className="w-5 h-5 text-ring mr-2" />
+                <span className="text-2xl font-bold text-ring">{stats.totalDaysCompleted}</span>
               </div>
-              <p className="text-sm text-slate-600">Days Completed</p>
+              <p className="text-sm text-muted-foreground">Days Completed</p>
             </CardContent>
           </Card>
         </div>

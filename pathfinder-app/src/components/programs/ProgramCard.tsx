@@ -87,14 +87,14 @@ export default function ProgramCard({
 
   if (compact) {
     return (
-      <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setIsExpanded(true)}>
+      <Card variant="interactive" onClick={() => setIsExpanded(true)}>
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="text-2xl">{getProgramTypeIcon(program.type)}</div>
               <div>
-                <h3 className="font-medium text-sm">{program.title}</h3>
-                <p className="text-xs text-slate-600">{formatProgramDuration(program.duration)}</p>
+                <h3 className="font-medium text-sm text-card-foreground">{program.title}</h3>
+                <p className="text-xs text-muted-foreground">{formatProgramDuration(program.duration)}</p>
               </div>
             </div>
             <Badge className={`text-xs ${getProgramStatusColor(program.status)}`}>
@@ -112,20 +112,20 @@ export default function ProgramCard({
   }
 
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 border border-slate-200">
+    <Card variant="interactive">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
             <div className="text-3xl">{getProgramTypeIcon(program.type)}</div>
             <div className="flex-1">
-              <CardTitle className="text-lg font-semibold text-navy-900">
+              <CardTitle className="text-lg font-semibold text-card-foreground">
                 {program.title}
               </CardTitle>
-              <CardDescription className="text-sm text-slate-600 mt-1">
+              <CardDescription className="text-sm text-muted-foreground mt-1">
                 {program.description}
               </CardDescription>
               {program.subtitle && (
-                <p className="text-xs text-slate-500 mt-1 italic">{program.subtitle}</p>
+                <p className="text-xs text-muted-foreground/80 mt-1 italic">{program.subtitle}</p>
               )}
             </div>
           </div>
@@ -137,7 +137,7 @@ export default function ProgramCard({
 
       <CardContent className="pt-0">
         {/* Program Info */}
-        <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
           {program.duration && (
             <div className="flex items-center gap-1">
               <CalendarDaysIcon className="w-4 h-4" />
@@ -161,14 +161,14 @@ export default function ProgramCard({
         {program.progress && (
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-700">Progress</span>
-              <span className="text-sm text-slate-600">
+              <span className="text-sm font-medium text-card-foreground">Progress</span>
+              <span className="text-sm text-muted-foreground">
                 {program.progress.completionPercentage}%
               </span>
             </div>
             <Progress value={program.progress.completionPercentage} className="h-2 mb-2" />
             
-            <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="flex items-center justify-between text-xs text-muted-foreground/80">
               <span>
                 {program.progress.completedDays.length} of {program.progress.totalDays || '∞'} days
               </span>
@@ -215,7 +215,7 @@ export default function ProgramCard({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs text-slate-500 hover:text-slate-700"
+                className="text-xs text-muted-foreground hover:text-foreground"
               >
                 {isExpanded ? (
                   <>Less <ChevronUpIcon className="w-3 h-3 ml-1" /></>
@@ -227,7 +227,7 @@ export default function ProgramCard({
 
             {/* Expanded Actions */}
             {isExpanded && (
-              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border">
                 <Button
                   variant="outline"
                   size="sm"
@@ -274,8 +274,8 @@ export default function ProgramCard({
 
         {/* Program Details */}
         {isExpanded && (
-          <div className="pt-4 border-t border-slate-100 mt-4">
-            <div className="text-xs text-slate-500 space-y-1">
+          <div className="pt-4 border-t border-border mt-4">
+            <div className="text-xs text-muted-foreground/80 space-y-1">
               <div>Created: {program.createdAt.toLocaleDateString()}</div>
               {program.startedAt && (
                 <div>Started: {program.startedAt.toLocaleDateString()}</div>
@@ -284,7 +284,7 @@ export default function ProgramCard({
                 <div>Completed: {program.completedAt.toLocaleDateString()}</div>
               )}
               {program.shareCode && (
-                <div>Share Code: <code className="bg-slate-100 px-1 rounded">{program.shareCode}</code></div>
+                <div>Share Code: <code className="bg-muted px-1 rounded">{program.shareCode}</code></div>
               )}
             </div>
           </div>

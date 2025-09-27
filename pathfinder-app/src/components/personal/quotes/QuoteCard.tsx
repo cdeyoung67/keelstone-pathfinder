@@ -94,7 +94,7 @@ export default function QuoteCard({ quote, onUpdate, onDelete, className = '' }:
       case 'book':
         return 'text-purple-600';
       case 'sermon':
-        return 'text-red-600';
+        return 'text-destructive';
       case 'community':
         return 'text-orange-600';
       default:
@@ -230,7 +230,7 @@ export default function QuoteCard({ quote, onUpdate, onDelete, className = '' }:
               variant="ghost"
               size="sm"
               onClick={handleDelete}
-              className="p-2 h-8 w-8 text-slate-400 hover:text-red-600"
+              className="p-2 h-8 w-8 text-slate-400 hover:text-destructive"
             >
               <TrashIcon className="w-4 h-4" />
             </Button>

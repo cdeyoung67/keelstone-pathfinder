@@ -33,11 +33,11 @@ export default function AppHeader({
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex fixed left-0 top-0 bottom-0 w-36 bg-gradient-to-b from-navy-900 to-navy-800 flex-col shadow-large border-r border-navy-700/50 z-40">
+      <div className="hidden md:flex fixed left-0 top-0 bottom-0 w-36 bg-card flex-col shadow-large border-r border-border z-40">
         {/* Logo at top */}
-        <div className="px-3 py-8 border-b border-navy-700/50 flex justify-center bg-gradient-to-b from-navy-800/50 to-transparent">
+        <div className="px-3 py-8 border-b border-border flex justify-center">
           <div className="transform hover:scale-110 transition-all duration-300 hover:drop-shadow-lg">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-slate-100/10 to-slate-200/5 hover:from-slate-100/20 hover:to-slate-200/10 transition-all duration-300">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/15 transition-all duration-300">
               <div className="animate-logo-glow">
                 <Image
                   src="/TheKeelStone-Txt-Logo-Grey-gradient-BG.png"
@@ -59,7 +59,7 @@ export default function AppHeader({
               variant="ghost"
               size="sm"
               onClick={onBackClick}
-              className="text-caption text-sand-200 hover:text-sand-100 hover:bg-navy-800/50 hover:bg-gradient-to-r hover:from-navy-800/50 hover:to-navy-700/50 focus-ring text-center flex flex-col items-center gap-2 h-auto py-3 px-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-soft"
+              className="text-caption text-primary/80 hover:text-primary hover:bg-primary/10 hover:bg-gradient-to-r hover:from-primary/10 hover:to-primary/5 focus-ring text-center flex flex-col items-center gap-2 h-auto py-3 px-3 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-soft"
             >
               <ArrowLeftIcon className="w-5 h-5" />
               <span className="text-xs leading-tight font-medium">{backButtonText}</span>
@@ -69,18 +69,18 @@ export default function AppHeader({
         
         {/* User Info Section - Desktop */}
         {isAuthenticated && user && (
-          <div className="px-3 py-4 border-t border-navy-700/50 bg-gradient-to-b from-transparent to-navy-800/50">
+          <div className="px-3 py-4 border-t border-border">
             <div className="flex flex-col items-center gap-3">
               {/* User Avatar & Info */}
               <div className="flex flex-col items-center gap-2">
-                <Avatar className="w-10 h-10 ring-2 ring-gold-200/50">
+                <Avatar className="w-10 h-10 ring-2 ring-selected/50">
                   <AvatarImage src={user.avatar} alt={`${user.firstName} ${user.lastName}`} />
-                  <AvatarFallback className="bg-gradient-to-br from-gold-100 to-gold-200 text-gold-800 font-semibold text-xs">
+                  <AvatarFallback className="bg-gradient-to-br from-selected-bg to-selected text-selected-foreground font-semibold text-xs">
                     {user.firstName.charAt(0)}{user.lastName.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="text-center">
-                  <p className="text-xs font-semibold text-sand-100 leading-tight">
+                  <p className="text-xs font-semibold text-primary leading-tight">
                     {user.firstName}
                   </p>
                   <div className="flex items-center justify-center gap-1 mt-1">
@@ -89,7 +89,7 @@ export default function AppHeader({
                     ) : (
                       <SparklesIcon className="w-3 h-3 text-blue-400" />
                     )}
-                    <span className="text-xs text-sand-300 capitalize">{user.door}</span>
+                    <span className="text-xs text-primary/80 capitalize">{user.door}</span>
                   </div>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function AppHeader({
                     ) : (
                       <SparklesIcon className="w-3 h-3 text-blue-400" />
                     )}
-                    <span className="text-xs text-sand-300 capitalize">{user.door}</span>
+                    <span className="text-xs text-primary/80 capitalize">{user.door}</span>
                   </div>
                 </div>
               </div>

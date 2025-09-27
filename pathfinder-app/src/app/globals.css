@@ -5,44 +5,92 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Keel Stone Brand Colors - keeping for existing components */
   --navy: #1F3A56;
   --slate: #5A6670;
-  --gold: #C9A45C;
-  --olive: #708C69;
+  --gold: #B9A131;
+  --olive: #2C6E6C;
   --sand-light: #F9F9F6;
   --sand-dark: #D9CBB4;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.13 0.028 261.692);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0.028 261.692);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0.028 261.692);
-  --primary: oklch(0.21 0.034 264.665);
-  --primary-foreground: oklch(0.985 0.002 247.839);
-  --secondary: oklch(0.967 0.003 264.542);
-  --secondary-foreground: oklch(0.21 0.034 264.665);
-  --muted: oklch(0.967 0.003 264.542);
-  --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: oklch(0.967 0.003 264.542);
-  --accent-foreground: oklch(0.21 0.034 264.665);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.928 0.006 264.531);
-  --input: oklch(0.928 0.006 264.531);
-  --ring: oklch(0.707 0.022 261.325);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.002 247.839);
-  --sidebar-foreground: oklch(0.13 0.028 261.692);
-  --sidebar-primary: oklch(0.21 0.034 264.665);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.967 0.003 264.542);
-  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-  --sidebar-border: oklch(0.928 0.006 264.531);
-  --sidebar-ring: oklch(0.707 0.022 261.325);
+
+  /* Light Theme - Precise HSL values from color guidance */
+  /* Base surfaces & text */
+  --background: 60 20% 97.1%;        /* #F9F9F6 */
+  --foreground: 210.5 47% 22.9%;     /* #1F3A56 */
+
+  --card: 51.4 20% 93.1%;            /* #F1F0EA */
+  --card-foreground: 210.5 47% 22.9%; /* #1F3A56 */
+
+  --popover: 51.4 20% 93.1%;         /* #F1F0EA */
+  --popover-foreground: 210.5 47% 22.9%;
+
+  /* Brand roles */
+  --primary: 210.5 47% 22.9%;        /* Deep Navy #1F3A56 */
+  --primary-foreground: 60 20% 97.1%; /* Almost White #F9F9F6 */
+
+  --secondary: 207.3 10.9% 39.6%;    /* Slate #5A6670 */
+  --secondary-foreground: 60 20% 97.1%;
+
+  --accent: 178.2 42.9% 30.2%;       /* Deep Teal #2C6E6C */
+  --accent-foreground: 60 20% 97.1%;
+
+  --destructive: 15.1 49.8% 46.9%;   /* Rust #B35A3C */
+  --destructive-foreground: 60 20% 97.1%;
+
+  /* Neutrals & helpers */
+  --muted: 38.2 21.9% 70.4%;         /* Taupe #C4B8A3 */
+  --muted-foreground: 207.3 10.9% 39.6%;
+
+  --border: 37.3 32.7% 77.8%;        /* Beige #D9CBB4 */
+  --input: 37.3 32.7% 77.8%;
+  --ring: 49.4 58.1% 45.9%;          /* Gold #B9A131 */
+
+  /* Optional data/info tones */
+  --info: 246.7 18.2% 61.2%;         /* Lavender #8E8AAE */
+
+  /* Unified popup theme system - based on sign-in popup */
+  --popup-background: 51.4 20% 93.1%;     /* #F1F0EA - Light beige/cream background */
+  --popup-foreground: 210.5 47% 22.9%;    /* #1F3A56 - Dark blue for titles */
+  --popup-muted: 207.3 10.9% 39.6%;       /* #5A6670 - Light grey for subtitles */
+  --popup-accent: 207.3 20% 55%;          /* Light blue for accents/links */
+  --popup-border: 37.3 32.7% 77.8%;       /* #D9CBB4 - Border color */
+
+  /* Enhanced selection and interactive states */
+  --selected: 49.4 58.1% 45.9%;           /* Gold - for selected items */
+  --selected-foreground: 210.5 47% 22.9%; /* Navy text on gold */
+  --selected-bg: 49.4 58.1% 95%;          /* Very light gold background */
+  
+  /* Interactive states */
+  --hover: 49.4 58.1% 92%;                /* Light gold hover */
+  --active: 49.4 58.1% 85%;               /* Slightly darker for active */
+  
+  /* Enhanced card selection states */
+  --card-selected: 49.4 58.1% 96%;        /* Nearly white with gold tint */
+  --card-selected-border: 49.4 58.1% 45.9%; /* Strong gold border */
+  --card-selected-gradient-from: 49.4 58.1% 98%; /* Very light gold */
+  --card-selected-gradient-to: 178.2 42.9% 97%;   /* Very light teal */
+  
+  /* Status indicators */
+  --success: 142 76% 36%;                  /* Green for completion */
+  --warning: 45 93% 47%;                   /* Amber for attention */
+
+  /* Chart colors - using theme colors */
+  --chart-1: 49.4 58.1% 45.9%;       /* Gold */
+  --chart-2: 178.2 42.9% 30.2%;      /* Teal */
+  --chart-3: 210.5 47% 22.9%;        /* Navy */
+  --chart-4: 207.3 10.9% 39.6%;      /* Slate */
+  --chart-5: 15.1 49.8% 46.9%;       /* Rust */
+
+  /* Sidebar colors */
+  --sidebar: 60 20% 97.1%;
+  --sidebar-foreground: 210.5 47% 22.9%;
+  --sidebar-primary: 210.5 47% 22.9%;
+  --sidebar-primary-foreground: 60 20% 97.1%;
+  --sidebar-accent: 51.4 20% 93.1%;
+  --sidebar-accent-foreground: 210.5 47% 22.9%;
+  --sidebar-border: 37.3 32.7% 77.8%;
+  --sidebar-ring: 49.4 58.1% 45.9%;
 }
 
 @theme inline {
@@ -478,6 +526,34 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@keyframes selectionGlow {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--selected) / 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 4px hsl(var(--selected) / 0.1);
+  }
+}
+
+@keyframes cardLift {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+@keyframes progressFill {
+  0% {
+    width: 0%;
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .animate-gentle-fade {
   animation: gentleFade 0.8s ease-out;
 }
@@ -500,6 +576,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-logo-glow {
   animation: logoGlow 3s ease-in-out infinite;
+}
+
+.animate-selection-glow {
+  animation: selectionGlow 0.3s ease-out;
+}
+
+.animate-card-lift {
+  animation: cardLift 0.2s ease-out;
+}
+
+.animate-progress-fill {
+  animation: progressFill 0.5s ease-out;
 }
 
 /* Focus styles for accessibility */
@@ -613,6 +701,32 @@ h1, h2, h3, h4, h5, h6 {
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+
+  /* Dark mode popup theme */
+  --popup-background: oklch(0.21 0.034 264.665);   /* Dark background */
+  --popup-foreground: oklch(0.985 0.002 247.839);  /* Light text for titles */
+  --popup-muted: oklch(0.707 0.022 261.325);       /* Muted text for subtitles */
+  --popup-accent: oklch(0.696 0.17 162.48);        /* Light blue accent */
+  --popup-border: oklch(1 0 0 / 10%);              /* Border color */
+
+  /* Enhanced dark mode selection and interactive states */
+  --selected: 49.4 58.1% 55%;             /* Brighter gold for dark */
+  --selected-foreground: 210.5 47% 12%;   /* Very dark navy */
+  --selected-bg: 49.4 58.1% 15%;          /* Dark gold background */
+  
+  /* Dark mode interactive states */
+  --hover: 49.4 58.1% 20%;
+  --active: 49.4 58.1% 25%;
+  
+  /* Dark mode card selection states */
+  --card-selected: 49.4 58.1% 18%;
+  --card-selected-border: 49.4 58.1% 55%;
+  --card-selected-gradient-from: 49.4 58.1% 20%; /* Dark gold */
+  --card-selected-gradient-to: 178.2 42.9% 22%;   /* Dark teal */
+  
+  /* Dark mode status indicators */
+  --success: 142 76% 46%;                  /* Brighter green for dark */
+  --warning: 45 93% 57%;                   /* Brighter amber for dark */
 }
 
 @layer base {

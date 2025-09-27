@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { LightBulbIcon } from '@heroicons/react/24/outline';
+import { Card } from './card';
 
 interface LoadingStateProps {
   message?: string;
@@ -46,34 +47,34 @@ export default function LoadingState({
   }, [estimatedTime]);
 
   return (
-    <div className="fixed inset-0 bg-navy-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="card max-w-md w-full p-8 text-center animate-gentle-fade">
+    <div className="fixed inset-0 bg-primary/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <Card variant="interactive" size="lg" className="max-w-md w-full text-center animate-gentle-fade">
         {/* Animated Icon */}
         <div className="mb-6">
           <div className="w-16 h-16 mx-auto bg-accent rounded-full flex items-center justify-center">
-            <div className="w-8 h-8 border-2 border-sand-100 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-2 border-accent-foreground border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
 
         {/* Title */}
-        <h3 className="text-title mb-2">
+        <h3 className="text-lg font-serif font-semibold text-gray-900 mb-2">
           Creating Your Personal Plan
         </h3>
 
         {/* Dynamic Message */}
-        <p className="text-body mb-6 min-h-[3rem] flex items-center justify-center">
+        <p className="text-sm text-gray-600 mb-6 min-h-[3rem] flex items-center justify-center">
           {message || LOADING_MESSAGES[currentMessage]}
         </p>
 
         {/* Progress Bar */}
         <div className="mb-6">
-          <div className="w-full bg-sand-300 rounded-full h-2">
+          <div className="w-full bg-muted rounded-full h-2">
             <div 
-              className="bg-accent h-2 rounded-full transition-all duration-300 ease-out"
+              className="bg-selected h-2 rounded-full transition-all duration-300 ease-out animate-progress-fill"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <p className="text-caption mt-2">
+          <p className="text-xs text-gray-500 mt-2">
             This usually takes {Math.round(estimatedTime / 1000)} seconds...
           </p>
         </div>
@@ -82,20 +83,20 @@ export default function LoadingState({
         {onCancel && (
           <button
             onClick={onCancel}
-            className="text-slate-500 hover:text-slate-700 text-sm underline focus-ring rounded"
+            className="text-gray-600 hover:text-gray-900 text-sm underline focus-ring rounded transition-colors duration-200"
           >
             Cancel
           </button>
         )}
 
         {/* Encouraging Note */}
-        <div className="mt-6 p-4 bg-gold-50 rounded-lg border border-gold-200">
-          <p className="text-sm text-gold-800">
-            <LightBulbIcon className="w-4 h-4 inline mr-1 text-gold-600" />
+        <div className="mt-6 p-4 bg-selected-bg rounded-lg border border-selected/20">
+          <p className="text-sm text-gray-900">
+            <LightBulbIcon className="w-4 h-4 inline mr-1 text-selected" />
             <strong>Did you know?</strong> Personalized practices are 3x more likely to become lasting habits than generic ones.
           </p>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

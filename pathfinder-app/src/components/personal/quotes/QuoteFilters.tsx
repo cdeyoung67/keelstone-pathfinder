@@ -138,7 +138,7 @@ export default function QuoteFiltersComponent({ filters, onFiltersChange }: Quot
                 <FruitTag tag={fruit} type="fruit" size="sm" />
                 <button
                   onClick={() => removeArrayFilter('fruits', fruit)}
-                  className="text-slate-400 hover:text-red-500 transition-colors"
+                  className="text-slate-400 hover:text-destructive transition-colors"
                 >
                   <XMarkIcon className="w-3 h-3" />
                 </button>
@@ -183,7 +183,7 @@ export default function QuoteFiltersComponent({ filters, onFiltersChange }: Quot
                 <FruitTag tag={tag} type="wisdom" size="sm" />
                 <button
                   onClick={() => removeArrayFilter('wisdomTags', tag)}
-                  className="text-slate-400 hover:text-red-500 transition-colors"
+                  className="text-slate-400 hover:text-destructive transition-colors"
                 >
                   <XMarkIcon className="w-3 h-3" />
                 </button>
@@ -208,7 +208,7 @@ export default function QuoteFiltersComponent({ filters, onFiltersChange }: Quot
           variant="outline"
           size="sm"
           onClick={() => updateFilter('door', 'christian')}
-          className={filters.door === 'christian' ? 'bg-red-100 border-red-300 text-red-800' : ''}
+          className={filters.door === 'christian' ? 'bg-accent/10 border-accent text-accent' : ''}
         >
           Christian Path
         </Button>

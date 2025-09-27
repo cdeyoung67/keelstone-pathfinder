@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["class"], // toggled by adding/removing .dark on <html> or <body>
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,6 +10,95 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Design System Colors (with alpha-value support for shadcn)
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
+        background: "hsl(var(--background) / <alpha-value>)",
+        foreground: "hsl(var(--foreground) / <alpha-value>)",
+
+        primary: {
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card) / <alpha-value>)",
+          foreground: "hsl(var(--card-foreground) / <alpha-value>)",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover) / <alpha-value>)",
+          foreground: "hsl(var(--popover-foreground) / <alpha-value>)",
+        },
+
+        /* Optional */
+        info: "hsl(var(--info) / <alpha-value>)",
+
+        // Enhanced selection system
+        selected: {
+          DEFAULT: "hsl(var(--selected) / <alpha-value>)",
+          foreground: "hsl(var(--selected-foreground) / <alpha-value>)",
+          background: "hsl(var(--selected-bg) / <alpha-value>)",
+        },
+        
+        // Interactive states
+        hover: "hsl(var(--hover) / <alpha-value>)",
+        active: "hsl(var(--active) / <alpha-value>)",
+        
+        // Enhanced card system
+        "card-selected": {
+          DEFAULT: "hsl(var(--card-selected) / <alpha-value>)",
+          border: "hsl(var(--card-selected-border) / <alpha-value>)",
+          "gradient-from": "hsl(var(--card-selected-gradient-from) / <alpha-value>)",
+          "gradient-to": "hsl(var(--card-selected-gradient-to) / <alpha-value>)",
+        },
+        
+        // Status system
+        success: "hsl(var(--success) / <alpha-value>)",
+        warning: "hsl(var(--warning) / <alpha-value>)",
+
+        // Unified popup theme system
+        popup: {
+          DEFAULT: "hsl(var(--popup-background) / <alpha-value>)",
+          foreground: "hsl(var(--popup-foreground) / <alpha-value>)",
+          muted: "hsl(var(--popup-muted) / <alpha-value>)",
+          accent: "hsl(var(--popup-accent) / <alpha-value>)",
+          border: "hsl(var(--popup-border) / <alpha-value>)",
+        },
+
+        chart: {
+          "1": "hsl(var(--chart-1) / <alpha-value>)",
+          "2": "hsl(var(--chart-2) / <alpha-value>)",
+          "3": "hsl(var(--chart-3) / <alpha-value>)",
+          "4": "hsl(var(--chart-4) / <alpha-value>)",
+          "5": "hsl(var(--chart-5) / <alpha-value>)",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar) / <alpha-value>)",
+          foreground: "hsl(var(--sidebar-foreground) / <alpha-value>)",
+          primary: "hsl(var(--sidebar-primary) / <alpha-value>)",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground) / <alpha-value>)",
+          accent: "hsl(var(--sidebar-accent) / <alpha-value>)",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground) / <alpha-value>)",
+          border: "hsl(var(--sidebar-border) / <alpha-value>)",
+          ring: "hsl(var(--sidebar-ring) / <alpha-value>)",
+        },
+
         // Keel Stone Brand Colors
         navy: {
           50: '#f0f4f8',
@@ -40,23 +130,23 @@ const config: Config = {
           200: '#feecaa',
           300: '#fddb70',
           400: '#fbc638',
-          500: '#C9A45C', // Warm Gold
-          600: '#b8941f',
+          500: '#B9A131', // Updated to match light theme ring color
+          600: '#a68f2b',
           700: '#927419',
           800: '#785a1a',
           900: '#66481b',
         },
         olive: {
-          50: '#f6f8f4',
-          100: '#e9f0e4',
-          200: '#d4e1ca',
-          300: '#b6cca5',
-          400: '#94b37c',
-          500: '#708C69', // Olive Green
-          600: '#5a7355',
-          700: '#485a45',
-          800: '#3c4a39',
-          900: '#343e32',
+          50: '#f0f7f7',
+          100: '#d9eceb',
+          200: '#b6d7d5',
+          300: '#8fbfbc',
+          400: '#6ba5a1',
+          500: '#2C6E6C', // Updated to match light theme accent color
+          600: '#265a58',
+          700: '#1f4847',
+          800: '#1a3b3a',
+          900: '#16302f',
         },
         sand: {
           50: '#fdfcfa',
@@ -92,6 +182,9 @@ const config: Config = {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.4s ease-out',
         'gentle-pulse': 'gentlePulse 2s ease-in-out infinite',
+        'selection-glow': 'selectionGlow 0.3s ease-out',
+        'card-lift': 'cardLift 0.2s ease-out',
+        'progress-fill': 'progressFill 0.5s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -106,9 +199,26 @@ const config: Config = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.7' },
         },
+        selectionGlow: {
+          '0%': { boxShadow: '0 0 0 0 hsl(var(--selected) / 0.4)' },
+          '100%': { boxShadow: '0 0 0 4px hsl(var(--selected) / 0.1)' },
+        },
+        cardLift: {
+          '0%': { transform: 'translateY(0) scale(1)' },
+          '100%': { transform: 'translateY(-2px) scale(1.02)' },
+        },
+        progressFill: {
+          '0%': { width: '0%', opacity: '0.8' },
+          '100%': { opacity: '1' },
+        },
+      },
+      borderRadius: {
+        xl: "1rem",
+        "2xl": "1.25rem",
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(31, 58, 86, 0.08), 0 10px 20px -2px rgba(31, 58, 86, 0.04)',
+        soft: "0 4px 14px rgba(0,0,0,.18)",
+        card: "0 8px 24px rgba(0,0,0,.16)",
         'medium': '0 4px 25px -5px rgba(31, 58, 86, 0.12), 0 10px 30px -5px rgba(31, 58, 86, 0.08)',
         'large': '0 10px 40px -10px rgba(31, 58, 86, 0.15), 0 20px 50px -10px rgba(31, 58, 86, 0.1)',
       },

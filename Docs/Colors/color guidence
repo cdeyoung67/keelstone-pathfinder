@@ -1,0 +1,193 @@
+Theme tokens (CSS variables)
+
+Put this in your global CSS (e.g., globals.css).
+shadcn expects hsl(var(--token)) style values; I’ve converted your hexes to HSL.
+
+:root {
+  /* Base surfaces & text */
+  --background: 60 20% 97.1%;        /* #F9F9F6 */
+  --foreground: 210.5 47% 22.9%;      /* #1F3A56 */
+
+  --card: 51.4 20% 93.1%;             /* #F1F0EA */
+  --card-foreground: 210.5 47% 22.9%; /* #1F3A56 */
+
+  --popover: 51.4 20% 93.1%;          /* #F1F0EA */
+  --popover-foreground: 210.5 47% 22.9%;
+
+  /* Brand roles */
+  --primary: 210.5 47% 22.9%;         /* Deep Navy #1F3A56 */
+  --primary-foreground: 60 20% 97.1%; /* Almost White #F9F9F6 */
+
+  --secondary: 207.3 10.9% 39.6%;     /* Slate #5A6670 */
+  --secondary-foreground: 60 20% 97.1%;
+
+  --accent: 178.2 42.9% 30.2%;        /* Deep Teal #2C6E6C */
+  --accent-foreground: 60 20% 97.1%;
+
+  --destructive: 15.1 49.8% 46.9%;    /* Rust #B35A3C */
+  --destructive-foreground: 60 20% 97.1%;
+
+  /* Neutrals & helpers */
+  --muted: 38.2 21.9% 70.4%;          /* Taupe #C4B8A3 */
+  --muted-foreground: 207.3 10.9% 39.6%;
+
+  --border: 37.3 32.7% 77.8%;         /* Beige #D9CBB4 */
+  --input: 37.3 32.7% 77.8%;
+  --ring: 49.4 58.1% 45.9%;           /* Gold #B9A131 */
+
+  /* Optional data/info tones */
+  --info: 246.7 18.2% 61.2%;          /* Lavender #8E8AAE */
+}
+
+.dark {
+  --background: 210.5 47% 22.9%;      /* Navy base */
+  --foreground: 60 20% 97.1%;
+
+  --card: 212 25.4% 23.1%;            /* Dark card #2C3A4A */
+  --card-foreground: 60 20% 97.1%;
+
+  --popover: 212 25.4% 23.1%;
+  --popover-foreground: 60 20% 97.1%;
+
+  /* In dark, go premium: gold as primary */
+  --primary: 49.4 58.1% 45.9%;        /* Gold #B9A131 */
+  --primary-foreground: 210.5 47% 22.9%;
+
+  --secondary: 214.3 19.4% 28.2%;     /* Muted dark #3A4656 */
+  --secondary-foreground: 60 20% 97.1%;
+
+  --accent: 178.2 42.9% 30.2%;        /* Teal pops on dark */
+  --accent-foreground: 60 20% 97.1%;
+
+  --destructive: 15.1 49.8% 46.9%;
+  --destructive-foreground: 60 20% 97.1%;
+
+  --muted: 214.3 19.4% 28.2%;
+  --muted-foreground: 38.2 21.9% 70.4%;
+
+  --border: 214.3 19.4% 28.2%;
+  --input: 214.3 19.4% 28.2%;
+  --ring: 49.4 58.1% 45.9%;
+
+  --info: 246.7 18.2% 61.2%;
+}
+
+2) Tailwind config
+
+Map Tailwind utilities to those tokens (adds bg-background, text-foreground, bg-primary, etc.).
+
+// tailwind.config.ts
+import type { Config } from "tailwindcss"
+
+const config: Config = {
+  darkMode: ["class"], // toggled by adding/removing .dark on <html> or <body>
+  content: ["./src/**/*.{ts,tsx,js,jsx,mdx}"],
+  theme: {
+    extend: {
+      colors: {
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
+        background: "hsl(var(--background) / <alpha-value>)",
+        foreground: "hsl(var(--foreground) / <alpha-value>)",
+
+        primary: {
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card) / <alpha-value>)",
+          foreground: "hsl(var(--card-foreground) / <alpha-value>)",
+        },
+
+        /* Optional */
+        info: "hsl(var(--info) / <alpha-value>)",
+      },
+      borderRadius: {
+        xl: "1rem",
+        "2xl": "1.25rem",
+      },
+      boxShadow: {
+        soft: "0 4px 14px rgba(0,0,0,.18)",
+        card: "0 8px 24px rgba(0,0,0,.16)",
+      },
+    },
+  },
+  plugins: [],
+}
+export default config
+
+3) Usage patterns (shadcn-friendly)
+Page scaffolding
+<body class="bg-background text-foreground">
+  <!-- content -->
+</body>
+
+Cards & surfaces
+<div class="bg-card text-card-foreground shadow-card rounded-2xl border border-border p-6">
+  <!-- card content -->
+</div>
+
+Buttons (works with shadcn classes or your own)
+<!-- Primary (light: navy / dark: gold) -->
+<button class="inline-flex items-center rounded-xl bg-primary px-4 py-2 text-primary-foreground hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+  Primary
+</button>
+
+<!-- Secondary -->
+<button class="inline-flex items-center rounded-xl bg-secondary px-4 py-2 text-secondary-foreground hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">
+  Secondary
+</button>
+
+<!-- Accent CTA (teal) -->
+<button class="inline-flex items-center rounded-xl bg-accent px-4 py-2 text-accent-foreground hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">
+  Join Keelstone
+</button>
+
+<!-- Destructive -->
+<button class="inline-flex items-center rounded-xl bg-destructive px-4 py-2 text-destructive-foreground hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">
+  Delete
+</button>
+
+Inputs
+<input
+  class="w-full rounded-xl bg-background text-foreground border border-input placeholder:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring px-3 py-2"
+/>
+
+Navigation
+<nav class="border-b border-border bg-background/70 backdrop-blur">
+  <a class="text-foreground/80 hover:text-foreground">Home</a>
+  <a class="text-foreground/80 hover:text-[hsl(var(--ring))]">Community</a>
+</nav>
+
+Status & helpers
+<p class="text-[hsl(var(--info))]">Heads up: this insight is new.</p>
+<p class="text-[hsl(var(--destructive))]">Error saving settings.</p>
+
+4) Design guidance (Keelstone-specific)
+
+Primary action density: Use primary for 1–2 actions/page; use accent (teal) for standout CTAs (“Join Free”)—it pops beautifully on both themes.
+
+Headings vs body: Headings can stay text-foreground (navy in light) or use gold by applying text-[hsl(var(--ring))] sparingly for hero lines.
+
+Borders vs shadows: Prefer subtle borders border-border and soft shadows (shadow-soft, shadow-card) for the premium aesthetic.
+
+Focus accessibility: Keep the ring (gold) for keyboard focus; it’s distinct in both themes.
+
+Dark comfort: Avoid pure white; our --foreground is a warm off-white. Keep long-form text on bg-card for gentle contrast.

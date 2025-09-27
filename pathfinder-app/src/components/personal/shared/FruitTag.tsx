@@ -142,7 +142,7 @@ const wisdomConfig: Record<WisdomTag, { label: string; icon: any; color: string 
   discipline: {
     label: 'Discipline',
     icon: LockClosedIcon,
-    color: 'bg-red-100 text-red-800 border-red-200'
+    color: 'bg-destructive/10 text-destructive border-destructive/20'
   }
 };
 

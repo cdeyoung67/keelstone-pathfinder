@@ -132,16 +132,16 @@ export default function PersonalDashboard() {
 
       {/* Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted">
+          <TabsTrigger value="overview" className="flex items-center gap-2 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-card">
             <ChartBarIcon className="w-4 h-4" />
             Overview
           </TabsTrigger>
-          <TabsTrigger value="quotes" className="flex items-center gap-2">
+          <TabsTrigger value="quotes" className="flex items-center gap-2 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-card">
             <BookOpenIcon className="w-4 h-4" />
             Life Verses
           </TabsTrigger>
-          <TabsTrigger value="testimonies" className="flex items-center gap-2">
+          <TabsTrigger value="testimonies" className="flex items-center gap-2 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-card">
             <HeartIcon className="w-4 h-4" />
             Testimonies
           </TabsTrigger>
@@ -177,7 +177,7 @@ export default function PersonalDashboard() {
               value={collection.testimonies}
               description="Stories shared"
               icon={HeartIcon}
-              color="text-red-600"
+              color="text-destructive"
             />
           </div>
 
@@ -255,8 +255,8 @@ export default function PersonalDashboard() {
 
             <Card className="card-elevated hover:shadow-large transition-all duration-300 cursor-pointer">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <HeartIcon className="w-8 h-8 text-red-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-destructive/10 to-destructive/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <HeartIcon className="w-8 h-8 text-destructive" />
                 </div>
                 <h3 className="font-serif font-semibold text-navy-900 mb-2">Share Your Story</h3>
                 <p className="text-sm text-slate-600 mb-4">
