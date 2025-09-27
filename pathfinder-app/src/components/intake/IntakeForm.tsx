@@ -540,14 +540,14 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
           {/* Step 4: Time & Schedule */}
           {currentStep === 4 && (
-            <div className="space-y-3">
+            <div className="space-y-3 bg-popup rounded-lg p-4 m-4 border border-gold-400 shadow-md">
               <div className="text-center">
-                <h3 className="text-lg font-serif font-semibold text-gray-900">When will you practice?</h3>
-                <p className="text-xs text-gray-600 mt-0.5">Choose your time commitment and schedule</p>
+                <h3 className="text-lg font-serif font-semibold text-navy-900">When will you practice?</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Choose your time commitment and schedule</p>
               </div>
               
               <div className="space-y-2">
-                <h4 className="text-xs font-medium text-gray-900">Time Budget</h4>
+                <h4 className="text-xs font-medium text-navy-900">Time Budget</h4>
                 <div className="space-y-1.5">
                   {[
                     { value: '5-10', label: '10 min or less', description: 'Four 2-minute micro-habits (recommended)' },
@@ -556,9 +556,12 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                   ].map((option) => (
                     <Card
                       key={option.value}
-                      variant={formData.timeBudget === option.value ? "selected" : "selectable"}
+                      variant="default"
                       onClick={() => setFormData(prev => ({ ...prev, timeBudget: option.value as TimeBudget }))}
-                      className="bg-background border-muted hover:border-selected/50"
+                      className={formData.timeBudget === option.value
+                        ? "bg-gradient-to-r from-selected to-accent border-2 border-gold-500 shadow-md hover:shadow-lg transition-all duration-200"
+                        : "bg-[#F1F0EA] border-gray-200 shadow-sm hover:border-selected/50 hover:shadow-md transition-all duration-200"
+                      }
                     >
                       <CardContent className="p-2.5">
                         <div className="flex items-center justify-between">
@@ -574,7 +577,7 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-xs font-medium text-gray-900">Best Time of Day</h4>
+                <h4 className="text-xs font-medium text-navy-900">Best Time of Day</h4>
                 <div className="grid grid-cols-2 gap-1.5">
                   {[
                     { value: 'morning', label: 'Morning', description: 'Start centered' },
@@ -584,9 +587,12 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                   ].map((option) => (
                     <Card
                       key={option.value}
-                      variant={formData.daypart === option.value ? "selected" : "selectable"}
+                      variant="default"
                       onClick={() => setFormData(prev => ({ ...prev, daypart: option.value as Daypart }))}
-                      className="bg-background border-muted hover:border-selected/50"
+                      className={formData.daypart === option.value
+                        ? "bg-gradient-to-r from-selected to-accent border-2 border-gold-500 shadow-md hover:shadow-lg transition-all duration-200"
+                        : "bg-[#F1F0EA] border-gray-200 shadow-sm hover:border-selected/50 hover:shadow-md transition-all duration-200"
+                      }
                     >
                       <CardContent className="p-2">
                         <div className="text-center">
@@ -603,10 +609,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
           {/* Step 5: If-Then Planning */}
           {currentStep === 5 && (
-            <div className="space-y-4">
+            <div className="space-y-3 bg-popup rounded-lg p-4 m-4 border border-gold-400 shadow-md">
               <div className="text-center">
-                <h3 className="text-lg font-serif font-semibold text-gray-900">Create Your If-Then Plans</h3>
-                <p className="text-sm text-gray-600 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four focused plans for {getPrimaryVirtue(formData.struggles)}.</p>
+                <h3 className="text-lg font-serif font-semibold text-navy-900">Create Your If-Then Plans</h3>
+                <p className="text-sm text-gray-500 mt-1">Research shows that "if-then" planning dramatically improves habit success. Let's create four focused plans for {getPrimaryVirtue(formData.struggles)}.</p>
                 <div className="mt-2 text-xs text-ring bg-gold-50 border border-gold-200 rounded-lg px-3 py-2 inline-block">
                   <LightBulbIcon className="w-3 h-3 inline mr-1" />
                   These plans are customized for your {formData.door === 'christian' ? 'Christian faith journey' : 'secular wisdom path'}
@@ -615,17 +621,17 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
               {/* Plans are initialized via useEffect when entering this step */}
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {formData.ifThenPlans.map((plan, index) => {
                   const virtue = VIRTUE_DESCRIPTIONS[plan.virtue];
                   return (
-                    <Card key={`${plan.virtue}-${plan.approach || index}`} className="bg-sand-50 border-sand-300">
+                    <Card key={`${plan.virtue}-${plan.approach || index}`} className="bg-[#F1F0EA] border-gold-400 shadow-sm">
                       <CardHeader className="pb-3">
                         <CardTitle className="text-sm font-semibold text-navy-900 capitalize">
                           {plan.approach ? `${plan.approach.toUpperCase()} - ${virtue.title}` : `${virtue.title} - ${virtue.subtitle}`}
                         </CardTitle>
                         {plan.approach && (
-                          <CardDescription className="text-xs text-slate-600">
+                          <CardDescription className="text-xs text-gray-500">
                             {plan.approach === 'prepare' && 'Set intention and center yourself'}
                             {plan.approach === 'act' && 'Take your first small step'}
                             {plan.approach === 'serve' && 'Practice through service to others'}
@@ -635,28 +641,28 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                       </CardHeader>
                       <CardContent className="space-y-3">
                         <div className="space-y-2">
-                          <Label className="text-xs font-medium text-slate-700">
+                          <Label className="text-xs font-medium text-navy-900">
                             If (trigger/cue):
                           </Label>
                           <Input
                             value={plan.cue}
                             onChange={(e) => updateIfThenPlan(plan.virtue, plan.approach, 'cue', e.target.value)}
                             placeholder="e.g., after my morning coffee"
-                            className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-8 text-sm"
+                            className="bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700 h-8 text-sm"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-xs font-medium text-slate-700">
+                          <Label className="text-xs font-medium text-navy-900">
                             Then I will:
                           </Label>
                           <Input
                             value={plan.action}
                             onChange={(e) => updateIfThenPlan(plan.virtue, plan.approach, 'action', e.target.value)}
                             placeholder="e.g., pause and ask for guidance"
-                            className="bg-sand-100 border-sand-400 focus:border-gold-500 focus:ring-gold-500/20 h-8 text-sm"
+                            className="bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700 h-8 text-sm"
                           />
                         </div>
-                        <div className="text-xs text-slate-500 italic">
+                        <div className="text-xs text-gray-500 italic">
                           "If {plan.cue}, then I will {plan.action}"
                         </div>
                       </CardContent>
@@ -680,15 +686,15 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
 
           {/* Step 6: Context (Optional) */}
           {currentStep === 6 && (
-            <div className="space-y-4">
+            <div className="space-y-3 bg-popup rounded-lg p-4 m-4 border border-gold-400 shadow-md">
               <div className="text-center">
-                <h3 className="text-lg font-serif font-semibold text-gray-900">Anything else we should know?</h3>
-                <p className="text-sm text-gray-600 mt-1">Optional: Share context to help us personalize your plan better</p>
+                <h3 className="text-lg font-serif font-semibold text-navy-900">Anything else we should know?</h3>
+                <p className="text-sm text-gray-500 mt-1">Optional: Share context to help us personalize your plan better</p>
               </div>
               
-              <Card className="bg-sand-50 border-sand-300">
+              <Card className="bg-[#F1F0EA] border-gold-400 shadow-sm">
                 <CardContent className="p-4">
-                  <Label htmlFor="context" className="text-xs font-medium text-gray-900 mb-2 block">
+                  <Label htmlFor="context" className="text-xs font-medium text-navy-900 mb-2 block">
                     Additional Context (Optional)
                   </Label>
                   <textarea
@@ -696,10 +702,10 @@ export default function IntakeForm({ onSubmit, onClose, initialData, startStep =
                     value={formData.context}
                     onChange={(e) => setFormData(prev => ({ ...prev, context: e.target.value }))}
                     placeholder="E.g., I'm a new parent, going through a career transition, dealing with loss..."
-                    className="w-full px-3 py-2 border border-sand-400 rounded-lg focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 bg-sand-100 text-sm resize-none"
+                    className="w-full px-3 py-2 bg-gray-50 border-gray-200 shadow-sm focus:border-selected focus:ring-2 focus:ring-selected/20 placeholder:text-slate-500 text-gray-700 rounded-lg text-sm resize-none"
                     rows={3}
                   />
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-xs text-gray-500 mt-2">
                     This helps us tailor your practices to your current life situation.
                   </p>
                 </CardContent>
